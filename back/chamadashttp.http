@@ -1,14 +1,5 @@
-### Produtos - listar
-GET http://localhost:1337/api/products?page=1&pageSize=4
-
-### Produto - listar por termo
-
-GET http://localhost:1337/api/products?page=1&pageSize=4&filters[$or][0][title][$containsi]=Impostora
-### Produto - detalhe
-GET http://localhost:1337/api/products/1
-
-### Auth - login
-POST http://localhost:1337/api/auth/local
+###Auth - Fazer Login
+POST http://localhost:1337/api/auth/login
 Content-Type: application/json
 
 {
@@ -17,57 +8,11 @@ Content-Type: application/json
 }
 
 ### Auth - registro
-POST http://localhost:1337/api/auth/local/register
+POST http://localhost:1337/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "visao",
-  "email": "visao@email.com",
+  "username": "heloisa",
+  "email": "heloisa@email.com",
   "password": "senha123"
-}
-
-### Carrinho - listar itens
-GET http://localhost:1337/api/cart-itens
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ2aXNhb0BlbWFpbC5jb20iLCJpYXQiOjE3Nzk4OTg3NDUsImV4cCI6MTc4MDUwMzU0NX0._3SePlopoSgYfINr8x73dBrvDRwemHDVH4cUmikqkB8
-
-### Carrinho - adicionar item
-POST http://localhost:1337/api/cart-itens
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ2aXNhb0BlbWFpbC5jb20iLCJpYXQiOjE3Nzk4OTg3NDUsImV4cCI6MTc4MDUwMzU0NX0._3SePlopoSgYfINr8x73dBrvDRwemHDVH4cUmikqkB8
-Content-Type: application/json
-
-{
-  "data": {
-    "product": 3,
-    "quantity": 1
-  }
-}
-
-### Carrinho - atualizar quantidade
-PUT http://localhost:1337/api/cart-itens/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ2aXNhb0BlbWFpbC5jb20iLCJpYXQiOjE3Nzk4OTg3NDUsImV4cCI6MTc4MDUwMzU0NX0._3SePlopoSgYfINr8x73dBrvDRwemHDVH4cUmikqkB8
-Content-Type: application/json
-
-{
-  "data": {
-    "quantity": 3
-  }
-}
-
-### Carrinho - remover item
-DELETE http://localhost:1337/api/cart-itens/1
-Authorization: Bearer SEU_TOKEN_JWT
-
-### Comprados - listar itens
-GET http://localhost:1337/api/comprados
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ2aXNhb0BlbWFpbC5jb20iLCJpYXQiOjE3Nzk5ODQyNDUsImV4cCI6MTc4MDU4OTA0NX0.pWqb07BLLmQopMlOi2zifci8bfuny1iGCFywGKfdnZc
-
-### Comprados - adicionar item
-POST http://localhost:1337/api/comprados
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ2aXNhb0BlbWFpbC5jb20iLCJpYXQiOjE3Nzk5ODQyNDUsImV4cCI6MTc4MDU4OTA0NX0.pWqb07BLLmQopMlOi2zifci8bfuny1iGCFywGKfdnZc
-Content-Type: application/json
-
-{
-  "data": {
-    "productsIds": [2]
-  }
 }

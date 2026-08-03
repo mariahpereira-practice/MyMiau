@@ -87,8 +87,8 @@ export function Login() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Nome de Usuário"
-                    autoComplete="username"
+                    label="E-mail do Usuário"
+                    autoComplete="email"
                     autoFocus
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}

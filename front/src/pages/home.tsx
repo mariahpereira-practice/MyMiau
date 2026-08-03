@@ -1,11 +1,14 @@
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import { Layers, LogIn, UserPlus } from "lucide-react";
+import { Cat, Layers, LogIn, UserPlus } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 import { CatPawPrint } from "../components/CatPawPrint";
+import { selectAuth } from "../store/slices/auth-slice";
 
 export function Home() {
     const navigate = useNavigate();
-
+    const { isAuthenticated } = useSelector(selectAuth);
+    const username = useSelector((state: any) => state.auth.user?.username);
     return (
         <Box>
             <Paper elevation={1}
@@ -43,7 +46,7 @@ export function Home() {
                         gap: 3
                     }}>
                     My Miau Starter
-                    <Layers size={64} />
+                    <Cat size={64} />
                 </Typography>            
                 <Typography variant="h5" color="text.secondary" sx={{
                     mb:4,
@@ -54,38 +57,66 @@ export function Home() {
                     paginas, dominios e fluxos de negocio do seu jeito.
                 </Typography>
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                    <Button
-                        variant="contained"
-                        size="large"
-                        startIcon={<LogIn />}
-                        onClick={() => navigate('/login')}
-                        sx={{
-                            px: 4,
-                            py: 1.5,
-                            fontSize: "1rem",
-                            fontWeight: "bold",
-                            color: "primary.contrastText",
-                        }}
-                    >
-                        Entrar
-                    </Button>
+                {!isAuthenticated && (
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            startIcon={<LogIn />}
+                            onClick={() => navigate('/login')}
+                            sx={{
+                                px: 4,
+                                py: 1.5,
+                                fontSize: "1rem",
+                                fontWeight: "bold",
+                                color: "primary.contrastText",
+                            }}
+                        >
+                            Entrar
+                        </Button>
 
-                    <Button
-                        variant="outlined"
-                        size="large"
-                        startIcon={<UserPlus />}
-                        onClick={() => navigate('/register')}
-                        sx={{
-                            px: 4,
-                            py: 1.5,
-                            fontSize: "1rem",
-                            fontWeight: "bold",
-                        }}
-                    >
-                        Criar conta
-                    </Button>
-                </Stack>
+                        <Button
+                            variant="outlined"
+                            size="large"
+                            startIcon={<UserPlus />}
+                            onClick={() => navigate('/register')}
+                            sx={{
+                                px: 4,
+                                py: 1.5,
+                                fontSize: "1rem",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            Criar conta
+                        </Button>
+                    </Stack>
+                )}
+                {(isAuthenticated && (
+                    <div>
+                        <Typography variant="h6" color="text.secondary" sx={{
+                            mb: 2,
+                            mt: 2
+                        }}>
+                            Bem-vindo {username}!
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            startIcon={<Layers />}
+                            onClick={() => navigate('/app')}
+                            sx={{
+                                px: 4,
+                                py: 1.5,
+                                fontSize: "1rem",
+                                fontWeight: "bold",
+                                color: "primary.contrastText",
+                            }}
+                        >
+                            Acessar Painel
+                        </Button>
+                    </div>
+                    
+                ))}
             </Paper>
             <CatPawPrint />
         </Box>
