@@ -57,6 +57,8 @@ async function loginUser({ identifier, password }) {
       id: Number(user.id),
       username: user.username,
       email: user.email,
+      pontuacao: Number(user.pontuacao),
+      rankGlobal: user.rankGlobal,
     },
     token,
   };

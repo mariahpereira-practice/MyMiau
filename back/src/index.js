@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config/database');
 const authRoutes = require('../routes/auth.routes');
+const gatoRoutes = require('../routes/gato.routes');
 const errorHandler = require('../middlewares/error.middeware');
 
 const app = express();
@@ -10,11 +11,8 @@ const app = express();
 app.use(cors({ origin: process.env.FRONTEND_ORIGIN || 'http://localhost:5173' }));
 app.use(express.json());
 
-app.get('/api/health', (req, res) => {
-    res.status(200).json({ status: 'ok' });
-});
-
 app.use('/api/auth', authRoutes);
+app.use('/api/gatos', gatoRoutes);
 
 app.use(errorHandler);
 

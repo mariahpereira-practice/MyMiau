@@ -97,7 +97,7 @@ export function Home() {
                             mb: 2,
                             mt: 2
                         }}>
-                            Bem-vindo {username}!
+                            Bem-vindo(a) {username}!
                         </Typography>
                         <Button
                             variant="contained"

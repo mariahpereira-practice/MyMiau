@@ -5,6 +5,7 @@ import { Register } from '../pages/register'
 import { Login } from '../pages/login'
 import { ProtectedRoute } from './protected-route'
 import { Dashboard } from '../pages/dashboard'
+import { Gatos } from '../pages/gatos'
 
 export const Routers = () => {
     return (
@@ -15,6 +16,7 @@ export const Routers = () => {
                 <Route path="/register" element={<Register />} />
                 <Route element={<ProtectedRoute />}>
                     <Route path="/app" element={<Dashboard />} />
+                    <Route path="/gatos" element={<Gatos />} />
                 </Route>
             </Route>
         </Routes>

@@ -1,5 +1,6 @@
 export const NAVIGATION_LINKS = [
     { label: "Início", path: "/" },
+    { label: "Gatos", path: "/gatos" },
     { label: "Painel", path: "/app" },
 ]
 

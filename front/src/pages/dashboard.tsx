@@ -28,6 +28,12 @@ export function Dashboard() {
           <Typography variant="body1" sx={{ mt: 1 }}>
             Email: <strong>{user?.email}</strong>
           </Typography>
+          <Typography variant="body1" sx={{ mt: 1 }}>
+            Pontuação: <strong>{user?.pontuacao}</strong>
+          </Typography>
+          <Typography variant="body1" sx={{ mt: 1 }}>
+            Rank Global: <strong>{user?.rankGlobal}</strong>
+          </Typography>
         </CardContent>
       </Card>
     </Stack>
