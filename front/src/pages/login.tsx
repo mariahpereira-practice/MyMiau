@@ -19,7 +19,7 @@ export function Login() {
 
     const loginMutation = useMutation({
         mutationFn: async () => {
-            const response = await api.post<AuthResponse>('/auth/local', {
+            const response = await api.post<AuthResponse>('/auth/login', {
                 identifier,
                 password
             });
@@ -31,7 +31,7 @@ export function Login() {
                 token: data.jwt
             }));
             toast.success(`Bem vindo(a) de volta, ${data.user.username}!`);
-            navigate('/');
+            navigate('/app');
         },
         onError: () => {
             toast.error('Credenciais inválidas. Tente novamente.');
@@ -44,11 +44,8 @@ export function Login() {
             toast.error('Por favor, preencha todos os campos.');
             return;
         }
-        // imprimir variáveis de estado no escopo (para auditoria / depuração) - - resposta a pergunta 
-       // O aluno fez a impressão das variáveis de estado no escopo?
-        console.log('Login state:', { identifier, passwordLength: password.length });
         loginMutation.mutate();
-    }, [identifier, password]);
+    }, [identifier, password, loginMutation]);
 
   return (
     <Box>

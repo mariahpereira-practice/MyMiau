@@ -1,29 +1,11 @@
-import { Box, Button, Grid, Icon, Paper, Typography } from "@mui/material";
-import { Cat, CatIcon, Headset, PawPrint, PawPrintIcon, ShieldCheck, ShoppingBag, Truck } from "lucide-react";
-import { CardFeature } from "../components/CardFeature";
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { Layers, LogIn, UserPlus } from "lucide-react";
 import { useNavigate } from "react-router";
 import { CatPawPrint } from "../components/CatPawPrint";
 
 export function Home() {
-
-    const features = [{
-        icon: <Truck size={40} />,
-        title: "Entrega Rápida",
-        description: "Receba seus livros em casa com nossa entrega rápida e confiável."
-    },
-    {
-        icon: <ShieldCheck size={40} />,
-        title: "Compra Segura",
-        description: "Compre com confiança em nossa plataforma segura e protegida."
-    },
-    {
-        icon: <Headset size={40} />,
-        title: "Suporte ao Cliente",
-        description: "Nossa equipe de suporte está pronta para ajudar você a qualquer momento."
-    }
-]
-
     const navigate = useNavigate();
+
     return (
         <Box>
             <Paper elevation={1}
@@ -53,48 +35,59 @@ export function Home() {
                         fontWeight: 800,
                         color: "primary.main",
                         mb: 2,
-                        fontSize: {xs: "2.5rem", md: "3.75rem", lg: "4.5rem"},
+                        fontSize: {xs: "2.2rem", md: "3rem", lg: "3.8rem"},
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "center",
                         gap: 3
                     }}>
-                    Miau Livraria
-                    <Cat size={150}></Cat>
+                    My Miau Starter
+                    <Layers size={64} />
                 </Typography>            
                 <Typography variant="h5" color="text.secondary" sx={{
                     mb:4,
-                    maxWidth: "900px",
+                    maxWidth: "760px",
                     mx: "auto"
                 }}>
-                    A livraria online que oferece uma vasta seleção de livros para todos os gostos. <br />
-                    Encontre seu próximo livro favorito conosco! Miau!
+                    Base inicial pronta para evolucao. Comece com autenticacao, depois adicione
+                    paginas, dominios e fluxos de negocio do seu jeito.
                 </Typography>
-                <Button variant="contained" size="large" 
-                startIcon={<ShoppingBag />}
-                onClick={() => navigate("/books")}
-                sx={{
-                    px:4,
-                    py: 1.5,
-                    fontSize: "1.1rem",
-                    fontWeight: "bold",
-                    color: "primary.contrastText",
-                }}>
-                    Explorar Livros
-                </Button>
+
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        startIcon={<LogIn />}
+                        onClick={() => navigate('/login')}
+                        sx={{
+                            px: 4,
+                            py: 1.5,
+                            fontSize: "1rem",
+                            fontWeight: "bold",
+                            color: "primary.contrastText",
+                        }}
+                    >
+                        Entrar
+                    </Button>
+
+                    <Button
+                        variant="outlined"
+                        size="large"
+                        startIcon={<UserPlus />}
+                        onClick={() => navigate('/register')}
+                        sx={{
+                            px: 4,
+                            py: 1.5,
+                            fontSize: "1rem",
+                            fontWeight: "bold",
+                        }}
+                    >
+                        Criar conta
+                    </Button>
+                </Stack>
             </Paper>
             <CatPawPrint />
-            <Grid container spacing={4}>
-                {features.map((feature, index) => (
-                    <Grid sx={{
-                        flexGrow: 1,
-                        flexBasis: "300px"
-                    }} key={index}>
-                        <CardFeature {...feature} />
-                    </Grid>
-                ))}
-            </Grid>
         </Box>
     )
 }

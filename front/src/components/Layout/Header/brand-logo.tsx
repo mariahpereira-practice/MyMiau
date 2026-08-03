@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { Book, Cat } from "lucide-react";
+import { Cat, Sparkles } from "lucide-react";
 import {Link as RouterLink} from "react-router";
 
 function BrandLogo() {
@@ -16,8 +16,8 @@ function BrandLogo() {
         flexGrow: {xs: 1, md: 0, lg: 0},
         mr: {md: 4}
     }}>
-    <Book size={25}/>
-      Miau Livraria
+    <Sparkles size={25}/>
+      My Miau Base
     <Cat size={25}/>
     </Typography>
   );

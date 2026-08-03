@@ -11,13 +11,13 @@ export function Footer() {
         }}>
             <Container maxWidth="lg" >
                 <Typography variant="body2" color="text.secondary" align="center">
-                    © {new Date().getFullYear()} Miau Livraria. Projeto de Estudo de Front-End com React. Instituição: Infnet
+                    © {new Date().getFullYear()} My Miau Base. Estrutura inicial para evolucao de produto com React.
                 </Typography>
                 <Typography variant="caption" color="text.secondary" align="center" sx={{
                     display: { xs: 'none', sm: 'block' },
                     mt: 1
                 }}>
-                   Ícones: Lucide
+                   UI com Material UI e icones Lucide.
                 </Typography>
             </Container>
         </Box>

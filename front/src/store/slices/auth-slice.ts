@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type User } from '../../types';
 import { logout } from '../actions/logout';
+import type { RootState } from '..';
 
 interface AuthState {
     user?: User;
@@ -46,6 +47,6 @@ const authSlice = createSlice({
    }
 });
 
-export const selectAuth = (state: any) => state.auth;
+export const selectAuth = (state: RootState) => state.auth;
 export const { setCredentials } = authSlice.actions;
 export default authSlice.reducer;

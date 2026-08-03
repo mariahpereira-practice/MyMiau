@@ -2,7 +2,6 @@ import { Navigate, Outlet, useLocation } from "react-router"
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectAuth } from "../store/slices/auth-slice";
-import { Layout } from "../components/Layout";
 import { useEffect } from "react";
 
 export const ProtectedRoute = () => {

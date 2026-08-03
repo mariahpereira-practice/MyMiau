@@ -13,7 +13,6 @@ export function Register() {
 
     const dispatch = useAppDispatch();
 
-    const isError = false;
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,7 +21,7 @@ export function Register() {
 
     const registerMutation = useMutation({
         mutationFn: async () => {
-            const response = await api.post<AuthResponse>("/auth/local/register", {
+            const response = await api.post<AuthResponse>("/auth/register", {
                 username,
                 email,
                 password
@@ -32,15 +31,21 @@ export function Register() {
         onSuccess: (data) => { 
             dispatch(setCredentials({user: data.user, token: data.jwt}));
             toast.success("Cadastro realizado com sucesso!");
-            navigate("/");
+            navigate('/app');
         },
-        onError: (error) => {
-            toast.error("Erro ao registrar a conta. Verifique os dados e tente novamente.");
+        onError: () => {
+            toast.error('Erro ao registrar a conta. Verifique os dados e tente novamente.');
         }
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!username || !email || !password) {
+            toast.error('Preencha todos os campos.');
+            return;
+        }
+
         registerMutation.mutate();
     }
 
@@ -76,12 +81,10 @@ export function Register() {
                     Registre sua conta
                 </Typography>
 
-                {isError && (
-                    <Alert severity="error" sx={{
-                    width: "100%",
-                    mt: 2
-                    }}>Ocorreu um erro ao registrar a conta. Verifique os dados e tente novamente.
-                </Alert>
+                {registerMutation.isError && (
+                    <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+                        Ocorreu um erro ao registrar a conta. Verifique os dados e tente novamente.
+                    </Alert>
                 )}
 
                 <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit}>

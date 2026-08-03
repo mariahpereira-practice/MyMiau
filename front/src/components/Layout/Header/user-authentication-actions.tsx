@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router";
-import { useAppDispatch, type RootState } from "../../../store";
+import { useAppDispatch } from "../../../store";
 import { selectAuth } from "../../../store/slices/auth-slice";
 import { logout } from '../../../store/actions/logout';
 import { useCallback } from "react";

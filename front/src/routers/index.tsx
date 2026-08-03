@@ -1,13 +1,10 @@
-import {Routes, Route} from 'react-router'
-import { ProtectedRoute } from './protected-route'
+import { Routes, Route } from 'react-router'
 import { Layout } from '../components/Layout'
 import { Home } from '../pages/home'
 import { Register } from '../pages/register'
 import { Login } from '../pages/login'
-import { Books } from '../pages/books'
-import { BookDetails } from '../pages/book-details'
-import { CartPage } from '../pages/cart-page'
-import { LivrosComprados } from '../pages/livros-comprados'
+import { ProtectedRoute } from './protected-route'
+import { Dashboard } from '../pages/dashboard'
 
 export const Routers = () => {
     return (
@@ -16,17 +13,10 @@ export const Routers = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/books" element={<Books />} />
-                <Route path="/books/:id" element={<BookDetails />} />
                 <Route element={<ProtectedRoute />}>
-                    <Route path="/cart" element={<CartPage/>} />
-                </Route>
-                <Route element={<ProtectedRoute />}>
-                    <Route path="/livros-comprados" element={<LivrosComprados/>} />
+                    <Route path="/app" element={<Dashboard />} />
                 </Route>
             </Route>
-            
-            
         </Routes>
     )
 }
