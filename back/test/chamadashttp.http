@@ -1,4 +1,13 @@
-###Auth - Fazer Login
+###Auth - Fazer Login como tutor
+POST http://localhost:1337/api/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "juliana@email.com",
+  "password": "senha123"
+}
+
+###Auth - Fazer Login como catsitter
 POST http://localhost:1337/api/auth/login
 Content-Type: application/json
 
@@ -12,19 +21,45 @@ POST http://localhost:1337/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "heloisa",
-  "email": "heloisa@email.com",
-  "password": "senha123"
+  "username": "Lucio",
+  "email": "lucio@email.com",
+  "password": "senha123",
+  "role": "CATSITTER"
 }
 
 ### Gatos - Ver todos os gatos
 GET http://localhost:1337/api/gatos
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
 
-### Gatos - Buscar por nome do gato
+### Gatos - Buscar por nome do gato - quebrado por agora
 GET http://localhost:1337/api/gatos?search=mingau
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
 
 ### Gatos - Buscar por id do gato
 GET http://localhost:1337/api/gatos?id=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
 
-### Gatos - Buscar por nome do tutor
+### Gatos - Buscar por nome do tutor - quebrado por agora
 GET http://localhost:1337/api/gatos?search=pedro
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
+
+### Gatos - salvar um novo gato
+POST http://localhost:1337/api/gatos
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
+
+{
+  "nomeGato": "Mister Miau",
+  "idadeGato": 2,
+  "pesoGato": 4.5,
+  "peloGato": "Curto",
+  "racaGato": "Siamês",
+  "nomeTutor": "Pedro",
+  "enderecoTutor": "Rua das Flores, 123",
+  "telefoneTutor": "1234567890"
+}
+
+### Tarefas - Ver todas as tarefas de um gato
+GET http://localhost:1337/api/tarefas?idGato=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
+

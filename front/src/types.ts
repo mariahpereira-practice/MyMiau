@@ -7,6 +7,7 @@ export interface User {
     id: number;
     username: string;
     email: string;
+    role: 'TUTOR' | 'CATSITTER' | 'MODERATOR' | 'ADMIN';
     pontuacao: number;
     rankGlobal: string;
 }

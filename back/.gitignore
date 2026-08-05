@@ -5,3 +5,5 @@ pnpm-lock.yaml
 lerna-debug.log*
 .env
 .env.example
+
+requisitos.md
