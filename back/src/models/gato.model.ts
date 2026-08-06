@@ -45,7 +45,6 @@ export async function findMany({
 
   if (disponiveis == true) {
     where.push('g.disponivel_para_cuidado = 1');
-    params.push(disponiveis ? 1 : 0);
   }
 
   if (searchGato && String(searchGato).trim() !== '') {

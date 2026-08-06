@@ -17,7 +17,7 @@ function BrandLogo() {
         mr: {md: 4}
     }}>
     <Sparkles size={25}/>
-      My Miau Base
+      My Miau
     <Cat size={25}/>
     </Typography>
   );

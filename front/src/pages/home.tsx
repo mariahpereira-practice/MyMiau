@@ -1,9 +1,10 @@
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import { Cat, Layers, LogIn, UserPlus } from "lucide-react";
+import { Cat, CircleUser, Layers, LogIn, UserPlus } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { CatPawPrint } from "../components/CatPawPrint";
 import { selectAuth } from "../store/slices/auth-slice";
+import { nomeFormatado } from "../utils/formatacao";
 
 export function Home() {
     const navigate = useNavigate();
@@ -45,16 +46,17 @@ export function Home() {
                         justifyContent: "center",
                         gap: 3
                     }}>
-                    My Miau Starter
+                    My Miau Community
                     <Cat size={64} />
                 </Typography>            
-                <Typography variant="h5" color="text.secondary" sx={{
-                    mb:4,
+                <Typography variant="h6" color="text.secondary" sx={{
                     maxWidth: "760px",
-                    mx: "auto"
+                    mb: 2,
+                    textAlign: "justify",
                 }}>
-                    Base inicial pronta para evolucao. Comece com autenticacao, depois adicione
-                    paginas, dominios e fluxos de negocio do seu jeito.
+                    A comunidade My Miau é um espaço dedicado aos amantes de gatos, 
+                    onde você pode se conectar com outros tutores e cat sitters, 
+                    compartilhar experiências, dicas e cuidados para garantir o bem-estar dos felinos. 
                 </Typography>
 
                 {!isAuthenticated && (
@@ -97,13 +99,19 @@ export function Home() {
                             mb: 2,
                             mt: 2
                         }}>
-                            Bem-vindo(a) {username}!
+                            Bem-vindo(a) {nomeFormatado(username)}!
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary" sx={{
+                            mb: 2,
+                            mt: 2
+                        }}>
+                            Você está inscrito(a) como <strong>{useSelector((state: any) => state.auth.user?.role)}</strong>.
                         </Typography>
                         <Button
                             variant="contained"
                             size="large"
-                            startIcon={<Layers />}
-                            onClick={() => navigate('/app')}
+                            startIcon={<CircleUser />}
+                            onClick={() => navigate('/perfil')}
                             sx={{
                                 px: 4,
                                 py: 1.5,
@@ -112,7 +120,7 @@ export function Home() {
                                 color: "primary.contrastText",
                             }}
                         >
-                            Acessar Painel
+                            Acessar Perfil
                         </Button>
                     </div>
                     

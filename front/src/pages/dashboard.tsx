@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../store/slices/auth-slice';
+import { nomeFormatado } from '../utils/formatacao';
 
 export function Dashboard() {
   const { user } = useSelector(selectAuth);
@@ -9,10 +10,11 @@ export function Dashboard() {
     <Stack spacing={3} sx={{ maxWidth: 820, mx: 'auto' }}>
       <Box>
         <Typography variant="h4" component="h1" sx={{ fontWeight: 800 }}>
-          Painel do Projeto
+          Olá, {nomeFormatado(user?.username)}!
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-          Esta area e o ponto de partida para novas paginas e para a sua regra de negocio.
+          Seja bem-vindo(a) ao MyMiau! Você está inscrito(a) como <strong>{user?.role}</strong>.
+          Isso significa que você pode cadastrar seu gatos e criar tarefas para CatSitters poderem cuidar deles! 
         </Typography>
       </Box>
 
@@ -21,19 +23,29 @@ export function Dashboard() {
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
             Sessao Atual
           </Typography>
+          <Typography variant="body1" sx={{ mt: 1 }}>
+            Você é: <strong>{user?.role}</strong>
+          </Typography>
+          {user?.role === 'CATSITTER' && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
+            <Typography variant="body1" sx={{ mt: 1 }}>
+              Pontuação: <strong>{user?.pontuacao}</strong>
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 1 }}>
+              Rank Global: <strong>{user?.rankGlobal}</strong>
+            </Typography>
+            </Box>
+          )}
           <Divider sx={{ my: 2 }} />
           <Typography variant="body1">
-            Usuario: <strong>{user?.username}</strong>
+            Usuário: <strong>{user?.username}</strong>
           </Typography>
           <Typography variant="body1" sx={{ mt: 1 }}>
-            Email: <strong>{user?.email}</strong>
+            E-mail: <strong>{user?.email}</strong>
           </Typography>
-          <Typography variant="body1" sx={{ mt: 1 }}>
-            Pontuação: <strong>{user?.pontuacao}</strong>
-          </Typography>
-          <Typography variant="body1" sx={{ mt: 1 }}>
-            Rank Global: <strong>{user?.rankGlobal}</strong>
-          </Typography>
+
+          <Divider sx={{ my: 2 }} />
+          
         </CardContent>
       </Card>
     </Stack>

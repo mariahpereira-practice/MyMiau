@@ -31,7 +31,7 @@ export function Login() {
                 token: data.jwt
             }));
             toast.success(`Bem vindo(a) de volta, ${data.user.username}!`);
-            navigate('/app');
+            navigate('/perfil');
         },
         onError: () => {
             toast.error('Credenciais inválidas. Tente novamente.');

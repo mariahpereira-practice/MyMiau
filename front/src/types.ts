@@ -20,9 +20,17 @@ export interface Gato {
     peloGato: string;
     racaGato: string;
     idIcone: number;
-    nomeTutor: string;
-    enderecoTutor: string;
-    telefoneTutor: string;
+    tutor_id: number;
+    tutorNome?: string;
+    disponivel_para_cuidado: boolean;
 }
 
-
+export interface Tarefa {
+    idTarefa: number;
+    gato_id: number;
+    descricao: string;
+    pontos: number;
+    status: 'PENDENTE' | 'CONCLUIDA';
+    concluida_por: number | null;
+    concluida_em: Date | null;
+}

@@ -15,7 +15,7 @@ export const Routers = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route element={<ProtectedRoute />}>
-                    <Route path="/app" element={<Dashboard />} />
+                    <Route path="/perfil" element={<Dashboard />} />
                     <Route path="/gatos" element={<Gatos />} />
                 </Route>
             </Route>

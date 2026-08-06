@@ -9,8 +9,8 @@ import { logout } from '../actions/logout';
 import type { RootState } from '..';
 
 export interface GatosFilters {
-    id?: string;
-    search?: string;
+    searchGato?: string;
+    searchTutor?: string;
 }
 
 interface GatosState {
@@ -30,16 +30,19 @@ const initialState: GatosState = {
 export const fetchGatos = createAsyncThunk<
     Gato[],
     GatosFilters | undefined,
-    { rejectValue: string }
->('gatos/fetchGatos', async (filters, { rejectWithValue }) => {
+    { state: RootState; rejectValue: string }
+>('gatos/fetchGatos', async (filters, { getState, rejectWithValue }) => {
     try {
+        const role = getState().auth.user?.role;
+        const endpoint = role === 'TUTOR' ? '/gatos/meus' : '/gatos/disponiveis';
+
         const params = {
-            ...(filters?.id?.trim() ? { id: filters.id.trim() } : {}),
-            ...(filters?.search?.trim() ? { search: filters.search.trim() } : {}),
+            ...(filters?.searchGato?.trim() ? { searchGato: filters.searchGato.trim() } : {}),
+            ...(filters?.searchTutor?.trim() ? { searchTutor: filters.searchTutor.trim() } : {}),
         };
 
-        const response = await api.get<{ gatos: Gato[] }>('/gatos', { params });
-        return response.data.gatos;
+        const response = await api.get<Gato[]>(endpoint, { params });
+        return response.data;
     } catch {
         return rejectWithValue('Nao foi possivel carregar os gatos.');
     }
