@@ -31,7 +31,7 @@ export function Register() {
         onSuccess: (data) => { 
             dispatch(setCredentials({user: data.user, token: data.jwt}));
             toast.success("Cadastro realizado com sucesso!");
-            navigate('/app');
+            navigate('/perfil');
         },
         onError: () => {
             toast.error('Erro ao registrar a conta. Verifique os dados e tente novamente.');
