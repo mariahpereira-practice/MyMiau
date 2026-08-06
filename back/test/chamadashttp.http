@@ -27,39 +27,88 @@ Content-Type: application/json
   "role": "CATSITTER"
 }
 
-### Gatos - Ver todos os gatos
-GET http://localhost:1337/api/gatos
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
+### Gatos - Ver todos os MEUS gatos - TUTOR
+GET http://localhost:1337/api/gatos/meus
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
 
-### Gatos - Buscar por nome do gato - quebrado por agora
-GET http://localhost:1337/api/gatos?search=mingau
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
+### Gatos - Ver todos os gatos disponiveis - CATSITTER
+GET http://localhost:1337/api/gatos/disponiveis
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+### Gatos - Buscar por nome do gato em gatos disponiveis - CATSITTER
 
-### Gatos - Buscar por id do gato
-GET http://localhost:1337/api/gatos?id=1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
+GET http://localhost:1337/api/gatos/disponiveis?searchGato=mingau
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
 
-### Gatos - Buscar por nome do tutor - quebrado por agora
-GET http://localhost:1337/api/gatos?search=pedro
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
+### Gatos - Buscar por nome do gato em MEUS gatos - TUTOR
+GET http://localhost:1337/api/gatos/meus?searchGato=mingau
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
 
-### Gatos - salvar um novo gato
+### Gatos - Buscar por nome do tutor em gatos disponiveis - CATSITTER
+GET http://localhost:1337/api/gatos/disponiveis?searchTutor=pedro
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+
+### Gatos - Buscar por nome do gato e tutor em gatos disponiveis - CATSITTER
+GET http://localhost:1337/api/gatos/disponiveis?searchGato=thor&searchTutor=pedro
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+
+
+### Gatos - salvar um novo gato - TUTOR
 POST http://localhost:1337/api/gatos
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+
 
 {
-  "nomeGato": "Mister Miau",
+  "nomeGato": "Susie",
   "idadeGato": 2,
   "pesoGato": 4.5,
-  "peloGato": "Curto",
-  "racaGato": "Siamês",
-  "nomeTutor": "Pedro",
-  "enderecoTutor": "Rua das Flores, 123",
-  "telefoneTutor": "1234567890"
+  "peloGato": 2,
+  "racaGato": "Sem Raça Definida",
+  "idIcone": 1
 }
 
-### Tarefas - Ver todas as tarefas de um gato
-GET http://localhost:1337/api/tarefas?idGato=1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NTkzMDYwNCwiZXhwIjoxNzg2NTM1NDA0fQ.y9IKIp4YmfVOXt-jWajvtHSfS-Z-GAimpEFmMtqMAd0
+### Gatos - atualizar informações de um gato - TUTOR
+PUT http://localhost:1337/api/gatos/6
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
 
+{
+  "peloGato": 3,
+  "idIcone": 2,
+  "disponivel_para_cuidado": 0
+}
+
+### Tarefas - visualizar uma lista de tarefas de um gato especifico - TUTOR
+GET http://localhost:1337/api/tarefas/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+
+### Tarefas - visualizar uma lista de tarefas de um gato especifico - CATSITTER
+GET http://localhost:1337/api/tarefas/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+
+### Tarefas - criar uma tarefa para um gato especifico - TUTOR
+POST http://localhost:1337/api/tarefas/tarefa/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+
+{
+  "descricao": "Dar banho no gato",
+  "pontos": 10
+}
+
+### Tarefas - deletar uma tarefa especifica de um gato especifico - TUTOR
+DELETE http://localhost:1337/api/tarefas/tarefa/1/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+### idGato | req.user.id (validar se o tutor é dono do gato) | idTarefa
+
+### Tarefas - atualizar uma tarefa especifica de um gato especifico - TUTOR
+PUT http://localhost:1337/api/tarefas/tarefa/1/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+### idGato | req.user.id (validar se o tutor é dono do gato) | idTarefa
+
+### Tarefas - atualizar o status de tarefa especifica de um gato especifico - CATSITTER
+PUT http://localhost:1337/api/tarefas/tarefa/1/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+### idGato | disponivelGato (validar se o gato está disponível para cuidado) | idTarefa

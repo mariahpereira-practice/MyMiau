@@ -1,65 +1,45 @@
 import { NextFunction, Request, Response } from 'express';
+import { Tarefa } from '../types/tarefa';
+import { listTarefasCatSitter, listTarefasTutor, criarTarefa } from '../services/tarefas.service';
 
-interface ListaTarefas{
-    tarefas: Tarefa[];
-}
-
-interface Tarefa {
-  descTarefa: string;
-  tarefaCumprida: boolean;
-}
+type IdGatoParams = { idGato: string };
 
 export const getListaTarefas = async (
-    req: Request,
-    res: Response<ListaTarefas>, 
-    next: NextFunction): 
+    req: Request<IdGatoParams>,
+    res: Response, 
+    next: NextFunction):
     Promise<Response | void> => {
   try {
-    const { idGato } = req.query;
-    res.status(200).json({
-      tarefas: [
-        {
-          descTarefa: "Dar comida",
-          tarefaCumprida: false,
-        },
-        {
-          descTarefa: "Dar banho",
-          tarefaCumprida: true,
-        },
-      ],
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const postListaTarefas = async (
-  req: Request<{}, {}, ListaTarefas>,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
-  try {
-    const { tarefas } = req.body;
-    // Implement the logic to save the tarefas data to the database
-    // For example, you can call a service function that handles the database operation
-    // Example: await tarefasService.saveTarefas(tarefas);
-    res.status(201).json({ message: 'Lista de tarefas registrada com sucesso!' });
+    const { idGato } = req.params;
+    if(!idGato) {
+      return res.status(400).json({ message: 'Parâmetro idGato inválido.' });
+    }
+    if(req.user?.role === 'CATSITTER') {
+      const tarefas = await listTarefasCatSitter({ idGato: Number(idGato)});
+      return res.json({ tarefas });
+    } else {
+      const idTutor = req.user?.id;
+      const tarefas = await listTarefasTutor({ idGato: Number(idGato), idTutor: Number(idTutor)});
+      return res.json({ tarefas });
+    }
   } catch (error) {
     next(error);
   }
 };
 
 export const postTarefa = async (
-  req: Request<{ idLista: string }, {}, Tarefa>,
+  req: Request<IdGatoParams, {}, Tarefa>,
   res: Response,
   next: NextFunction,
 ): Promise<Response | void> => {
   try {
-    const { idLista } = req.params;
-    const { descTarefa, tarefaCumprida } = req.body;
-    // Implement the logic to save the tarefa data to the database for the specified idLista
-    // For example, you can call a service function that handles the database operation
-    // Example: await tarefasService.saveTarefa(idLista, { descTarefa, tarefaCumprida });
+    const { idGato } = req.params;
+    const idTutor = req.user?.id;
+    if (!idTutor) {
+      return res.status(401).json({ message: 'Usuário não autenticado.' });
+    }
+    const data: Tarefa = req.body;
+    await criarTarefa(Number(idGato), Number(idTutor), data);
     res.status(201).json({ message: 'Tarefa registrada com sucesso!' });
   } catch (error) {
     next(error);
@@ -73,11 +53,26 @@ export const updateTarefa = async (
 ): Promise<Response | void> => {
   try {
     const { idLista, idTarefa } = req.params;
-    const { descTarefa, tarefaCumprida } = req.body;
     // Implement the logic to update the tarefa data in the database for the specified idLista and idTarefa
     // For example, you can call a service function that handles the database operation
     // Example: await tarefasService.updateTarefa(idLista, idTarefa, { descTarefa, tarefaCumprida });
     res.status(201).json({ message: 'Tarefa atualizada com sucesso!' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteTarefa = async (
+  req: Request<{ idLista: string; idTarefa: string }>,
+  res: Response,
+  next: NextFunction,
+): Promise<Response | void> => {
+  try {
+    const { idLista, idTarefa } = req.params;
+    // Implement the logic to delete the tarefa data from the database for the specified idLista and idTarefa
+    // For example, you can call a service function that handles the database operation
+    // Example: await tarefasService.deleteTarefa(idLista, idTarefa);
+    res.status(200).json({ message: 'Tarefa deletada com sucesso!' });
   } catch (error) {
     next(error);
   }
