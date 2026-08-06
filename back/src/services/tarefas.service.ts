@@ -1,6 +1,7 @@
-import { findMany, createTarefa } from "../models/tarefa.model";
+import { findMany, createTarefa, findTarefaById, deletarTarefa, updateStatusTarefa } from "../models/tarefa.model";
 import { findGatoByIdGato } from "../models/gato.model";
 import { Tarefa } from "../types/tarefa";
+import { updateTarefa} from "../models/tarefa.model";
 
 export async function listTarefasCatSitter({
   idGato
@@ -69,4 +70,62 @@ export async function criarTarefa(idGato: number, idTutor: number, data: Tarefa)
         concluida_por: idTutor,
         concluida_em: new Date(),
       });        
+}
+
+export async function deletarTarefaServico(idGato: number, idTarefa: number, idTutor: number) {
+  const gato = await findGatoByIdGato(idGato);
+
+  if (!gato) {
+      throw new Error('Gato não encontrado.');
+  }
+
+  if (gato.tutor_id !== idTutor) {
+      throw new Error('Você não tem permissão para deletar tarefas deste gato.');
+  }
+
+  const tarefa = await findTarefaById(idTarefa);
+
+  if (!tarefa) {
+      throw new Error('Tarefa não encontrada.');
+  }
+
+  if (tarefa.gato_id !== idGato) {
+      throw new Error('A tarefa não pertence a este gato.');
+  }
+
+  await deletarTarefa(idTarefa);
+
+} 
+
+export async function atualizarTarefa(idGato: number, idTutor: number, data: Tarefa, idTarefa: number) {
+  const gato = await findGatoByIdGato(idGato);
+
+    if (!gato) {
+        throw new Error('Gato não encontrado.');
+    }
+
+    if (gato.tutor_id !== idTutor) {
+        throw new Error('Você não tem permissão para atualizar tarefas deste gato.');
+    }
+    const tarefa = await findTarefaById(idTarefa);
+
+    if (!tarefa) {
+        throw new Error('Tarefa não encontrada.');
+    }
+
+    if (tarefa.gato_id !== idGato) {
+        throw new Error('A tarefa não pertence a este gato.');
+    }
+
+    const payload = {
+      descricao: data.descricao ?? tarefa.descricao,
+      pontos: data.pontos ?? tarefa.pontos,
+      status: data.status ?? tarefa.status,
+    };
+
+    await updateTarefa(payload, idTarefa);
+}
+
+export async function atualizarStatusTarefa(idTarefa: number, idCatSitter: number) {
+  await updateStatusTarefa(idTarefa, idCatSitter);
 }

@@ -99,16 +99,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 ### Tarefas - deletar uma tarefa especifica de um gato especifico - TUTOR
 DELETE http://localhost:1337/api/tarefas/tarefa/1/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
-### idGato | req.user.id (validar se o tutor é dono do gato) | idTarefa
 
 ### Tarefas - atualizar uma tarefa especifica de um gato especifico - TUTOR
-PUT http://localhost:1337/api/tarefas/tarefa/1/1
+PUT http://localhost:1337/api/tarefas/tarefa/1/7
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
-### idGato | req.user.id (validar se o tutor é dono do gato) | idTarefa
+
+{
+  "descricao": "Dar banho no gato",
+  "pontos": 15
+}
 
 ### Tarefas - atualizar o status de tarefa especifica de um gato especifico - CATSITTER
-PUT http://localhost:1337/api/tarefas/tarefa/1/1
+PUT http://localhost:1337/api/tarefas/tarefa/1/7
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
-### idGato | disponivelGato (validar se o gato está disponível para cuidado) | idTarefa
+

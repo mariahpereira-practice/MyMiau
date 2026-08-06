@@ -31,3 +31,27 @@ export async function createTarefa(data: {
   ]);
   return result;
 }
+
+export async function findTarefaById(idTarefa: number): Promise<Tarefa | undefined> {
+  const sql = `SELECT * FROM tarefas t WHERE t.idTarefa = ?`;
+  const rows = await db.query<Tarefa[]>(sql, [idTarefa]);
+  return rows[0];
+}
+
+export async function deletarTarefa(idTarefa: number): Promise<void> {
+  const sql = `DELETE FROM tarefas WHERE idTarefa = ?`;
+  await db.query(sql, [idTarefa]);
+}
+
+export async function updateTarefa(
+  data: { descricao: string; pontos: number; status: 'PENDENTE' | 'CONCLUIDA' },
+  idTarefa: number,
+): Promise<void> {
+  const sql = `UPDATE tarefas SET descricao = ?, pontos = ?, status = ? WHERE idTarefa = ? `;
+  await db.query(sql, [data.descricao, data.pontos, data.status, idTarefa]);
+}
+
+export async function updateStatusTarefa(idTarefa: number, idCatSitter: number): Promise<void> {
+  const sql = `UPDATE tarefas SET status = 'CONCLUIDA', concluida_em = ?, concluida_por = ? WHERE idTarefa = ?`;
+  await db.query(sql, [new Date(), idCatSitter, idTarefa]);
+}
