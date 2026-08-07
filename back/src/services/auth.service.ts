@@ -1,21 +1,9 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { createUser, findByEmail, findByUsername, type UserRow } from '../models/user.model';
-import { UserRole } from '../types/user-role';
+import { UserModel } from '../models/user.model';
+import { LoginUserInputDTO, RegisterUserInputDTO, UserRole } from '../dtos/user.dto';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change_me';
-
-type RegisterInput = {
-  username?: string;
-  email?: string;
-  password?: string;
-  role?: UserRole;
-};
-
-type LoginInput = {
-  identifier?: string;
-  password?: string;
-};
 
 type HttpError = Error & { status: number };
 
@@ -25,14 +13,14 @@ function createHttpError(status: number, message: string): HttpError {
   return error;
 }
 
-function mapPublicUser(user: UserRow) {
+function mapPublicUser(user: UserModel) {
   return {
-    id: Number(user.id),
-    username: user.username,
-    email: user.email,
-    role: (user.role as UserRole) || UserRole.TUTOR,
+    id: user.id as number,
+    username: user.username as string,
+    email: user.email as string,
+    role: user.role ?? UserRole.TUTOR,
     pontuacao: Number(user.pontuacao ?? 0),
-    rankGlobal: user.rankGlobal,
+    rankGlobal: user.rankGlobal ?? undefined,
   };
 }
 
@@ -41,23 +29,23 @@ export async function registerUser({
   email,
   password,
   role
-}: RegisterInput) {
+}: RegisterUserInputDTO) {
   if (!username || !email || !password) {
     throw createHttpError(400, 'Username, email and password are required.');
   }
 
-  const existingByEmail = await findByEmail(email);
+  const existingByEmail = await UserModel.findByEmail(email);
   if (existingByEmail) {
     throw createHttpError(409, 'Email already in use.');
   }
 
-  const existingByUsername = await findByUsername(username);
+  const existingByUsername = await UserModel.findByUsername(username);
   if (existingByUsername) {
     throw createHttpError(409, 'Username already in use.');
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
-  const newUser = await createUser({
+  const newUser = await UserModel.create({
     username,
     email,
     password_hash: passwordHash,
@@ -80,25 +68,35 @@ export async function registerUser({
   return { user, token, role: role ?? UserRole.TUTOR };
 }
 
-export async function loginUser({ identifier, password }: LoginInput) {
+export async function loginUser({ identifier, password }: LoginUserInputDTO) {
   if (!identifier || !password) {
     throw createHttpError(400, 'Identifier and password are required.');
   }
 
-  const user =
-    (await findByEmail(identifier)) || (await findByUsername(identifier));
+  const userRow =
+    (await UserModel.findByEmail(identifier)) || (await UserModel.findByUsername(identifier));
 
-  if (!user) {
+  if (!userRow) {
     throw createHttpError(401, 'Invalid credentials.');
   }
 
-  const isValidPassword = await bcrypt.compare(password, user.password_hash);
+  const user = new UserModel({ user: userRow });
+
+  if (!user.passwordHash) {
+    throw createHttpError(401, 'Invalid credentials.');
+  }
+
+  const isValidPassword = await bcrypt.compare(password, user.passwordHash);
   if (!isValidPassword) {
     throw createHttpError(401, 'Invalid credentials.');
   }
 
+  if (!user.id || !user.email) {
+    throw createHttpError(401, 'Invalid credentials.');
+  }
+
   const token = jwt.sign(
-    { id: user.id, email: user.email, role: (user.role as UserRole) || UserRole.TUTOR },
+    { id: user.id, email: user.email, role: user.role ?? UserRole.TUTOR },
     JWT_SECRET,
     { expiresIn: '7d' },
   );

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Tarefa } from '../types/tarefa';
+import { CreateTarefaInputDTO, UpdateTarefaInputDTO } from '../dtos/tarefa.dto';
 import { listTarefasCatSitter, listTarefasTutor, criarTarefa, deletarTarefaServico, atualizarTarefa, atualizarStatusTarefa } from '../services/tarefas.service';
 
 export const getListaTarefas = async (
@@ -26,7 +26,7 @@ export const getListaTarefas = async (
 };
 
 export const postTarefa = async (
-  req: Request<{ idGato: string }, {}, Tarefa>,
+  req: Request<{ idGato: string }, {}, CreateTarefaInputDTO>,
   res: Response,
   next: NextFunction,
 ): Promise<Response | void> => {
@@ -36,7 +36,7 @@ export const postTarefa = async (
     if (!idTutor) {
       return res.status(401).json({ message: 'Usuário não autenticado.' });
     }
-    const data: Tarefa = req.body;
+    const data: CreateTarefaInputDTO = req.body;
     await criarTarefa(Number(idGato), Number(idTutor), data);
     res.status(201).json({ message: 'Tarefa registrada com sucesso!' });
   } catch (error) {
@@ -45,7 +45,7 @@ export const postTarefa = async (
 };
 
 export const updateTarefa = async (
-  req: Request<{ idGato: string; idTarefa: string }, {}, Tarefa>,
+  req: Request<{ idGato: string; idTarefa: string }, {}, UpdateTarefaInputDTO>,
   res: Response,
   next: NextFunction,
 ): Promise<Response | void> => {
@@ -61,7 +61,7 @@ export const updateTarefa = async (
     if (!idTutor) {
       return res.status(401).json({ message: 'Usuário não autenticado.' });
     }
-    const data: Tarefa = req.body;
+    const data: UpdateTarefaInputDTO = req.body;
     await atualizarTarefa(Number(idGato), Number(idTutor), data, Number(idTarefa));
 
     res.status(201).json({ message: 'Tarefa atualizada com sucesso!' });

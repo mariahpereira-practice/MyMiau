@@ -1,14 +1,13 @@
-import { findMany, createTarefa, findTarefaById, deletarTarefa, updateStatusTarefa } from "../models/tarefa.model";
-import { findGatoByIdGato } from "../models/gato.model";
-import { Tarefa } from "../types/tarefa";
-import { updateTarefa} from "../models/tarefa.model";
+import { TarefaModel } from "../models/tarefa.model";
+import { GatoModel } from "../models/gato.model";
+import { CreateTarefaInputDTO, UpdateTarefaInputDTO } from "../dtos/tarefa.dto";
 
 export async function listTarefasCatSitter({
   idGato
 }: {
   idGato: number;
 }) {
-  const gato = await findGatoByIdGato(idGato);
+  const gato = await GatoModel.findGatoByIdGato(idGato);
     
   if (!gato) {
     throw new Error('Gato não encontrado.');
@@ -18,8 +17,10 @@ export async function listTarefasCatSitter({
     throw new Error('Gato não disponível para cuidado.');
   }
 
-  const tarefas = await findMany({ idGato });
-  return tarefas;
+  const tarefas = await TarefaModel.findMany({ idGato });
+  return tarefas
+    .map((tarefa) => new TarefaModel({ tarefa }).toResponse())
+    .filter((tarefa): tarefa is NonNullable<typeof tarefa> => tarefa !== null);
 }
 
 export async function listTarefasTutor({
@@ -29,7 +30,7 @@ export async function listTarefasTutor({
     idGato: number;
     idTutor: number;
 }) {
-    const gato = await findGatoByIdGato(idGato);
+    const gato = await GatoModel.findGatoByIdGato(idGato);
 
     if (!gato) {
         throw new Error('Gato não encontrado.');
@@ -39,13 +40,15 @@ export async function listTarefasTutor({
         throw new Error('Você não tem permissão para visualizar as tarefas deste gato.');
     }
 
-    const tarefas = await findMany({ idGato });
-    return tarefas;
+    const tarefas = await TarefaModel.findMany({ idGato });
+    return tarefas
+      .map((tarefa) => new TarefaModel({ tarefa }).toResponse())
+      .filter((tarefa): tarefa is NonNullable<typeof tarefa> => tarefa !== null);
 }
 
-export async function criarTarefa(idGato: number, idTutor: number, data: Tarefa) {
+export async function criarTarefa(idGato: number, idTutor: number, data: CreateTarefaInputDTO) {
     
-    const gato = await findGatoByIdGato(idGato);
+    const gato = await GatoModel.findGatoByIdGato(idGato);
 
     if (!gato) {
         throw new Error('Gato não encontrado.');
@@ -62,7 +65,7 @@ export async function criarTarefa(idGato: number, idTutor: number, data: Tarefa)
         throw new Error('Descrição e pontos são obrigatórios para salvar uma tarefa.');
       }
       
-      const newTarefa = await createTarefa({
+      await TarefaModel.createTarefa({
         gato_id: idGato,
         descricao: data.descricao,
         pontos: data.pontos,
@@ -73,7 +76,7 @@ export async function criarTarefa(idGato: number, idTutor: number, data: Tarefa)
 }
 
 export async function deletarTarefaServico(idGato: number, idTarefa: number, idTutor: number) {
-  const gato = await findGatoByIdGato(idGato);
+  const gato = await GatoModel.findGatoByIdGato(idGato);
 
   if (!gato) {
       throw new Error('Gato não encontrado.');
@@ -83,22 +86,24 @@ export async function deletarTarefaServico(idGato: number, idTarefa: number, idT
       throw new Error('Você não tem permissão para deletar tarefas deste gato.');
   }
 
-  const tarefa = await findTarefaById(idTarefa);
+    const tarefa = await TarefaModel.findTarefaById(idTarefa);
 
   if (!tarefa) {
       throw new Error('Tarefa não encontrada.');
   }
 
-  if (tarefa.gato_id !== idGato) {
+    const tarefaInstance = new TarefaModel({ tarefa });
+
+    if (tarefaInstance.gato_id !== idGato) {
       throw new Error('A tarefa não pertence a este gato.');
   }
 
-  await deletarTarefa(idTarefa);
+  await TarefaModel.deletarTarefa(idTarefa);
 
 } 
 
-export async function atualizarTarefa(idGato: number, idTutor: number, data: Tarefa, idTarefa: number) {
-  const gato = await findGatoByIdGato(idGato);
+export async function atualizarTarefa(idGato: number, idTutor: number, data: UpdateTarefaInputDTO, idTarefa: number) {
+  const gato = await GatoModel.findGatoByIdGato(idGato);
 
     if (!gato) {
         throw new Error('Gato não encontrado.');
@@ -107,25 +112,53 @@ export async function atualizarTarefa(idGato: number, idTutor: number, data: Tar
     if (gato.tutor_id !== idTutor) {
         throw new Error('Você não tem permissão para atualizar tarefas deste gato.');
     }
-    const tarefa = await findTarefaById(idTarefa);
+    const tarefa = await TarefaModel.findTarefaById(idTarefa);
 
     if (!tarefa) {
         throw new Error('Tarefa não encontrada.');
     }
 
-    if (tarefa.gato_id !== idGato) {
+    const tarefaInstance = new TarefaModel({ tarefa });
+
+    if (tarefaInstance.gato_id !== idGato) {
         throw new Error('A tarefa não pertence a este gato.');
     }
 
+    if (
+      tarefaInstance.descricao === null
+      || tarefaInstance.pontos === null
+      || tarefaInstance.status === null
+    ) {
+      throw new Error('Dados da tarefa inválidos para atualização.');
+    }
+
     const payload = {
-      descricao: data.descricao ?? tarefa.descricao,
-      pontos: data.pontos ?? tarefa.pontos,
-      status: data.status ?? tarefa.status,
+      descricao: data.descricao ?? tarefaInstance.descricao,
+      pontos: data.pontos ?? tarefaInstance.pontos,
+      status: data.status ?? tarefaInstance.status,
     };
 
-    await updateTarefa(payload, idTarefa);
+    await TarefaModel.updateTarefa(payload, idTarefa);
 }
 
 export async function atualizarStatusTarefa(idTarefa: number, idCatSitter: number) {
-  await updateStatusTarefa(idTarefa, idCatSitter);
+  
+  const tarefa = await TarefaModel.findTarefaById(idTarefa);
+
+  if (!tarefa) {
+    throw new Error('Tarefa não encontrada.');
+  }
+
+  const tarefaInstance = new TarefaModel({ tarefa });
+
+  if (tarefaInstance.status === 'CONCLUIDA') {
+    throw new Error('A tarefa já foi concluída.');
+  }
+
+  if (tarefaInstance.pontos === null) {
+    throw new Error('Tarefa inválida para atualização de pontuação.');
+  }
+  
+  await TarefaModel.updateStatusTarefa(idTarefa, idCatSitter);
+  await TarefaModel.updatePontuacaoCatSitter(idCatSitter, tarefaInstance.pontos);
 }

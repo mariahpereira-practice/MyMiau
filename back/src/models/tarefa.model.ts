@@ -1,57 +1,112 @@
 import db from '../config/database';
-import { Tarefa } from '../types/tarefa';
+import { TarefaResponseDTO, TarefaStatus } from '../dtos/tarefa.dto';
 
-export async function findMany({
-  idGato,
-}: {
-  idGato: number;
-}): Promise<Tarefa[]> {
-  const sql = `SELECT * FROM tarefas t WHERE t.gato_id = ? ORDER BY t.idTarefa DESC`;
+export class TarefaModel {
+  private tarefaRow: TarefaResponseDTO | null;
 
-  const rows = await db.query<Tarefa[]>(sql, [idGato]);
-  return rows;
-}
+  constructor(data: { tarefa: TarefaResponseDTO }) {
+    this.tarefaRow = data.tarefa;
+  }
 
-export async function createTarefa(data: {
-  descricao: string;
-  pontos: number;
-  status: 'PENDENTE' | 'CONCLUIDA';
-  concluida_por: number | null;
-  concluida_em: Date;
-  gato_id: number;
-}): Promise<{ insertId: number }> {
-  const sql = `INSERT INTO tarefas (descricao, pontos, status, concluida_por, concluida_em, gato_id) VALUES (?, ?, ?, ?, ?, ?)`;
-  const result = await db.query<{ insertId: number }>(sql, [
-    data.descricao,
-    data.pontos,
-    data.status,
-    data.concluida_por,
-    data.concluida_em,
-    data.gato_id,
-  ]);
-  return result;
-}
+  get idTarefa(): number | null {
+    return this.tarefaRow?.idTarefa || null;
+  }
 
-export async function findTarefaById(idTarefa: number): Promise<Tarefa | undefined> {
-  const sql = `SELECT * FROM tarefas t WHERE t.idTarefa = ?`;
-  const rows = await db.query<Tarefa[]>(sql, [idTarefa]);
-  return rows[0];
-}
+  get gato_id(): number | null {
+    return this.tarefaRow?.gato_id || null;
+  }
 
-export async function deletarTarefa(idTarefa: number): Promise<void> {
-  const sql = `DELETE FROM tarefas WHERE idTarefa = ?`;
-  await db.query(sql, [idTarefa]);
-}
+  get descricao(): string | null {
+    return this.tarefaRow?.descricao || null;
+  }
 
-export async function updateTarefa(
-  data: { descricao: string; pontos: number; status: 'PENDENTE' | 'CONCLUIDA' },
-  idTarefa: number,
-): Promise<void> {
-  const sql = `UPDATE tarefas SET descricao = ?, pontos = ?, status = ? WHERE idTarefa = ? `;
-  await db.query(sql, [data.descricao, data.pontos, data.status, idTarefa]);
-}
+  get pontos(): number | null {
+    return this.tarefaRow?.pontos || null;
+  }
 
-export async function updateStatusTarefa(idTarefa: number, idCatSitter: number): Promise<void> {
-  const sql = `UPDATE tarefas SET status = 'CONCLUIDA', concluida_em = ?, concluida_por = ? WHERE idTarefa = ?`;
-  await db.query(sql, [new Date(), idCatSitter, idTarefa]);
+  get status(): TarefaStatus | null {
+    return this.tarefaRow?.status || null;
+  }
+
+  get concluida_por(): number | null {
+    return this.tarefaRow?.concluida_por || null;
+  }
+
+  get concluida_em(): Date | null {
+    return this.tarefaRow?.concluida_em || null;
+  }
+
+  toResponse(): TarefaResponseDTO | null {
+    if (!this.tarefaRow) {
+      return null;
+    } 
+
+    const response: TarefaResponseDTO = {
+      idTarefa: this.idTarefa as number,
+      gato_id: this.gato_id as number,
+      descricao: this.descricao as string,
+      pontos: this.pontos as number,
+      status: this.status as TarefaStatus,
+      concluida_por: this.concluida_por ?? null,
+      concluida_em: this.concluida_em ?? null,
+    };
+
+    return response;
+  }
+
+  static async findMany({ idGato }: { idGato: number }): Promise<TarefaResponseDTO[]> {
+    const sql = `SELECT * FROM tarefas t WHERE t.gato_id = ? ORDER BY t.idTarefa DESC`;
+    const rows = await db.query<TarefaResponseDTO[]>(sql, [idGato]);
+    return rows;
+  }
+
+  static async findTarefaById(idTarefa: number): Promise<TarefaResponseDTO | undefined> {
+    const sql = `SELECT * FROM tarefas t WHERE t.idTarefa = ?`;
+    const rows = await db.query<TarefaResponseDTO[]>(sql, [idTarefa]);
+    return rows[0];
+  }
+
+  static async createTarefa(data: {
+    descricao: string;
+    pontos: number;
+    status: TarefaStatus;
+    concluida_por: number | null;
+    concluida_em: Date;
+    gato_id: number;
+  }): Promise<{ insertId: number }> {
+    const sql = `INSERT INTO tarefas (descricao, pontos, status, concluida_por, concluida_em, gato_id) VALUES (?, ?, ?, ?, ?, ?)`;
+    const result = await db.query<{ insertId: number }>(sql, [
+      data.descricao,
+      data.pontos,
+      data.status,
+      data.concluida_por,
+      data.concluida_em,
+      data.gato_id,
+    ]);
+    return result;
+  }
+
+  static async deletarTarefa(idTarefa: number): Promise<void> {
+    const sql = `DELETE FROM tarefas WHERE idTarefa = ?`;
+    await db.query(sql, [idTarefa]);
+  }
+
+  static async updateTarefa(
+    data: { descricao: string; pontos: number; status: TarefaStatus },
+    idTarefa: number,
+  ): Promise<void> {
+    const sql = `UPDATE tarefas SET descricao = ?, pontos = ?, status = ? WHERE idTarefa = ? `;
+    await db.query(sql, [data.descricao, data.pontos, data.status, idTarefa]);
+  }
+
+  static async updateStatusTarefa(idTarefa: number, idCatSitter: number): Promise<void> {
+    const sql = `UPDATE tarefas SET status = 'CONCLUIDA', concluida_em = ?, concluida_por = ? WHERE idTarefa = ?`;
+    await db.query(sql, [new Date(), idCatSitter, idTarefa]);
+  }
+
+  static async updatePontuacaoCatSitter(idCatSitter: number, pontos: number): Promise<void> {
+    const sql = `UPDATE users SET pontuacao = pontuacao + ? WHERE id = ?`;
+    await db.query(sql, [pontos, idCatSitter]);
+  }
+
 }

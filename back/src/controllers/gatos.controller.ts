@@ -1,9 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import { listGatos, saveGato, updateGato } from '../services/gatos.service';
-import { GatoRequest, GatoResponse } from '../types/gato';
+import {
+  GatoCreateInputDTO,
+  GatoCreateRequestDTO,
+  GatoResponseDTO,
+  GatoUpdateInputDTO,
+} from '../dtos/gato.dto';
 
 export const saveGatoController = async (
-  req: Request<{}, {}, GatoRequest>,
+  req: Request<{}, {}, GatoCreateRequestDTO>,
   res: Response,
   next: NextFunction,
 ): Promise<Response | void> => {
@@ -13,8 +18,11 @@ export const saveGatoController = async (
     if (!idTutor) {
       return res.status(401).json({ message: 'Usuário não autenticado.' });
     }
-    data.tutor_id = idTutor;
-    const gato = await saveGato(data as GatoRequest);
+    const payload: GatoCreateInputDTO = {
+      ...data,
+      tutor_id: idTutor,
+    };
+    const gato = await saveGato(payload);
     return res.status(201).json(gato);
   } catch (error) {
     next(error);
@@ -22,7 +30,7 @@ export const saveGatoController = async (
 };
 
 export const updateGatoController = async (
-  req: Request<{ id: string }, {}, GatoRequest>,
+  req: Request<{ id: string }, {}, GatoUpdateInputDTO>,
   res: Response,
   next: NextFunction,
 ): Promise<Response | void> => {
@@ -33,7 +41,7 @@ export const updateGatoController = async (
       return res.status(401).json({ message: 'Usuário não autenticado.' });
     }
     const data = req.body;
-    const gatoUpdated = await updateGato(Number(id), idTutor, data as GatoRequest);
+    const gatoUpdated = await updateGato(Number(id), idTutor, data);
     return res.json(gatoUpdated);
   } catch (error) {
     next(error);
@@ -42,7 +50,7 @@ export const updateGatoController = async (
 
 export const getGatosDisponiveis = async (
     req: Request, 
-    res: Response<GatoResponse[]>, 
+  res: Response<GatoResponseDTO[]>, 
     next: NextFunction): 
     Promise<Response | void> => {
   try {
@@ -60,7 +68,7 @@ export const getGatosDisponiveis = async (
 
 export const getMeusGatos = async (
     req: Request, 
-    res: Response<GatoResponse[]>,
+  res: Response<GatoResponseDTO[]>,
     next: NextFunction): 
     Promise<Response | void> => {
   try {

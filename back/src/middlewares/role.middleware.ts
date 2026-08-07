@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { UserRole } from '../types/user-role';
+import { UserRole } from '../dtos/user.dto';
 
 export const authorizeRoles = (...allowedRoles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction): Response | void => {

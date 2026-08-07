@@ -21,8 +21,8 @@ POST http://localhost:1337/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "Lucio",
-  "email": "lucio@email.com",
+  "username": "Luciana",
+  "email": "luciana@email.com",
   "password": "senha123",
   "role": "CATSITTER"
 }
@@ -59,7 +59,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 
 
 {
-  "nomeGato": "Susie",
+  "nomeGato": "Sullie",
   "idadeGato": 2,
   "pesoGato": 4.5,
   "peloGato": 2,
@@ -79,7 +79,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 }
 
 ### Tarefas - visualizar uma lista de tarefas de um gato especifico - TUTOR
-GET http://localhost:1337/api/tarefas/2
+GET http://localhost:1337/api/tarefas/4
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
 
 ### Tarefas - visualizar uma lista de tarefas de um gato especifico - CATSITTER
@@ -87,7 +87,7 @@ GET http://localhost:1337/api/tarefas/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
 
 ### Tarefas - criar uma tarefa para um gato especifico - TUTOR
-POST http://localhost:1337/api/tarefas/tarefa/1
+POST http://localhost:1337/api/tarefas/tarefa/4
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
 
@@ -101,7 +101,7 @@ DELETE http://localhost:1337/api/tarefas/tarefa/1/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
 
 ### Tarefas - atualizar uma tarefa especifica de um gato especifico - TUTOR
-PUT http://localhost:1337/api/tarefas/tarefa/1/7
+PUT http://localhost:1337/api/tarefas/tarefa/4/9
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
 
@@ -111,7 +111,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 }
 
 ### Tarefas - atualizar o status de tarefa especifica de um gato especifico - CATSITTER
-PUT http://localhost:1337/api/tarefas/tarefa/1/7
+PUT http://localhost:1337/api/tarefas/tarefa/4/10
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
 

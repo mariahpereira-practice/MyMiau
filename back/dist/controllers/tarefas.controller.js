@@ -1,47 +1,37 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTarefa = exports.postTarefa = exports.postListaTarefas = exports.getListaTarefas = void 0;
+exports.deleteTarefa = exports.updateTarefa = exports.postTarefa = exports.getListaTarefas = void 0;
+const tarefas_service_1 = require("../services/tarefas.service");
 const getListaTarefas = async (req, res, next) => {
     try {
-        const { idGato } = req.query;
-        res.status(200).json({
-            tarefas: [
-                {
-                    descTarefa: "Dar comida",
-                    tarefaCumprida: false,
-                },
-                {
-                    descTarefa: "Dar banho",
-                    tarefaCumprida: true,
-                },
-            ],
-        });
+        const { idGato } = req.params;
+        if (!idGato) {
+            return res.status(400).json({ message: 'Parâmetro idGato inválido.' });
+        }
+        if (req.user?.role === 'CATSITTER') {
+            const tarefas = await (0, tarefas_service_1.listTarefasCatSitter)({ idGato: Number(idGato) });
+            return res.json({ tarefas });
+        }
+        else {
+            const idTutor = req.user?.id;
+            const tarefas = await (0, tarefas_service_1.listTarefasTutor)({ idGato: Number(idGato), idTutor: Number(idTutor) });
+            return res.json({ tarefas });
+        }
     }
     catch (error) {
         next(error);
     }
 };
 exports.getListaTarefas = getListaTarefas;
-const postListaTarefas = async (req, res, next) => {
-    try {
-        const { tarefas } = req.body;
-        // Implement the logic to save the tarefas data to the database
-        // For example, you can call a service function that handles the database operation
-        // Example: await tarefasService.saveTarefas(tarefas);
-        res.status(201).json({ message: 'Lista de tarefas registrada com sucesso!' });
-    }
-    catch (error) {
-        next(error);
-    }
-};
-exports.postListaTarefas = postListaTarefas;
 const postTarefa = async (req, res, next) => {
     try {
-        const { idLista } = req.params;
-        const { descTarefa, tarefaCumprida } = req.body;
-        // Implement the logic to save the tarefa data to the database for the specified idLista
-        // For example, you can call a service function that handles the database operation
-        // Example: await tarefasService.saveTarefa(idLista, { descTarefa, tarefaCumprida });
+        const { idGato } = req.params;
+        const idTutor = req.user?.id;
+        if (!idTutor) {
+            return res.status(401).json({ message: 'Usuário não autenticado.' });
+        }
+        const data = req.body;
+        await (0, tarefas_service_1.criarTarefa)(Number(idGato), Number(idTutor), data);
         res.status(201).json({ message: 'Tarefa registrada com sucesso!' });
     }
     catch (error) {
@@ -51,11 +41,17 @@ const postTarefa = async (req, res, next) => {
 exports.postTarefa = postTarefa;
 const updateTarefa = async (req, res, next) => {
     try {
-        const { idLista, idTarefa } = req.params;
-        const { descTarefa, tarefaCumprida } = req.body;
-        // Implement the logic to update the tarefa data in the database for the specified idLista and idTarefa
-        // For example, you can call a service function that handles the database operation
-        // Example: await tarefasService.updateTarefa(idLista, idTarefa, { descTarefa, tarefaCumprida });
+        const { idGato, idTarefa } = req.params;
+        if (req.user?.role === 'CATSITTER') {
+            await (0, tarefas_service_1.atualizarStatusTarefa)(Number(idTarefa), Number(req.user?.id));
+            return res.status(200).json({ message: 'Status da tarefa atualizado com sucesso!' });
+        }
+        const idTutor = req.user?.id;
+        if (!idTutor) {
+            return res.status(401).json({ message: 'Usuário não autenticado.' });
+        }
+        const data = req.body;
+        await (0, tarefas_service_1.atualizarTarefa)(Number(idGato), Number(idTutor), data, Number(idTarefa));
         res.status(201).json({ message: 'Tarefa atualizada com sucesso!' });
     }
     catch (error) {
@@ -63,4 +59,19 @@ const updateTarefa = async (req, res, next) => {
     }
 };
 exports.updateTarefa = updateTarefa;
+const deleteTarefa = async (req, res, next) => {
+    try {
+        const { idGato, idTarefa } = req.params;
+        const idTutor = req.user?.id;
+        if (!idTutor) {
+            return res.status(401).json({ message: 'Usuário não autenticado.' });
+        }
+        await (0, tarefas_service_1.deletarTarefaServico)(Number(idGato), Number(idTarefa), Number(idTutor));
+        res.status(200).json({ message: 'Tarefa deletada com sucesso!' });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.deleteTarefa = deleteTarefa;
 //# sourceMappingURL=tarefas.controller.js.map

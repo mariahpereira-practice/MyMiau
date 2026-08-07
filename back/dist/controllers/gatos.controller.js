@@ -1,27 +1,73 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGatos = exports.saveGato = void 0;
+exports.getMeusGatos = exports.getGatosDisponiveis = exports.updateGatoController = exports.saveGatoController = void 0;
 const gatos_service_1 = require("../services/gatos.service");
-function registerGato(data) {
-    // Implement the logic to save the gato data to the database
-    // For example, you can call a service function that handles the database operation
-    // Example: await gatoService.saveGato(data);
-}
-const saveGato = (req, res) => {
-    const data = req.body;
-    registerGato(data);
-    res.status(201).json({ message: 'Gato registrado com sucesso!' });
-};
-exports.saveGato = saveGato;
-const getGatos = async (req, res, next) => {
+const saveGatoController = async (req, res, next) => {
     try {
-        const { id, search } = req.query;
-        const gatos = await (0, gatos_service_1.listGatos)({ id, search });
-        return res.json({ gatos });
+        const data = req.body;
+        const idTutor = req.user?.id;
+        if (!idTutor) {
+            return res.status(401).json({ message: 'Usuário não autenticado.' });
+        }
+        const payload = {
+            ...data,
+            tutor_id: idTutor,
+        };
+        const gato = await (0, gatos_service_1.saveGato)(payload);
+        return res.status(201).json(gato);
     }
     catch (error) {
         next(error);
     }
 };
-exports.getGatos = getGatos;
+exports.saveGatoController = saveGatoController;
+const updateGatoController = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const idTutor = req.user?.id;
+        if (!idTutor) {
+            return res.status(401).json({ message: 'Usuário não autenticado.' });
+        }
+        const data = req.body;
+        const gatoUpdated = await (0, gatos_service_1.updateGato)(Number(id), idTutor, data);
+        return res.json(gatoUpdated);
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.updateGatoController = updateGatoController;
+const getGatosDisponiveis = async (req, res, next) => {
+    try {
+        const { search, searchGato, searchTutor } = req.query;
+        const gatos = await (0, gatos_service_1.listGatos)({
+            searchGato: searchGato ?? search,
+            searchTutor,
+            disponiveis: true,
+        });
+        return res.json(gatos);
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.getGatosDisponiveis = getGatosDisponiveis;
+const getMeusGatos = async (req, res, next) => {
+    try {
+        if (!req.user?.id) {
+            return res.status(401).json([]);
+        }
+        const { search, searchGato, searchTutor } = req.query;
+        const meusGatos = await (0, gatos_service_1.listGatos)({
+            tutorId: req.user.id,
+            searchGato: searchGato ?? search,
+            searchTutor,
+        });
+        return res.json(meusGatos);
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.getMeusGatos = getMeusGatos;
 //# sourceMappingURL=gatos.controller.js.map
