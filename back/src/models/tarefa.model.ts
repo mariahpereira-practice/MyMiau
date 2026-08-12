@@ -2,42 +2,42 @@ import db from '../config/database';
 import { TarefaResponseDTO, TarefaStatus } from '../dtos/tarefa.dto';
 
 export class TarefaModel {
-  private tarefaRow: TarefaResponseDTO | null;
+  private __tarefaRow: TarefaResponseDTO | null;
 
   constructor(data: { tarefa: TarefaResponseDTO }) {
-    this.tarefaRow = data.tarefa;
+    this.__tarefaRow = data.tarefa;
   }
 
   get idTarefa(): number | null {
-    return this.tarefaRow?.idTarefa || null;
+    return this.__tarefaRow?.idTarefa || null;
   }
 
   get gato_id(): number | null {
-    return this.tarefaRow?.gato_id || null;
+    return this.__tarefaRow?.gato_id || null;
   }
 
   get descricao(): string | null {
-    return this.tarefaRow?.descricao || null;
+    return this.__tarefaRow?.descricao || null;
   }
 
   get pontos(): number | null {
-    return this.tarefaRow?.pontos || null;
+    return this.__tarefaRow?.pontos || null;
   }
 
   get status(): TarefaStatus | null {
-    return this.tarefaRow?.status || null;
+    return this.__tarefaRow?.status || null;
   }
 
   get concluida_por(): number | null {
-    return this.tarefaRow?.concluida_por || null;
+    return this.__tarefaRow?.concluida_por || null;
   }
 
   get concluida_em(): Date | null {
-    return this.tarefaRow?.concluida_em || null;
+    return this.__tarefaRow?.concluida_em || null;
   }
 
   toResponse(): TarefaResponseDTO | null {
-    if (!this.tarefaRow) {
+    if (!this.__tarefaRow) {
       return null;
     } 
 
@@ -99,12 +99,12 @@ export class TarefaModel {
     await db.query(sql, [data.descricao, data.pontos, data.status, idTarefa]);
   }
 
-  static async updateStatusTarefa(idTarefa: number, idCatSitter: number): Promise<void> {
+  async updateStatusTarefa(idTarefa: number, idCatSitter: number): Promise<void> {
     const sql = `UPDATE tarefas SET status = 'CONCLUIDA', concluida_em = ?, concluida_por = ? WHERE idTarefa = ?`;
     await db.query(sql, [new Date(), idCatSitter, idTarefa]);
   }
 
-  static async updatePontuacaoCatSitter(idCatSitter: number, pontos: number): Promise<void> {
+  async updatePontuacaoCatSitter(idCatSitter: number, pontos: number): Promise<void> {
     const sql = `UPDATE users SET pontuacao = pontuacao + ? WHERE id = ?`;
     await db.query(sql, [pontos, idCatSitter]);
   }

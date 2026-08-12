@@ -10,42 +10,42 @@ type InsertResult = {
 };
 
 export class UserModel {
-  private userRow: UserRow | null;
+  private __userRow: UserRow | null;
 
   constructor(data: { user: UserRow }) {
-    this.userRow = data.user;
+    this.__userRow = data.user;
   }
 
   get id(): number | null {
-    return this.userRow?.id || null;
+    return this.__userRow?.id || null;
   }
 
   get username(): string | null {
-    return this.userRow?.username || null;
+    return this.__userRow?.username || null;
   }
 
   get email(): string | null {
-    return this.userRow?.email || null;
+    return this.__userRow?.email || null;
   }
 
   get role(): UserRole | null {
-    return this.userRow?.role || null;
+    return this.__userRow?.role || null;
   }
 
   get pontuacao(): number | string | null {
-    return this.userRow?.pontuacao || null;
+    return this.__userRow?.pontuacao || null;
   }
 
   get rankGlobal(): string | null {
-    return this.userRow?.rankGlobal || null;
+    return this.__userRow?.rankGlobal || null;
   }
 
   get passwordHash(): string | null {
-    return this.userRow?.password_hash || null;
+    return this.__userRow?.password_hash || null;
   }
 
   toProfileResponse(): UserProfileResponseDTO | null {
-    if (!this.userRow) {
+    if (!this.__userRow) {
       return null;
     }
 
@@ -67,7 +67,7 @@ export class UserModel {
     return profile;
   }
 
-  private static normalizeUser(row: UserRow | null): UserRow | null {
+  private static __normalizeUser(row: UserRow | null): UserRow | null {
     if (!row) {
       return null;
     }
@@ -84,7 +84,7 @@ export class UserModel {
       'SELECT * FROM users WHERE email = ? LIMIT 1',
       [email],
     );
-    return UserModel.normalizeUser(rows[0] ?? null);
+    return UserModel.__normalizeUser(rows[0] ?? null);
   }
 
   static async findByUsername(username: string): Promise<UserRow | null> {
@@ -92,7 +92,7 @@ export class UserModel {
       'SELECT * FROM users WHERE username = ? LIMIT 1',
       [username],
     );
-    return UserModel.normalizeUser(rows[0] ?? null);
+    return UserModel.__normalizeUser(rows[0] ?? null);
   }
 
   static async findById(id: number): Promise<UserRow | null> {
@@ -100,7 +100,7 @@ export class UserModel {
       'SELECT id, username, email, role, pontuacao, rankGlobal, password_hash FROM users WHERE id = ? LIMIT 1',
       [id],
     );
-    return UserModel.normalizeUser(rows[0] ?? null);
+    return UserModel.__normalizeUser(rows[0] ?? null);
   }
 
   static async create({

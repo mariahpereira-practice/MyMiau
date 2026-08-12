@@ -111,7 +111,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 }
 
 ### Tarefas - atualizar o status de tarefa especifica de um gato especifico - CATSITTER
-PUT http://localhost:1337/api/tarefas/tarefa/4/10
+PUT http://localhost:1337/api/tarefas/tarefa/4/12
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
 

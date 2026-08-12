@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { CreateTarefaInputDTO, UpdateTarefaInputDTO } from '../dtos/tarefa.dto';
-import { listTarefasCatSitter, listTarefasTutor, criarTarefa, deletarTarefaServico, atualizarTarefa, atualizarStatusTarefa } from '../services/tarefas.service';
+import { tarefasService } from '../services/tarefas.service';
 
 export const getListaTarefas = async (
   req: Request<{ idGato: string }>,
@@ -13,11 +13,11 @@ export const getListaTarefas = async (
       return res.status(400).json({ message: 'Parâmetro idGato inválido.' });
     }
     if(req.user?.role === 'CATSITTER') {
-      const tarefas = await listTarefasCatSitter({ idGato: Number(idGato)});
+      const tarefas = await tarefasService.listTarefasCatSitter({ idGato: Number(idGato)});
       return res.json({ tarefas });
     } else {
       const idTutor = req.user?.id;
-      const tarefas = await listTarefasTutor({ idGato: Number(idGato), idTutor: Number(idTutor)});
+      const tarefas = await tarefasService.listTarefasTutor({ idGato: Number(idGato), idTutor: Number(idTutor)});
       return res.json({ tarefas });
     }
   } catch (error) {
@@ -37,7 +37,7 @@ export const postTarefa = async (
       return res.status(401).json({ message: 'Usuário não autenticado.' });
     }
     const data: CreateTarefaInputDTO = req.body;
-    await criarTarefa(Number(idGato), Number(idTutor), data);
+    await tarefasService.criarTarefa(Number(idGato), Number(idTutor), data);
     res.status(201).json({ message: 'Tarefa registrada com sucesso!' });
   } catch (error) {
     next(error);
@@ -53,7 +53,7 @@ export const updateTarefa = async (
     const { idGato, idTarefa } = req.params;
 
     if(req.user?.role === 'CATSITTER') {
-      await atualizarStatusTarefa(Number(idTarefa), Number(req.user?.id));
+      await tarefasService.atualizarStatusTarefa(Number(idTarefa), Number(req.user?.id));
       return res.status(200).json({ message: 'Status da tarefa atualizado com sucesso!' });
     }
 
@@ -62,7 +62,7 @@ export const updateTarefa = async (
       return res.status(401).json({ message: 'Usuário não autenticado.' });
     }
     const data: UpdateTarefaInputDTO = req.body;
-    await atualizarTarefa(Number(idGato), Number(idTutor), data, Number(idTarefa));
+    await tarefasService.atualizarTarefa(Number(idGato), Number(idTutor), data, Number(idTarefa));
 
     res.status(201).json({ message: 'Tarefa atualizada com sucesso!' });
   } catch (error) {
@@ -81,7 +81,7 @@ export const deleteTarefa = async (
     if (!idTutor) {
       return res.status(401).json({ message: 'Usuário não autenticado.' });
     }
-    await deletarTarefaServico(Number(idGato), Number(idTarefa), Number(idTutor));
+    await tarefasService.deletarTarefaServico(Number(idGato), Number(idTarefa), Number(idTutor));
     res.status(200).json({ message: 'Tarefa deletada com sucesso!' });
   } catch (error) {
     next(error);

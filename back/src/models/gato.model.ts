@@ -6,54 +6,54 @@ type InsertResult = {
 };
 
 export class GatoModel {
-  private gatoRow: GatoResponseDTO | null;
+  private __gatoRow: GatoResponseDTO | null;
 
   constructor(data: { gato: GatoResponseDTO }) {
-    this.gatoRow = data.gato;
+    this.__gatoRow = data.gato;
   }
 
   get id(): number | null {
-    return this.gatoRow?.id || null;
+    return this.__gatoRow?.id || null;
   }
 
   get nomeGato(): string | null {
-    return this.gatoRow?.nomeGato || null;
+    return this.__gatoRow?.nomeGato || null;
   }
 
   get idadeGato(): number | null {
-    return this.gatoRow?.idadeGato || null;
+    return this.__gatoRow?.idadeGato || null;
   }
 
   get pesoGato(): number | null {
-    return this.gatoRow?.pesoGato || null;
+    return this.__gatoRow?.pesoGato || null;
   }
 
   get peloGato(): number | null {
-    return this.gatoRow?.peloGato || null;
+    return this.__gatoRow?.peloGato || null;
   }
 
   get racaGato(): string | null {
-    return this.gatoRow?.racaGato || null;
+    return this.__gatoRow?.racaGato || null;
   }
 
   get idIcone(): number | null {
-    return this.gatoRow?.idIcone || null;
+    return this.__gatoRow?.idIcone || null;
   }
 
   get tutorId(): number | null {
-    return this.gatoRow?.tutor_id || null;
+    return this.__gatoRow?.tutor_id || null;
   }
 
   get tutorNome(): string | null {
-    return this.gatoRow?.tutorNome || null;
+    return this.__gatoRow?.tutorNome || null;
   }
 
   get disponivelParaCuidado(): 0 | 1 | null {
-    return this.gatoRow?.disponivel_para_cuidado ?? null;
+    return this.__gatoRow?.disponivel_para_cuidado ?? null;
   }
 
   toResponse(): GatoResponseDTO | null {
-    if (!this.gatoRow) {
+    if (!this.__gatoRow) {
       return null;
     }
 
@@ -84,7 +84,7 @@ export class GatoModel {
     };
   }
 
-  private static normalizeGato(row: GatoResponseDTO | null): GatoResponseDTO | null {
+  private static __normalizeGato(row: GatoResponseDTO | null): GatoResponseDTO | null {
     if (!row) {
       return null;
     }
@@ -136,7 +136,7 @@ export class GatoModel {
     } ORDER BY id DESC`;
 
     const rows = await db.query<GatoResponseDTO[]>(sql, params);
-    return rows.map((row) => GatoModel.normalizeGato(row) as GatoResponseDTO);
+    return rows.map((row) => GatoModel.__normalizeGato(row) as GatoResponseDTO);
   }
 
   static async findGatoByIdGato(id: number): Promise<GatoResponseDTO | null> {
@@ -148,7 +148,7 @@ export class GatoModel {
       LIMIT 1`,
       [id],
     );
-    return GatoModel.normalizeGato(rows[0] || null);
+    return GatoModel.__normalizeGato(rows[0] || null);
   }
 
   static async createGato(data: GatoCreateInputDTO): Promise<GatoResponseDTO> {

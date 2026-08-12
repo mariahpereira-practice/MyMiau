@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { listGatos, saveGato, updateGato } from '../services/gatos.service';
+import { gatosService } from '../services/gatos.service';
 import {
   GatoCreateInputDTO,
   GatoCreateRequestDTO,
@@ -22,7 +22,7 @@ export const saveGatoController = async (
       ...data,
       tutor_id: idTutor,
     };
-    const gato = await saveGato(payload);
+    const gato = await gatosService.saveGato(payload);
     return res.status(201).json(gato);
   } catch (error) {
     next(error);
@@ -41,7 +41,7 @@ export const updateGatoController = async (
       return res.status(401).json({ message: 'Usuário não autenticado.' });
     }
     const data = req.body;
-    const gatoUpdated = await updateGato(Number(id), idTutor, data);
+    const gatoUpdated = await gatosService.updateGato(Number(id), idTutor, data);
     return res.json(gatoUpdated);
   } catch (error) {
     next(error);
@@ -55,7 +55,7 @@ export const getGatosDisponiveis = async (
     Promise<Response | void> => {
   try {
     const { search, searchGato, searchTutor } = req.query;
-    const gatos = await listGatos({
+    const gatos = await gatosService.listGatos({
       searchGato: searchGato ?? search,
       searchTutor,
       disponiveis: true,
@@ -77,7 +77,7 @@ export const getMeusGatos = async (
     }
 
     const { search, searchGato, searchTutor } = req.query;
-    const meusGatos = await listGatos({
+    const meusGatos = await gatosService.listGatos({
       tutorId: req.user.id,
       searchGato: searchGato ?? search,
       searchTutor,
