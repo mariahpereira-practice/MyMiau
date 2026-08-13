@@ -7,40 +7,40 @@ exports.GatoModel = void 0;
 const database_1 = __importDefault(require("../config/database"));
 class GatoModel {
     constructor(data) {
-        this.gatoRow = data.gato;
+        this.__gatoRow = data.gato;
     }
     get id() {
-        return this.gatoRow?.id || null;
+        return this.__gatoRow?.id || null;
     }
     get nomeGato() {
-        return this.gatoRow?.nomeGato || null;
+        return this.__gatoRow?.nomeGato || null;
     }
     get idadeGato() {
-        return this.gatoRow?.idadeGato || null;
+        return this.__gatoRow?.idadeGato || null;
     }
     get pesoGato() {
-        return this.gatoRow?.pesoGato || null;
+        return this.__gatoRow?.pesoGato || null;
     }
     get peloGato() {
-        return this.gatoRow?.peloGato || null;
+        return this.__gatoRow?.peloGato || null;
     }
     get racaGato() {
-        return this.gatoRow?.racaGato || null;
+        return this.__gatoRow?.racaGato || null;
     }
     get idIcone() {
-        return this.gatoRow?.idIcone || null;
+        return this.__gatoRow?.idIcone || null;
     }
     get tutorId() {
-        return this.gatoRow?.tutor_id || null;
+        return this.__gatoRow?.tutor_id || null;
     }
     get tutorNome() {
-        return this.gatoRow?.tutorNome || null;
+        return this.__gatoRow?.tutorNome || null;
     }
     get disponivelParaCuidado() {
-        return this.gatoRow?.disponivel_para_cuidado ?? null;
+        return this.__gatoRow?.disponivel_para_cuidado ?? null;
     }
     toResponse() {
-        if (!this.gatoRow) {
+        if (!this.__gatoRow) {
             return null;
         }
         if (this.id === null
@@ -66,7 +66,7 @@ class GatoModel {
             disponivel_para_cuidado: this.disponivelParaCuidado ?? 1,
         };
     }
-    static normalizeGato(row) {
+    static __normalizeGato(row) {
         if (!row) {
             return null;
         }
@@ -108,7 +108,7 @@ class GatoModel {
         const sql = `SELECT g.*, COALESCE(u.username, '') AS tutorNome FROM gatos g
     LEFT JOIN users u ON u.id = g.tutor_id${where.length ? ` WHERE ${where.join(' AND ')}` : ''} ORDER BY id DESC`;
         const rows = await database_1.default.query(sql, params);
-        return rows.map((row) => GatoModel.normalizeGato(row));
+        return rows.map((row) => GatoModel.__normalizeGato(row));
     }
     static async findGatoByIdGato(id) {
         const rows = await database_1.default.query(`SELECT g.*, COALESCE(u.username, '') AS tutorNome
@@ -116,7 +116,7 @@ class GatoModel {
       LEFT JOIN users u ON u.id = g.tutor_id
       WHERE g.id = ?
       LIMIT 1`, [id]);
-        return GatoModel.normalizeGato(rows[0] || null);
+        return GatoModel.__normalizeGato(rows[0] || null);
     }
     static async createGato(data) {
         const result = await database_1.default.query('INSERT INTO gatos (nomeGato, idadeGato, pesoGato, peloGato, racaGato, idIcone, tutor_id) VALUES (?, ?, ?, ?, ?, ?, ?)', [data.nomeGato, data.idadeGato, data.pesoGato, data.peloGato, data.racaGato, data.idIcone, data.tutor_id]);
@@ -126,6 +126,23 @@ class GatoModel {
             throw new Error('Failed to create gato.');
         }
         return newGato;
+    }
+    static async updateGato(id, data) {
+        const sql = `
+      UPDATE gatos
+      SET nomeGato = ?, idadeGato = ?, pesoGato = ?, peloGato = ?, racaGato = ?, idIcone = ?, disponivel_para_cuidado = ?
+      WHERE id = ?
+    `;
+        await database_1.default.query(sql, [
+            data.nomeGato,
+            data.idadeGato,
+            data.pesoGato,
+            data.peloGato,
+            data.racaGato,
+            data.idIcone,
+            data.disponivel_para_cuidado,
+            id,
+        ]);
     }
 }
 exports.GatoModel = GatoModel;

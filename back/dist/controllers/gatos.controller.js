@@ -13,7 +13,7 @@ const saveGatoController = async (req, res, next) => {
             ...data,
             tutor_id: idTutor,
         };
-        const gato = await (0, gatos_service_1.saveGato)(payload);
+        const gato = await gatos_service_1.gatosService.saveGato(payload);
         return res.status(201).json(gato);
     }
     catch (error) {
@@ -29,7 +29,7 @@ const updateGatoController = async (req, res, next) => {
             return res.status(401).json({ message: 'Usuário não autenticado.' });
         }
         const data = req.body;
-        const gatoUpdated = await (0, gatos_service_1.updateGato)(Number(id), idTutor, data);
+        const gatoUpdated = await gatos_service_1.gatosService.updateGato(Number(id), idTutor, data);
         return res.json(gatoUpdated);
     }
     catch (error) {
@@ -39,12 +39,15 @@ const updateGatoController = async (req, res, next) => {
 exports.updateGatoController = updateGatoController;
 const getGatosDisponiveis = async (req, res, next) => {
     try {
+        if (!req.user?.id) {
+            return res.status(401).json([]);
+        }
         const { search, searchGato, searchTutor } = req.query;
-        const gatos = await (0, gatos_service_1.listGatos)({
+        const gatos = await gatos_service_1.gatosService.listGatos({
             searchGato: searchGato ?? search,
             searchTutor,
             disponiveis: true,
-        });
+        }, req.user.id);
         return res.json(gatos);
     }
     catch (error) {
@@ -58,11 +61,10 @@ const getMeusGatos = async (req, res, next) => {
             return res.status(401).json([]);
         }
         const { search, searchGato, searchTutor } = req.query;
-        const meusGatos = await (0, gatos_service_1.listGatos)({
-            tutorId: req.user.id,
+        const meusGatos = await gatos_service_1.gatosService.listGatos({
             searchGato: searchGato ?? search,
             searchTutor,
-        });
+        }, req.user.id);
         return res.json(meusGatos);
     }
     catch (error) {

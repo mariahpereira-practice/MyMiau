@@ -8,31 +8,31 @@ const database_1 = __importDefault(require("../config/database"));
 const user_dto_1 = require("../dtos/user.dto");
 class UserModel {
     constructor(data) {
-        this.userRow = data.user;
+        this.__userRow = data.user;
     }
     get id() {
-        return this.userRow?.id || null;
+        return this.__userRow?.id || null;
     }
     get username() {
-        return this.userRow?.username || null;
+        return this.__userRow?.username || null;
     }
     get email() {
-        return this.userRow?.email || null;
+        return this.__userRow?.email || null;
     }
     get role() {
-        return this.userRow?.role || null;
+        return this.__userRow?.role || null;
     }
     get pontuacao() {
-        return this.userRow?.pontuacao || null;
+        return this.__userRow?.pontuacao || null;
     }
     get rankGlobal() {
-        return this.userRow?.rankGlobal || null;
+        return this.__userRow?.rankGlobal || null;
     }
     get passwordHash() {
-        return this.userRow?.password_hash || null;
+        return this.__userRow?.password_hash || null;
     }
     toProfileResponse() {
-        if (!this.userRow) {
+        if (!this.__userRow) {
             return null;
         }
         const profile = {
@@ -49,7 +49,7 @@ class UserModel {
         }
         return profile;
     }
-    static normalizeUser(row) {
+    static __normalizeUser(row) {
         if (!row) {
             return null;
         }
@@ -61,15 +61,15 @@ class UserModel {
     }
     static async findByEmail(email) {
         const rows = await database_1.default.query('SELECT * FROM users WHERE email = ? LIMIT 1', [email]);
-        return UserModel.normalizeUser(rows[0] ?? null);
+        return UserModel.__normalizeUser(rows[0] ?? null);
     }
     static async findByUsername(username) {
         const rows = await database_1.default.query('SELECT * FROM users WHERE username = ? LIMIT 1', [username]);
-        return UserModel.normalizeUser(rows[0] ?? null);
+        return UserModel.__normalizeUser(rows[0] ?? null);
     }
     static async findById(id) {
         const rows = await database_1.default.query('SELECT id, username, email, role, pontuacao, rankGlobal, password_hash FROM users WHERE id = ? LIMIT 1', [id]);
-        return UserModel.normalizeUser(rows[0] ?? null);
+        return UserModel.__normalizeUser(rows[0] ?? null);
     }
     static async create({ username, email, password_hash, role, }) {
         const result = await database_1.default.query('INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)', [username, email, password_hash, role]);

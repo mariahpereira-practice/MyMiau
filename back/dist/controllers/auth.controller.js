@@ -5,7 +5,7 @@ const auth_service_1 = require("../services/auth.service");
 const register = async (req, res, next) => {
     try {
         const input = req.body;
-        const { user, token, role: registeredRole } = await (0, auth_service_1.registerUser)(input);
+        const { user, token, role: registeredRole } = await auth_service_1.authService.registerUser(input);
         return res.json({ jwt: token, user, role: registeredRole });
     }
     catch (error) {
@@ -16,7 +16,7 @@ exports.register = register;
 const login = async (req, res, next) => {
     try {
         const input = req.body;
-        const { user, token, role: loggedInRole } = await (0, auth_service_1.loginUser)(input);
+        const { user, token, role: loggedInRole } = await auth_service_1.authService.loginUser(input);
         return res.json({ jwt: token, user, role: loggedInRole });
     }
     catch (error) {

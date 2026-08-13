@@ -7,31 +7,31 @@ exports.TarefaModel = void 0;
 const database_1 = __importDefault(require("../config/database"));
 class TarefaModel {
     constructor(data) {
-        this.tarefaRow = data.tarefa;
+        this.__tarefaRow = data.tarefa;
     }
     get idTarefa() {
-        return this.tarefaRow?.idTarefa || null;
+        return this.__tarefaRow?.idTarefa || null;
     }
     get gato_id() {
-        return this.tarefaRow?.gato_id || null;
+        return this.__tarefaRow?.gato_id || null;
     }
     get descricao() {
-        return this.tarefaRow?.descricao || null;
+        return this.__tarefaRow?.descricao || null;
     }
     get pontos() {
-        return this.tarefaRow?.pontos || null;
+        return this.__tarefaRow?.pontos || null;
     }
     get status() {
-        return this.tarefaRow?.status || null;
+        return this.__tarefaRow?.status || null;
     }
     get concluida_por() {
-        return this.tarefaRow?.concluida_por || null;
+        return this.__tarefaRow?.concluida_por || null;
     }
     get concluida_em() {
-        return this.tarefaRow?.concluida_em || null;
+        return this.__tarefaRow?.concluida_em || null;
     }
     toResponse() {
-        if (!this.tarefaRow) {
+        if (!this.__tarefaRow) {
             return null;
         }
         const response = {
@@ -75,11 +75,11 @@ class TarefaModel {
         const sql = `UPDATE tarefas SET descricao = ?, pontos = ?, status = ? WHERE idTarefa = ? `;
         await database_1.default.query(sql, [data.descricao, data.pontos, data.status, idTarefa]);
     }
-    static async updateStatusTarefa(idTarefa, idCatSitter) {
+    async updateStatusTarefa(idTarefa, idCatSitter) {
         const sql = `UPDATE tarefas SET status = 'CONCLUIDA', concluida_em = ?, concluida_por = ? WHERE idTarefa = ?`;
         await database_1.default.query(sql, [new Date(), idCatSitter, idTarefa]);
     }
-    static async updatePontuacaoCatSitter(idCatSitter, pontos) {
+    async updatePontuacaoCatSitter(idCatSitter, pontos) {
         const sql = `UPDATE users SET pontuacao = pontuacao + ? WHERE id = ?`;
         await database_1.default.query(sql, [pontos, idCatSitter]);
     }

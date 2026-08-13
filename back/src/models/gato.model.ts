@@ -164,6 +164,36 @@ export class GatoModel {
     return newGato;
   }
 
+  static async updateGato(
+    id: number,
+    data: {
+      nomeGato: string;
+      idadeGato: number;
+      pesoGato: number;
+      peloGato: number;
+      racaGato: string;
+      idIcone: number;
+      disponivel_para_cuidado: 0 | 1;
+    },
+  ): Promise<void> {
+    const sql = `
+      UPDATE gatos
+      SET nomeGato = ?, idadeGato = ?, pesoGato = ?, peloGato = ?, racaGato = ?, idIcone = ?, disponivel_para_cuidado = ?
+      WHERE id = ?
+    `;
+
+    await db.query(sql, [
+      data.nomeGato,
+      data.idadeGato,
+      data.pesoGato,
+      data.peloGato,
+      data.racaGato,
+      data.idIcone,
+      data.disponivel_para_cuidado,
+      id,
+    ]);
+  }
+
 }
 
 

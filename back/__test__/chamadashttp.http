@@ -21,56 +21,56 @@ POST http://localhost:1337/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "Luciana",
-  "email": "luciana@email.com",
+  "username": "Augusto",
+  "email": "augusto@email.com",
   "password": "senha123",
   "role": "CATSITTER"
 }
 
 ### Gatos - Ver todos os MEUS gatos - TUTOR
 GET http://localhost:1337/api/gatos/meus
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjYyMDEzMSwiZXhwIjoxNzg3MjI0OTMxfQ.vCJzl1nyevc0nSZxfbeeg3r_0IcLLDjacswiRHTLtJ4
 
 ### Gatos - Ver todos os gatos disponiveis - CATSITTER
 GET http://localhost:1337/api/gatos/disponiveis
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODY2MjAxNDQsImV4cCI6MTc4NzIyNDk0NH0.TMcnjRLkib7b1QAV-AEYmtBFUq5DVeQue02SrwcseHY
 ### Gatos - Buscar por nome do gato em gatos disponiveis - CATSITTER
 
 GET http://localhost:1337/api/gatos/disponiveis?searchGato=mingau
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODY2MjAxNDQsImV4cCI6MTc4NzIyNDk0NH0.TMcnjRLkib7b1QAV-AEYmtBFUq5DVeQue02SrwcseHY
 
 ### Gatos - Buscar por nome do gato em MEUS gatos - TUTOR
-GET http://localhost:1337/api/gatos/meus?searchGato=mingau
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+GET http://localhost:1337/api/gatos/meus?searchGato=susie
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjYyMDEzMSwiZXhwIjoxNzg3MjI0OTMxfQ.vCJzl1nyevc0nSZxfbeeg3r_0IcLLDjacswiRHTLtJ4
 
 ### Gatos - Buscar por nome do tutor em gatos disponiveis - CATSITTER
 GET http://localhost:1337/api/gatos/disponiveis?searchTutor=pedro
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODY2MjAxNDQsImV4cCI6MTc4NzIyNDk0NH0.TMcnjRLkib7b1QAV-AEYmtBFUq5DVeQue02SrwcseHY
 
 ### Gatos - Buscar por nome do gato e tutor em gatos disponiveis - CATSITTER
 GET http://localhost:1337/api/gatos/disponiveis?searchGato=thor&searchTutor=pedro
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODY2MjAxNDQsImV4cCI6MTc4NzIyNDk0NH0.TMcnjRLkib7b1QAV-AEYmtBFUq5DVeQue02SrwcseHY
 
 
 ### Gatos - salvar um novo gato - TUTOR
 POST http://localhost:1337/api/gatos
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjYyMDEzMSwiZXhwIjoxNzg3MjI0OTMxfQ.vCJzl1nyevc0nSZxfbeeg3r_0IcLLDjacswiRHTLtJ4
 
 
 {
-  "nomeGato": "Sullie",
+  "nomeGato": "Marley",
   "idadeGato": 2,
   "pesoGato": 4.5,
   "peloGato": 2,
   "racaGato": "Sem Raça Definida",
-  "idIcone": 1
+  "idIcone": 5
 }
 
 ### Gatos - atualizar informações de um gato - TUTOR
 PUT http://localhost:1337/api/gatos/6
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjYyMDEzMSwiZXhwIjoxNzg3MjI0OTMxfQ.vCJzl1nyevc0nSZxfbeeg3r_0IcLLDjacswiRHTLtJ4
 
 {
   "peloGato": 3,
@@ -79,17 +79,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 }
 
 ### Tarefas - visualizar uma lista de tarefas de um gato especifico - TUTOR
-GET http://localhost:1337/api/tarefas/4
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+GET http://localhost:1337/api/tarefas/7
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjYyMDEzMSwiZXhwIjoxNzg3MjI0OTMxfQ.vCJzl1nyevc0nSZxfbeeg3r_0IcLLDjacswiRHTLtJ4
 
 ### Tarefas - visualizar uma lista de tarefas de um gato especifico - CATSITTER
-GET http://localhost:1337/api/tarefas/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+GET http://localhost:1337/api/tarefas/7
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODY2MjAxNDQsImV4cCI6MTc4NzIyNDk0NH0.TMcnjRLkib7b1QAV-AEYmtBFUq5DVeQue02SrwcseHY
 
 ### Tarefas - criar uma tarefa para um gato especifico - TUTOR
-POST http://localhost:1337/api/tarefas/tarefa/4
+POST http://localhost:1337/api/tarefas/tarefa/7
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjYyMDEzMSwiZXhwIjoxNzg3MjI0OTMxfQ.vCJzl1nyevc0nSZxfbeeg3r_0IcLLDjacswiRHTLtJ4
 
 {
   "descricao": "Dar banho no gato",
@@ -97,13 +97,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 }
 
 ### Tarefas - deletar uma tarefa especifica de um gato especifico - TUTOR
-DELETE http://localhost:1337/api/tarefas/tarefa/1/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+DELETE http://localhost:1337/api/tarefas/tarefa/7/15
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjYyMDEzMSwiZXhwIjoxNzg3MjI0OTMxfQ.vCJzl1nyevc0nSZxfbeeg3r_0IcLLDjacswiRHTLtJ4
 
 ### Tarefas - atualizar uma tarefa especifica de um gato especifico - TUTOR
-PUT http://localhost:1337/api/tarefas/tarefa/4/9
+PUT http://localhost:1337/api/tarefas/tarefa/7/16
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjAxMzA1NiwiZXhwIjoxNzg2NjE3ODU2fQ.CtcqWRkuJhCCJet4uCW4jETKLOcrECihg8CRlFhB87c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjYyMDEzMSwiZXhwIjoxNzg3MjI0OTMxfQ.vCJzl1nyevc0nSZxfbeeg3r_0IcLLDjacswiRHTLtJ4
 
 {
   "descricao": "Dar banho no gato",
@@ -111,7 +111,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 }
 
 ### Tarefas - atualizar o status de tarefa especifica de um gato especifico - CATSITTER
-PUT http://localhost:1337/api/tarefas/tarefa/4/12
+PUT http://localhost:1337/api/tarefas/tarefa/7/16
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODYwMTQzODcsImV4cCI6MTc4NjYxOTE4N30.ysEnOCkeP2pAQZFMZbQynmh00vCgkaf6VmkawU7dm24
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZWxvaXNhQGVtYWlsLmNvbSIsInJvbGUiOiJDQVRTSVRURVIiLCJpYXQiOjE3ODY2MjAxNDQsImV4cCI6MTc4NzIyNDk0NH0.TMcnjRLkib7b1QAV-AEYmtBFUq5DVeQue02SrwcseHY
 

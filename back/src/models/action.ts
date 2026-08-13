@@ -1,33 +1,20 @@
 import { UserModel } from './user.model';
-import { TarefaModel } from './tarefa.model';
 
-abstract class Action {
 
-    protected user: UserModel;
-    protected tarefa: TarefaModel;
+export abstract class Action<TResult = void> {
+  protected user: UserModel | undefined;
 
-    constructor(user: UserModel, tarefa: TarefaModel) {
-        this.user = user;
-        this.tarefa = tarefa;
+  constructor(user?: UserModel) {
+    this.user = user;
+  }
+
+  protected requireUserId(): number {
+    const userId = this.user?.id;
+    if (!userId) {
+      throw new Error('Usuário inválido para esta ação.');
     }
+    return userId;
+  }
 
-    abstract run(): Promise<void>;
-}
-
-export class ConcluirTarefa extends Action {
-
-    async run(): Promise<void> {
-        const pontos = this.tarefa.pontos;
-        const idTarefa = this.tarefa.idTarefa;
-        const idCatSitter = this.user.id;
-
-        if(!idTarefa || !idCatSitter) {
-            throw new Error('Tarefa ou usuário inválido para conclusão.');
-        }
-
-        await this.tarefa.updateStatusTarefa(idTarefa, idCatSitter);
-        if (pontos) {
-            await this.tarefa.updatePontuacaoCatSitter(idCatSitter, pontos);
-        }
-    }
+  abstract run(): Promise<TResult>;
 }

@@ -13,7 +13,11 @@ export const getListaTarefas = async (
       return res.status(400).json({ message: 'Parâmetro idGato inválido.' });
     }
     if(req.user?.role === 'CATSITTER') {
-      const tarefas = await tarefasService.listTarefasCatSitter({ idGato: Number(idGato)});
+      const idCatSitter = req.user?.id;
+      if (!idCatSitter) {
+        return res.status(401).json({ message: 'Usuário não autenticado.' });
+      }
+      const tarefas = await tarefasService.listTarefasCatSitter({ idGato: Number(idGato), idCatSitter: Number(idCatSitter)});
       return res.json({ tarefas });
     } else {
       const idTutor = req.user?.id;

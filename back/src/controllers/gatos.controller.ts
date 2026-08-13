@@ -54,12 +54,16 @@ export const getGatosDisponiveis = async (
     next: NextFunction): 
     Promise<Response | void> => {
   try {
+    if (!req.user?.id) {
+      return res.status(401).json([]);
+    }
+
     const { search, searchGato, searchTutor } = req.query;
     const gatos = await gatosService.listGatos({
       searchGato: searchGato ?? search,
       searchTutor,
       disponiveis: true,
-    });
+    }, req.user.id);
     return res.json(gatos);
   } catch (error) {
     next(error);
@@ -78,10 +82,9 @@ export const getMeusGatos = async (
 
     const { search, searchGato, searchTutor } = req.query;
     const meusGatos = await gatosService.listGatos({
-      tutorId: req.user.id,
       searchGato: searchGato ?? search,
       searchTutor,
-    });
+    }, req.user.id);
     return res.json(meusGatos);
   } catch (error) {
     next(error);
