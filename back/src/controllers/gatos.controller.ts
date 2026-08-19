@@ -10,8 +10,8 @@ import {
 export class GatoController {
   private readonly gatoService: GatosService;
 
-  constructor() {
-    this.gatoService = gatosService;
+  constructor(service: GatosService = gatosService) {
+    this.gatoService = service;
   }
 
   saveGato = async (
@@ -46,7 +46,7 @@ export class GatoController {
       return res.status(401).json({ message: 'Usuário não autenticado.' });
     }
     const data = req.body;
-    const gatoUpdated = await gatosService.updateGato(Number(id), idTutor, data);
+    const gatoUpdated = await this.gatoService.updateGato(Number(id), idTutor, data);
     return res.json(gatoUpdated);
   } catch (error) {
     next(error);
@@ -64,7 +64,7 @@ export class GatoController {
     }
 
     const { search, searchGato, searchTutor } = req.query;
-    const gatos = await gatosService.listGatos({
+    const gatos = await this.gatoService.listGatos({
       searchGato: searchGato ?? search,
       searchTutor,
       disponiveis: true,
@@ -86,7 +86,7 @@ export class GatoController {
     }
 
     const { search, searchGato, searchTutor } = req.query;
-    const meusGatos = await gatosService.listGatos({
+    const meusGatos = await this.gatoService.listGatos({
       searchGato: searchGato ?? search,
       searchTutor,
     }, req.user.id);

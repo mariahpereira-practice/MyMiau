@@ -4,9 +4,10 @@ import { requiredAuth, UserRole } from '../middlewares/auth.middleware';
 import { authorizeRoles } from '../middlewares/role.middleware';
 import { validateBody } from '../validators/validate-body.middleware';
 import { validateCreateGato, validateUpdateGato } from '../validators/dto.validators';
+import { gatosService } from '../services/gatos.service';
 
 const router = express.Router();
-const gatoController = new GatoController();
+const gatoController = new GatoController(gatosService);
 
 router.get('/meus', requiredAuth, authorizeRoles(UserRole.TUTOR, UserRole.ADMIN), gatoController.getMeusGatos);
 router.get('/disponiveis', requiredAuth, authorizeRoles(UserRole.CATSITTER, UserRole.MODERATOR, UserRole.ADMIN), gatoController.getGatosDisponiveis);
