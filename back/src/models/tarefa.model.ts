@@ -1,5 +1,5 @@
-import db from '../config/database';
 import { TarefaResponseDTO, TarefaStatus } from '../dtos/tarefa.dto';
+import { tarefaRepository } from '../repositories/tarefa.repository';
 
 export class TarefaModel {
   private __tarefaRow: TarefaResponseDTO | null;
@@ -55,15 +55,11 @@ export class TarefaModel {
   }
 
   static async findMany({ idGato }: { idGato: number }): Promise<TarefaResponseDTO[]> {
-    const sql = `SELECT * FROM tarefas t WHERE t.gato_id = ? ORDER BY t.idTarefa DESC`;
-    const rows = await db.query<TarefaResponseDTO[]>(sql, [idGato]);
-    return rows;
+    return tarefaRepository.findMany(idGato);
   }
 
   static async findTarefaById(idTarefa: number): Promise<TarefaResponseDTO | undefined> {
-    const sql = `SELECT * FROM tarefas t WHERE t.idTarefa = ?`;
-    const rows = await db.query<TarefaResponseDTO[]>(sql, [idTarefa]);
-    return rows[0];
+    return tarefaRepository.findById(idTarefa);
   }
 
   static async createTarefa(data: {
@@ -74,39 +70,26 @@ export class TarefaModel {
     concluida_em: Date;
     gato_id: number;
   }): Promise<{ insertId: number }> {
-    const sql = `INSERT INTO tarefas (descricao, pontos, status, concluida_por, concluida_em, gato_id) VALUES (?, ?, ?, ?, ?, ?)`;
-    const result = await db.query<{ insertId: number }>(sql, [
-      data.descricao,
-      data.pontos,
-      data.status,
-      data.concluida_por,
-      data.concluida_em,
-      data.gato_id,
-    ]);
-    return result;
+    return tarefaRepository.create(data);
   }
 
   static async deletarTarefa(idTarefa: number): Promise<void> {
-    const sql = `DELETE FROM tarefas WHERE idTarefa = ?`;
-    await db.query(sql, [idTarefa]);
+    await tarefaRepository.delete(idTarefa);
   }
 
   static async updateTarefa(
     data: { descricao: string; pontos: number; status: TarefaStatus },
     idTarefa: number,
   ): Promise<void> {
-    const sql = `UPDATE tarefas SET descricao = ?, pontos = ?, status = ? WHERE idTarefa = ? `;
-    await db.query(sql, [data.descricao, data.pontos, data.status, idTarefa]);
+    await tarefaRepository.update(idTarefa, data);
   }
 
   async updateStatusTarefa(idTarefa: number, idCatSitter: number): Promise<void> {
-    const sql = `UPDATE tarefas SET status = 'CONCLUIDA', concluida_em = ?, concluida_por = ? WHERE idTarefa = ?`;
-    await db.query(sql, [new Date(), idCatSitter, idTarefa]);
+    await tarefaRepository.updateStatus(idTarefa, idCatSitter);
   }
 
   async updatePontuacaoCatSitter(idCatSitter: number, pontos: number): Promise<void> {
-    const sql = `UPDATE users SET pontuacao = pontuacao + ? WHERE id = ?`;
-    await db.query(sql, [pontos, idCatSitter]);
+    await tarefaRepository.addPoints(idCatSitter, pontos);
   }
 
 }

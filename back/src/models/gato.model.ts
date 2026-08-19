@@ -1,9 +1,5 @@
-import db from '../config/database';
 import { GatoCreateInputDTO, GatoListFiltersInputDTO, GatoResponseDTO } from '../dtos/gato.dto';
-
-type InsertResult = {
-  insertId: number | string;
-};
+import { gatoRepository } from '../repositories/gato.repository';
 
 export class GatoModel {
   private __gatoRow: GatoResponseDTO | null;
@@ -105,63 +101,17 @@ export class GatoModel {
   }
 
   static async findMany(filters: GatoListFiltersInputDTO = {}): Promise<GatoResponseDTO[]> {
-    const where: string[] = [];
-    const params: Array<string | number> = [];
-
-    if (filters.tutorId !== undefined && filters.tutorId !== null && String(filters.tutorId).trim() !== '') {
-      const parsedTutorId = Number(filters.tutorId);
-      if (!Number.isNaN(parsedTutorId)) {
-        where.push('g.tutor_id = ?');
-        params.push(parsedTutorId);
-      }
-    }
-
-    if (filters.disponiveis === true) {
-      where.push('g.disponivel_para_cuidado = 1');
-    }
-
-    if (filters.searchGato && String(filters.searchGato).trim() !== '') {
-      where.push('LOWER(g.nomeGato) LIKE LOWER(?)');
-      params.push(`%${String(filters.searchGato).trim()}%`);
-    }
-
-    if (filters.searchTutor && String(filters.searchTutor).trim() !== '') {
-      where.push('LOWER(u.username) LIKE LOWER(?)');
-      params.push(`%${String(filters.searchTutor).trim()}%`);
-    } 
-
-    const sql = `SELECT g.*, COALESCE(u.username, '') AS tutorNome FROM gatos g
-    LEFT JOIN users u ON u.id = g.tutor_id${
-      where.length ? ` WHERE ${where.join(' AND ')}` : ''
-    } ORDER BY id DESC`;
-
-    const rows = await db.query<GatoResponseDTO[]>(sql, params);
+    const rows = await gatoRepository.findMany(filters);
     return rows.map((row) => GatoModel.__normalizeGato(row) as GatoResponseDTO);
   }
 
   static async findGatoByIdGato(id: number): Promise<GatoResponseDTO | null> {
-    const rows = await db.query<GatoResponseDTO[]>(
-      `SELECT g.*, COALESCE(u.username, '') AS tutorNome
-      FROM gatos g
-      LEFT JOIN users u ON u.id = g.tutor_id
-      WHERE g.id = ?
-      LIMIT 1`,
-      [id],
-    );
-    return GatoModel.__normalizeGato(rows[0] || null);
+    return GatoModel.__normalizeGato(await gatoRepository.findById(id));
   }
 
   static async createGato(data: GatoCreateInputDTO): Promise<GatoResponseDTO> {
-    const result = await db.query<InsertResult>(
-      'INSERT INTO gatos (nomeGato, idadeGato, pesoGato, peloGato, racaGato, idIcone, tutor_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [data.nomeGato, data.idadeGato, data.pesoGato, data.peloGato, data.racaGato, data.idIcone, data.tutor_id]
-    );
-    const newGatoId = Number(result.insertId);
-    const newGato = await GatoModel.findGatoByIdGato(newGatoId);
-    if (!newGato) {
-      throw new Error('Failed to create gato.');
-    }
-    return newGato;
+    const newGato = await gatoRepository.create(data);
+    return GatoModel.__normalizeGato(newGato) as GatoResponseDTO;
   }
 
   static async updateGato(
@@ -176,22 +126,7 @@ export class GatoModel {
       disponivel_para_cuidado: 0 | 1;
     },
   ): Promise<void> {
-    const sql = `
-      UPDATE gatos
-      SET nomeGato = ?, idadeGato = ?, pesoGato = ?, peloGato = ?, racaGato = ?, idIcone = ?, disponivel_para_cuidado = ?
-      WHERE id = ?
-    `;
-
-    await db.query(sql, [
-      data.nomeGato,
-      data.idadeGato,
-      data.pesoGato,
-      data.peloGato,
-      data.racaGato,
-      data.idIcone,
-      data.disponivel_para_cuidado,
-      id,
-    ]);
+    await gatoRepository.update(id, data);
   }
 
 }

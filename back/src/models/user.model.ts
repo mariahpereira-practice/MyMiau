@@ -1,13 +1,9 @@
-import db from '../config/database';
 import { UserProfileResponseDTO, UserRole } from '../dtos/user.dto';
+import { userRepository } from '../repositories/user.repository';
 
 export interface UserRow extends UserProfileResponseDTO {
   password_hash: string;
 }
-
-type InsertResult = {
-  insertId: number | string;
-};
 
 export class UserModel {
   private __userRow: UserRow | null;
@@ -80,27 +76,15 @@ export class UserModel {
   }
 
   static async findByEmail(email: string): Promise<UserRow | null> {
-    const rows = await db.query<UserRow[]>(
-      'SELECT * FROM users WHERE email = ? LIMIT 1',
-      [email],
-    );
-    return UserModel.__normalizeUser(rows[0] ?? null);
+    return UserModel.__normalizeUser(await userRepository.findByEmail(email));
   }
 
   static async findByUsername(username: string): Promise<UserRow | null> {
-    const rows = await db.query<UserRow[]>(
-      'SELECT * FROM users WHERE username = ? LIMIT 1',
-      [username],
-    );
-    return UserModel.__normalizeUser(rows[0] ?? null);
+    return UserModel.__normalizeUser(await userRepository.findByUsername(username));
   }
 
   static async findById(id: number): Promise<UserRow | null> {
-    const rows = await db.query<UserRow[]>(
-      'SELECT id, username, email, role, pontuacao, rankGlobal, password_hash FROM users WHERE id = ? LIMIT 1',
-      [id],
-    );
-    return UserModel.__normalizeUser(rows[0] ?? null);
+    return UserModel.__normalizeUser(await userRepository.findById(id));
   }
 
   static async create({
@@ -113,11 +97,7 @@ export class UserModel {
     email: string;
     password_hash: string;
     role: UserRole;
-  }): Promise<InsertResult> {
-    const result = await db.query<InsertResult>(
-      'INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
-      [username, email, password_hash, role],
-    );
-    return result;
+  }): Promise<{ insertId: number | string }> {
+    return userRepository.create({ username, email, password_hash, role });
   }
 }
