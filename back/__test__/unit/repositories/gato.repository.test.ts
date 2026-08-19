@@ -43,6 +43,44 @@ describe('MariaDbGatoRepository', () => {
     expect(database.calls[0].params).toEqual([2, '%Mar%', '%jul%']);
   });
 
+  test('findMany lista gatos sem filtros', async () => {
+    const database = new FakeDatabaseClient([[gato]]);
+    const repository = new MariaDbGatoRepository(database);
+
+    await expect(repository.findMany()).resolves.toEqual([gato]);
+    expect(database.calls[0].params).toEqual([]);
+  });
+
+  test('findMany filtra por nome do gato', async () => {
+    const database = new FakeDatabaseClient([[gato]]);
+    const repository = new MariaDbGatoRepository(database);
+
+    await repository.findMany({ searchGato: 'Whiskers' });
+
+    expect(database.calls[0].sql).toContain('LOWER(g.nomeGato) LIKE LOWER(?)');
+    expect(database.calls[0].params).toEqual(['%Whiskers%']);
+  });
+
+  test('findMany filtra por nome do tutor', async () => {
+    const database = new FakeDatabaseClient([[gato]]);
+    const repository = new MariaDbGatoRepository(database);
+
+    await repository.findMany({ searchTutor: 'John' });
+
+    expect(database.calls[0].sql).toContain('LOWER(u.username) LIKE LOWER(?)');
+    expect(database.calls[0].params).toEqual(['%John%']);
+  });
+
+  test('findMany filtra por disponibilidade', async () => {
+    const database = new FakeDatabaseClient([[gato]]);
+    const repository = new MariaDbGatoRepository(database);
+
+    await repository.findMany({ disponiveis: true });
+
+    expect(database.calls[0].sql).toContain('g.disponivel_para_cuidado = 1');
+    expect(database.calls[0].params).toEqual([]);
+  });
+
   test('findById busca gato pelo id', async () => {
     const database = new FakeDatabaseClient([[gato]]);
     const repository = new MariaDbGatoRepository(database);
@@ -50,6 +88,13 @@ describe('MariaDbGatoRepository', () => {
     await expect(repository.findById(gato.id)).resolves.toEqual(gato);
     expect(database.calls[0].params).toEqual([gato.id]);
     expect(database.calls[0].sql).toContain('WHERE g.id = ?');
+  });
+
+  test('findById retorna null quando não encontra gato', async () => {
+    const database = new FakeDatabaseClient([[]]);
+    const repository = new MariaDbGatoRepository(database);
+
+    await expect(repository.findById(999)).resolves.toBeNull();
   });
 
   test('create insere gato e busca o registro criado', async () => {
@@ -68,6 +113,13 @@ describe('MariaDbGatoRepository', () => {
       createInput.tutor_id,
     ]);
     expect(database.calls[1].params).toEqual([gato.id]);
+  });
+
+  test('create falha quando o registro criado não pode ser recuperado', async () => {
+    const database = new FakeDatabaseClient([{ insertId: 99 }, []]);
+    const repository = new MariaDbGatoRepository(database);
+
+    await expect(repository.create(createInput)).rejects.toThrow('Failed to create gato.');
   });
 
   test('update altera os dados do gato', async () => {

@@ -4,9 +4,10 @@ import app from '../../app';
 import { GatoResponseDTO } from '../../dtos/gato.dto';
 import { TarefaResponseDTO } from '../../dtos/tarefa.dto';
 import { UserRole } from '../../dtos/user.dto';
-import { GatoModel } from '../../models/gato.model';
-import { TarefaModel } from '../../models/tarefa.model';
-import { UserModel, type UserRow } from '../../models/user.model';
+import { type UserRow } from '../../models/user.model';
+import { userRepository } from '../../repositories/user.repository';
+import { gatoRepository } from '../../repositories/gato.repository';
+import { tarefaRepository } from '../../repositories/tarefa.repository';
 
 const requiredAuthMock = jest.fn();
 
@@ -80,15 +81,15 @@ describe('Tarefa API', () => {
     gato_id: 999,
   };
 
-  const userFindByIdSpy = jest.spyOn(UserModel, 'findById');
-  const gatoFindByIdSpy = jest.spyOn(GatoModel, 'findGatoByIdGato');
-  const tarefaFindManySpy = jest.spyOn(TarefaModel, 'findMany');
-  const tarefaFindByIdSpy = jest.spyOn(TarefaModel, 'findTarefaById');
-  const tarefaCreateSpy = jest.spyOn(TarefaModel, 'createTarefa');
-  const tarefaDeleteSpy = jest.spyOn(TarefaModel, 'deletarTarefa');
-  const tarefaUpdateSpy = jest.spyOn(TarefaModel, 'updateTarefa');
-  const updateStatusSpy = jest.spyOn(TarefaModel.prototype, 'updateStatusTarefa');
-  const updatePontuacaoSpy = jest.spyOn(TarefaModel.prototype, 'updatePontuacaoCatSitter');
+  const userFindByIdSpy = jest.spyOn(userRepository, 'findById');
+  const gatoFindByIdSpy = jest.spyOn(gatoRepository, 'findById');
+  const tarefaFindManySpy = jest.spyOn(tarefaRepository, 'findMany');
+  const tarefaFindByIdSpy = jest.spyOn(tarefaRepository, 'findById');
+  const tarefaCreateSpy = jest.spyOn(tarefaRepository, 'create');
+  const tarefaDeleteSpy = jest.spyOn(tarefaRepository, 'delete');
+  const tarefaUpdateSpy = jest.spyOn(tarefaRepository, 'update');
+  const updateStatusSpy = jest.spyOn(tarefaRepository, 'updateStatus');
+  const updatePontuacaoSpy = jest.spyOn(tarefaRepository, 'addPoints');
 
   const mockTutorAuth = () => {
     requiredAuthMock.mockImplementation((req: any, _res: any, next: any) => {
@@ -134,7 +135,7 @@ describe('Tarefa API', () => {
 
       expect(response.status).toBe(200);
       expect(gatoFindByIdSpy).toHaveBeenCalledWith(gatoTutorRow.id);
-      expect(tarefaFindManySpy).toHaveBeenCalledWith({ idGato: gatoTutorRow.id });
+      expect(tarefaFindManySpy).toHaveBeenCalledWith(gatoTutorRow.id);
       expect(response.body).toEqual({ tarefas: [tarefaRow] });
     });
 
@@ -161,7 +162,7 @@ describe('Tarefa API', () => {
 
       expect(response.status).toBe(200);
       expect(gatoFindByIdSpy).toHaveBeenCalledWith(gatoTutorRow.id);
-      expect(tarefaFindManySpy).toHaveBeenCalledWith({ idGato: gatoTutorRow.id });
+      expect(tarefaFindManySpy).toHaveBeenCalledWith(gatoTutorRow.id);
       expect(response.body).toEqual({ tarefas: [tarefaRow] });
     });
 
@@ -390,12 +391,12 @@ describe('Tarefa API', () => {
       expect(gatoFindByIdSpy).toHaveBeenCalledWith(gatoTutorRow.id);
       expect(tarefaFindByIdSpy).toHaveBeenCalledWith(tarefaRow.idTarefa);
       expect(tarefaUpdateSpy).toHaveBeenCalledWith(
+        tarefaRow.idTarefa,
         {
           descricao: 'Escovar o gato atualizado',
           pontos: 20,
           status: 'CONCLUIDA',
         },
-        tarefaRow.idTarefa,
       );
       expect(response.body).toEqual({ message: 'Tarefa atualizada com sucesso!' });
     });

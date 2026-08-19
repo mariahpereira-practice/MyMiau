@@ -3,6 +3,7 @@ import { GatoCreateInputDTO, GatoListFiltersInputDTO, GatoResponseDTO, GatoUpdat
 import { UserRole } from '../../../src/dtos/user.dto';
 import { GatosService } from '../../../src/services/gatos.service';
 import { UserModel, UserRow } from '../../../src/models/user.model';
+import type { UserRepository } from '../../../src/repositories/user.repository';
 
 const listTutorRunMock = jest.fn<() => Promise<GatoResponseDTO[]>>();
 const listCatSitterRunMock = jest.fn<() => Promise<GatoResponseDTO[]>>();
@@ -79,8 +80,6 @@ jest.mock('../../../src/models/catSitterAction', () => {
 });
 
 describe('Gatos Service', () => {
-  const service = new GatosService();
-
   const userRow: UserRow = {
     id: 99,
     username: 'tutor99',
@@ -102,9 +101,17 @@ describe('Gatos Service', () => {
     disponivel_para_cuidado: 1,
   };
 
+  const userRepository: jest.Mocked<UserRepository> = {
+    findByEmail: jest.fn(),
+    findByUsername: jest.fn(),
+    findById: jest.fn(),
+    create: jest.fn(),
+  };
+  const service = new GatosService(userRepository);
+
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(UserModel, 'findById').mockResolvedValue(userRow);
+    userRepository.findById.mockResolvedValue(userRow);
   });
 
   test('should list available cats when filters.disponiveis is true', async () => {
@@ -113,7 +120,7 @@ describe('Gatos Service', () => {
 
     const result = await service.listGatos(filters, 99);
 
-    expect(UserModel.findById).toHaveBeenCalledWith(99);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
     expect(listCatSitterCtorSpy).toHaveBeenCalledTimes(1);
     expect(listCatSitterCtorSpy.mock.calls[0][1]).toEqual(filters);
     expect(listCatSitterRunMock).toHaveBeenCalledTimes(1);
@@ -126,7 +133,7 @@ describe('Gatos Service', () => {
 
     const result = await service.listGatos(filters, 99);
 
-    expect(UserModel.findById).toHaveBeenCalledWith(99);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
     expect(listTutorCtorSpy).toHaveBeenCalledTimes(1);
     expect(listTutorCtorSpy.mock.calls[0][1]).toEqual(filters);
     expect(listTutorRunMock).toHaveBeenCalledTimes(1);
@@ -147,7 +154,7 @@ describe('Gatos Service', () => {
 
     const result = await service.saveGato(payload);
 
-    expect(UserModel.findById).toHaveBeenCalledWith(99);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
     expect(saveGatoCtorSpy).toHaveBeenCalledTimes(1);
     expect(saveGatoCtorSpy.mock.calls[0][1]).toEqual(payload);
     expect(saveGatoRunMock).toHaveBeenCalledTimes(1);
@@ -167,7 +174,7 @@ describe('Gatos Service', () => {
 
     const result = await service.updateGato(10, 99, payload);
 
-    expect(UserModel.findById).toHaveBeenCalledWith(99);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
     expect(updateGatoCtorSpy).toHaveBeenCalledTimes(1);
     expect(updateGatoCtorSpy.mock.calls[0][1]).toBe(10);
     expect(updateGatoCtorSpy.mock.calls[0][2]).toEqual(payload);
@@ -180,7 +187,7 @@ describe('Gatos Service', () => {
   });
 
   test('should throw when user is not found', async () => {
-    jest.spyOn(UserModel, 'findById').mockResolvedValueOnce(null);
+    userRepository.findById.mockResolvedValueOnce(null);
 
     await expect(service.listGatos({}, 1234)).rejects.toThrow('Usuário não encontrado.');
     expect(listTutorRunMock).not.toHaveBeenCalled();

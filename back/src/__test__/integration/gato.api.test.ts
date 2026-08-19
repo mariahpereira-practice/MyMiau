@@ -2,9 +2,11 @@ import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 import request from 'supertest';
 import app from '../../app';
 import { GatoModel } from '../../models/gato.model';
-import { UserModel, type UserRow } from '../../models/user.model';
+import { type UserRow } from '../../models/user.model';
 import { UserRole } from '../../dtos/user.dto';
 import { GatoResponseDTO } from '../../dtos/gato.dto';
+import { userRepository } from '../../repositories/user.repository';
+import { gatoRepository } from '../../repositories/gato.repository';
 
 const requiredAuthMock = jest.fn();
 
@@ -54,11 +56,11 @@ describe('Gato API', () => {
     pesoGato: 5,
   };
 
-  const findByIdSpy = jest.spyOn(UserModel, 'findById');
-  const findManySpy = jest.spyOn(GatoModel, 'findMany');
-  const findGatoByIdSpy = jest.spyOn(GatoModel, 'findGatoByIdGato');
-  const createGatoSpy = jest.spyOn(GatoModel, 'createGato');
-  const updateGatoSpy = jest.spyOn(GatoModel, 'updateGato');
+  const findByIdSpy = jest.spyOn(userRepository, 'findById');
+  const findManySpy = jest.spyOn(gatoRepository, 'findMany');
+  const findGatoByIdSpy = jest.spyOn(gatoRepository, 'findById');
+  const createGatoSpy = jest.spyOn(gatoRepository, 'create');
+  const updateGatoSpy = jest.spyOn(gatoRepository, 'update');
 
   const mockTutorAuth = () => {
     requiredAuthMock.mockImplementation((req: any, _res: any, next: any) => {

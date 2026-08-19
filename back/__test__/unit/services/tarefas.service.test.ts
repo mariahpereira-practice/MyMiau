@@ -1,243 +1,115 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
-import { UserRole } from '../../../src/dtos/user.dto';
-import { TarefaService } from '../../../src/services/tarefas.service';
-import { UserModel, UserRow } from '../../../src/models/user.model';
 import { CreateTarefaInputDTO, TarefaResponseDTO, UpdateTarefaInputDTO } from '../../../src/dtos/tarefa.dto';
-import { GatoModel } from '../../../src/models/gato.model';
+import { UserRole } from '../../../src/dtos/user.dto';
+import { UserModel, UserRow } from '../../../src/models/user.model';
+import { TarefaService } from '../../../src/services/tarefas.service';
+import type { UserRepository } from '../../../src/repositories/user.repository';
 
-const listarTarefasCatSitterRunMock = jest.fn<() => Promise<TarefaResponseDTO[]>>();
-const listarTarefasTutorRunMock = jest.fn<() => Promise<TarefaResponseDTO[]>>();
-const criarTarefaRunMock = jest.fn<() => Promise<void>>();
-const deletarTarefaRunMock = jest.fn<() => Promise<void>>();
-const atualizarTarefaRunMock = jest.fn<() => Promise<void>>();
-const concluirTarefaRunMock = jest.fn<() => Promise<void>>();
-
-const listarTarefasCatSitterCtorSpy = jest.fn();
-const listarTarefasTutorCtorSpy = jest.fn();
-const criarTarefaCtorSpy = jest.fn();
-const deletarTarefaCtorSpy = jest.fn();
-const atualizarTarefaCtorSpy = jest.fn();
-const concluirTarefaCtorSpy = jest.fn();
+const runMocks = {
+  catSitterList: jest.fn<() => Promise<TarefaResponseDTO[]>>(),
+  tutorList: jest.fn<() => Promise<TarefaResponseDTO[]>>(),
+  create: jest.fn<() => Promise<void>>(),
+  remove: jest.fn<() => Promise<void>>(),
+  update: jest.fn<() => Promise<void>>(),
+  conclude: jest.fn<() => Promise<void>>(),
+};
+const ctorMocks = {
+  catSitterList: jest.fn(),
+  tutorList: jest.fn(),
+  create: jest.fn(),
+  remove: jest.fn(),
+  update: jest.fn(),
+  conclude: jest.fn(),
+};
 
 jest.mock('../../../src/models/tutorAction', () => {
   const actual = jest.requireActual('../../../src/models/tutorAction') as typeof import('../../../src/models/tutorAction');
-
-  class FakeListarTarefasTutorAction extends actual.ListarTarefasTutorAction {
-    constructor(user: UserModel, idGato: number) {
-      super(user, idGato);
-      listarTarefasTutorCtorSpy(user, idGato);
-    }
-
-    run(): Promise<TarefaResponseDTO[]> {
-      return listarTarefasTutorRunMock();
-    }
+  class FakeTutorList extends actual.ListarTarefasTutorAction {
+    constructor(user: UserModel, idGato: number) { super(user, idGato); ctorMocks.tutorList(user, idGato); }
+    run() { return runMocks.tutorList(); }
   }
-
-  class FakeCriarTarefaTutorAction extends actual.CriarTarefaTutorAction {
-    constructor(user: UserModel, idGato: number, data: CreateTarefaInputDTO) {
-      super(user, idGato, data);
-      criarTarefaCtorSpy(user, idGato, data);
-    }
-
-    run(): Promise<void> {
-      return criarTarefaRunMock();
-    }
+  class FakeCreate extends actual.CriarTarefaTutorAction {
+    constructor(user: UserModel, idGato: number, data: CreateTarefaInputDTO) { super(user, idGato, data); ctorMocks.create(user, idGato, data); }
+    run() { return runMocks.create(); }
   }
-
-  class FakeAtualizarTarefaTutorAction extends actual.AtualizarTarefaTutorAction {
-    constructor(user: UserModel, idGato: number, idTarefa: number, data: UpdateTarefaInputDTO) {
-      super(user, idGato, idTarefa, data);
-      atualizarTarefaCtorSpy(user, idGato, idTarefa, data);
-    }
-
-    run(): Promise<void> {
-      return atualizarTarefaRunMock();
-    }
+  class FakeUpdate extends actual.AtualizarTarefaTutorAction {
+    constructor(user: UserModel, idGato: number, idTarefa: number, data: UpdateTarefaInputDTO) { super(user, idGato, idTarefa, data); ctorMocks.update(user, idGato, idTarefa, data); }
+    run() { return runMocks.update(); }
   }
-
-  class FakeDeletarTarefaTutorAction extends actual.DeletarTarefaTutorAction {
-    constructor(user: UserModel, idGato: number, idTarefa: number) {
-      super(user, idGato, idTarefa);
-      deletarTarefaCtorSpy(user, idGato, idTarefa);
-    }
-
-    run(): Promise<void> {
-      return deletarTarefaRunMock();
-    }
+  class FakeRemove extends actual.DeletarTarefaTutorAction {
+    constructor(user: UserModel, idGato: number, idTarefa: number) { super(user, idGato, idTarefa); ctorMocks.remove(user, idGato, idTarefa); }
+    run() { return runMocks.remove(); }
   }
-
-  return {
-    ...actual,
-    ListarTarefasTutorAction: FakeListarTarefasTutorAction,
-    CriarTarefaTutorAction: FakeCriarTarefaTutorAction,
-    AtualizarTarefaTutorAction: FakeAtualizarTarefaTutorAction,
-    DeletarTarefaTutorAction: FakeDeletarTarefaTutorAction,
-  };
+  return { ...actual, ListarTarefasTutorAction: FakeTutorList, CriarTarefaTutorAction: FakeCreate, AtualizarTarefaTutorAction: FakeUpdate, DeletarTarefaTutorAction: FakeRemove };
 });
 
 jest.mock('../../../src/models/catSitterAction', () => {
   const actual = jest.requireActual('../../../src/models/catSitterAction') as typeof import('../../../src/models/catSitterAction');
-
-  class FakeListarTarefasCatSitterAction extends actual.ListarTarefasCatSitterAction {
-    constructor(user: UserModel, idGato: number) {
-      super(user, idGato);
-      listarTarefasCatSitterCtorSpy(user, idGato);
-    }
-
-    run(): Promise<TarefaResponseDTO[]> {
-      return listarTarefasCatSitterRunMock();
-    }
+  class FakeCatSitterList extends actual.ListarTarefasCatSitterAction {
+    constructor(user: UserModel, idGato: number) { super(user, idGato); ctorMocks.catSitterList(user, idGato); }
+    run() { return runMocks.catSitterList(); }
   }
-
-  class FakeConcluirTarefaAction extends actual.ConcluirTarefa {
-    constructor(user: UserModel, idTarefa: number) {
-      super(user, idTarefa);
-      concluirTarefaCtorSpy(user, idTarefa);
-    }
-
-    run(): Promise<void> {
-      return concluirTarefaRunMock();
-    }
-  } 
-
-  return {
-    ...actual,
-    ListarTarefasCatSitterAction: FakeListarTarefasCatSitterAction,
-    ConcluirTarefa: FakeConcluirTarefaAction,
-  };
+  class FakeConclude extends actual.ConcluirTarefa {
+    constructor(user: UserModel, idTarefa: number) { super(user, idTarefa); ctorMocks.conclude(user, idTarefa); }
+    run() { return runMocks.conclude(); }
+  }
+  return { ...actual, ListarTarefasCatSitterAction: FakeCatSitterList, ConcluirTarefa: FakeConclude };
 });
 
-describe('Tarefas Service', () => {
-  const service = new TarefaService();
-
-  const userRow: UserRow = {
-    id: 99,
-    username: 'tutor99',
-    email: 'tutor99@email.com',
-    role: UserRole.TUTOR,
-    password_hash: 'hashed-password',
-  };
-
-  const gatoRow = {
-    id: 1,
-    nomeGato: 'Mimi',
-    tutor_id: 99,
-    idadeGato: 3,
-    pesoGato: 4.5,
-    peloGato: 1,
-    racaGato: 'Siamês',
-    idIcone: 2,
-    tutorNome:'tutor99',
-    disponivel_para_cuidado: '1' as any,
-  };  
-  
-  const tarefaRow: TarefaResponseDTO = {
-    idTarefa: 7,
-    gato_id: 1,
-    descricao: 'Escovar o gato',
-    pontos: 10,
-    status: 'PENDENTE',
-    concluida_por: null,
-    concluida_em: null,
-  };
+describe('TarefaService', () => {
+  const userRow: UserRow = { id: 99, username: 'tutor99', email: 'tutor99@email.com', role: UserRole.TUTOR, password_hash: 'hash' };
+  const tarefa: TarefaResponseDTO = { idTarefa: 7, gato_id: 1, descricao: 'Escovar', pontos: 10, status: 'PENDENTE', concluida_por: null, concluida_em: null };
+  const userRepository: jest.Mocked<UserRepository> = { findByEmail: jest.fn(), findByUsername: jest.fn(), findById: jest.fn(), create: jest.fn() };
+  const service = new TarefaService(userRepository);
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(UserModel, 'findById').mockResolvedValue(userRow);
-    jest.spyOn(GatoModel, 'findGatoByIdGato').mockResolvedValue(gatoRow);
+    userRepository.findById.mockResolvedValue(userRow);
   });
 
-  test('should list tarefas for cat sitter', async () => {
-    listarTarefasCatSitterRunMock.mockResolvedValue([tarefaRow]);
-
-    const result = await service.listTarefasCatSitter({ idGato: gatoRow.id, idCatSitter: gatoRow.tutor_id });
-
-    expect(UserModel.findById).toHaveBeenCalledWith(gatoRow.tutor_id);
-    expect(listarTarefasCatSitterCtorSpy).toHaveBeenCalledTimes(1);
-    expect(listarTarefasTutorCtorSpy).not.toHaveBeenCalled();
-    expect(listarTarefasCatSitterCtorSpy.mock.calls[0][1]).toBe(gatoRow.id);
-    expect(listarTarefasCatSitterRunMock).toHaveBeenCalledTimes(1);
-    expect(result).toEqual([tarefaRow]);
+  test('lista tarefas para catsitter', async () => {
+    runMocks.catSitterList.mockResolvedValue([tarefa]);
+    await expect(service.listTarefasCatSitter({ idGato: 1, idCatSitter: 99 })).resolves.toEqual([tarefa]);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
+    expect(ctorMocks.catSitterList).toHaveBeenCalledWith(expect.any(UserModel), 1);
   });
 
-  test('should list tarefas for tutor', async () => {
-    listarTarefasTutorRunMock.mockResolvedValue([tarefaRow]);
-
-    const result = await service.listTarefasTutor({ idGato: gatoRow.id, idTutor: gatoRow.tutor_id });
-
-    expect(UserModel.findById).toHaveBeenCalledWith(gatoRow.tutor_id);
-    expect(listarTarefasTutorCtorSpy).toHaveBeenCalledTimes(1);
-    expect(listarTarefasCatSitterCtorSpy).not.toHaveBeenCalled();
-    expect(listarTarefasTutorCtorSpy.mock.calls[0][1]).toBe(gatoRow.id);
-    expect(listarTarefasTutorRunMock).toHaveBeenCalledTimes(1);
-    expect(result).toEqual([tarefaRow]);
+  test('lista tarefas para tutor', async () => {
+    runMocks.tutorList.mockResolvedValue([tarefa]);
+    await expect(service.listTarefasTutor({ idGato: 1, idTutor: 99 })).resolves.toEqual([tarefa]);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
+    expect(ctorMocks.tutorList).toHaveBeenCalledWith(expect.any(UserModel), 1);
   });
 
-  test('should create tarefa for tutor', async () => {
-    const payload: CreateTarefaInputDTO = {
-      descricao: 'Limpar caixa de areia',
-      pontos: 5,
-    };
-
-    criarTarefaRunMock.mockResolvedValue(undefined);
-
-    await service.criarTarefa(gatoRow.id, gatoRow.tutor_id, payload);
-
-    expect(UserModel.findById).toHaveBeenCalledWith(gatoRow.tutor_id);
-    expect(criarTarefaCtorSpy).toHaveBeenCalledTimes(1);
-    expect(criarTarefaCtorSpy.mock.calls[0][1]).toBe(gatoRow.id);
-    expect(criarTarefaCtorSpy.mock.calls[0][2]).toEqual(payload);
-    expect(criarTarefaRunMock).toHaveBeenCalledTimes(1);
+  test('cria tarefa', async () => {
+    const input: CreateTarefaInputDTO = { descricao: 'Limpar caixa', pontos: 5 };
+    await service.criarTarefa(1, 99, input);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
+    expect(ctorMocks.create).toHaveBeenCalledWith(expect.any(UserModel), 1, input);
   });
 
-  test('should delete tarefa for tutor', async () => {
-    deletarTarefaRunMock.mockResolvedValue(undefined);
-
-    await service.deletarTarefaServico(gatoRow.id, tarefaRow.idTarefa, gatoRow.tutor_id);
-
-    expect(UserModel.findById).toHaveBeenCalledWith(gatoRow.tutor_id);
-    expect(deletarTarefaCtorSpy).toHaveBeenCalledTimes(1);
-    expect(deletarTarefaCtorSpy.mock.calls[0][1]).toBe(gatoRow.id);
-    expect(deletarTarefaCtorSpy.mock.calls[0][2]).toBe(tarefaRow.idTarefa);
-    expect(deletarTarefaRunMock).toHaveBeenCalledTimes(1);
+  test('remove tarefa', async () => {
+    await service.deletarTarefaServico(1, 7, 99);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
+    expect(ctorMocks.remove).toHaveBeenCalledWith(expect.any(UserModel), 1, 7);
   });
 
-  test('should update tarefa for tutor', async () => {
-    const payload: UpdateTarefaInputDTO = {
-      descricao: 'Dar ração premium',
-      pontos: 20,
-      status: 'CONCLUIDA',
-    };
-
-    atualizarTarefaRunMock.mockResolvedValue(undefined);
-
-    await service.atualizarTarefa(gatoRow.id, gatoRow.tutor_id, payload, tarefaRow.idTarefa);
-
-    expect(UserModel.findById).toHaveBeenCalledWith(gatoRow.tutor_id);
-    expect(atualizarTarefaCtorSpy).toHaveBeenCalledTimes(1);
-    expect(atualizarTarefaCtorSpy.mock.calls[0][1]).toBe(gatoRow.id);
-    expect(atualizarTarefaCtorSpy.mock.calls[0][2]).toBe(tarefaRow.idTarefa);
-    expect(atualizarTarefaCtorSpy.mock.calls[0][3]).toEqual(payload);
-    expect(atualizarTarefaRunMock).toHaveBeenCalledTimes(1);
+  test('atualiza tarefa', async () => {
+    const input: UpdateTarefaInputDTO = { descricao: 'Dar ração', pontos: 20, status: 'CONCLUIDA' };
+    await service.atualizarTarefa(1, 99, input, 7);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
+    expect(ctorMocks.update).toHaveBeenCalledWith(expect.any(UserModel), 1, 7, input);
   });
 
-  test('should conclude tarefa for cat sitter', async () => {
-    concluirTarefaRunMock.mockResolvedValue(undefined);
-
-    await service.atualizarStatusTarefa(tarefaRow.idTarefa, gatoRow.tutor_id);
-
-    expect(UserModel.findById).toHaveBeenCalledWith(gatoRow.tutor_id);
-    expect(concluirTarefaCtorSpy).toHaveBeenCalledTimes(1);
-    expect(concluirTarefaCtorSpy.mock.calls[0][1]).toBe(tarefaRow.idTarefa);
-    expect(concluirTarefaRunMock).toHaveBeenCalledTimes(1);
+  test('conclui tarefa', async () => {
+    await service.atualizarStatusTarefa(7, 99);
+    expect(userRepository.findById).toHaveBeenCalledWith(99);
+    expect(ctorMocks.conclude).toHaveBeenCalledWith(expect.any(UserModel), 7);
   });
 
-  test('should throw when user is not found', async () => {
-    jest.spyOn(UserModel, 'findById').mockResolvedValueOnce(null);
-
+  test('rejeita usuário inexistente', async () => {
+    userRepository.findById.mockResolvedValueOnce(null);
     await expect(service.listTarefasTutor({ idGato: 1, idTutor: 1234 })).rejects.toThrow('Usuário não encontrado.');
-    expect(listarTarefasTutorRunMock).not.toHaveBeenCalled();
+    expect(runMocks.tutorList).not.toHaveBeenCalled();
   });
-
-
 });

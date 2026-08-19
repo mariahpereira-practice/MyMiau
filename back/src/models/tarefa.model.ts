@@ -1,5 +1,4 @@
 import { TarefaResponseDTO, TarefaStatus } from '../dtos/tarefa.dto';
-import { tarefaRepository } from '../repositories/tarefa.repository';
 
 export class TarefaModel {
   private __tarefaRow: TarefaResponseDTO | null;
@@ -52,44 +51,6 @@ export class TarefaModel {
     };
 
     return response;
-  }
-
-  static async findMany({ idGato }: { idGato: number }): Promise<TarefaResponseDTO[]> {
-    return tarefaRepository.findMany(idGato);
-  }
-
-  static async findTarefaById(idTarefa: number): Promise<TarefaResponseDTO | undefined> {
-    return tarefaRepository.findById(idTarefa);
-  }
-
-  static async createTarefa(data: {
-    descricao: string;
-    pontos: number;
-    status: TarefaStatus;
-    concluida_por: number | null;
-    concluida_em: Date;
-    gato_id: number;
-  }): Promise<{ insertId: number }> {
-    return tarefaRepository.create(data);
-  }
-
-  static async deletarTarefa(idTarefa: number): Promise<void> {
-    await tarefaRepository.delete(idTarefa);
-  }
-
-  static async updateTarefa(
-    data: { descricao: string; pontos: number; status: TarefaStatus },
-    idTarefa: number,
-  ): Promise<void> {
-    await tarefaRepository.update(idTarefa, data);
-  }
-
-  async updateStatusTarefa(idTarefa: number, idCatSitter: number): Promise<void> {
-    await tarefaRepository.updateStatus(idTarefa, idCatSitter);
-  }
-
-  async updatePontuacaoCatSitter(idCatSitter: number, pontos: number): Promise<void> {
-    await tarefaRepository.addPoints(idCatSitter, pontos);
   }
 
 }

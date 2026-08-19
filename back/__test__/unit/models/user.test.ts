@@ -1,22 +1,11 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
-import db from '../../../src/config/database';
 import { UserModel, UserRow } from '../../../src/models/user.model';
 import { UserRole } from '../../../src/dtos/user.dto';
-
-jest.mock('../../../src/config/database', () => ({
-    __esModule: true,
-    default: {
-        query: jest.fn(),
-        pool: {},
-    },
-}));
 
 describe('User Model', () => {
     let userData!: { user: UserRow };
     let user!: UserModel;
     let profileResponse!: ReturnType<UserModel['toProfileResponse']>;
-    const mockedDbQuery = db.query as any;
-    
     beforeEach(() => {
         userData = {
             user: {
@@ -32,7 +21,6 @@ describe('User Model', () => {
         jest.clearAllMocks();
         user = new UserModel(userData);
         profileResponse = user.toProfileResponse();
-        mockedDbQuery.mockResolvedValue([userData.user]);
     });
 
 
@@ -91,68 +79,6 @@ describe('User Model', () => {
         expect(profileResponse?.role).toBe(UserRole.CATSITTER);
         expect(profileResponse?.pontuacao).toBe(undefined);
         expect(profileResponse?.rankGlobal).toBe(undefined);
-    });
-
-    test('should find user by email', async () => {
-        const result = await UserModel.findByEmail(userData.user.email);
-
-        expect(mockedDbQuery).toHaveBeenCalledWith(
-            'SELECT * FROM users WHERE email = ? LIMIT 1',
-            [userData.user.email],
-        );
-        expect(result).toEqual(userData.user);
-    });
-
-    test('should find user by username', async () =>{
-        const result = await UserModel.findByUsername(userData.user.username);
-
-        expect(mockedDbQuery).toHaveBeenCalledWith(
-            'SELECT * FROM users WHERE username = ? LIMIT 1',
-            [userData.user.username],
-        );
-        expect(result).toEqual(userData.user);
-
-    });
-
-    test('should find user by id', async () =>{
-        const result = await UserModel.findById(userData.user.id);
-
-        expect(mockedDbQuery).toHaveBeenCalledWith(
-            'SELECT id, username, email, role, pontuacao, rankGlobal, password_hash FROM users WHERE id = ? LIMIT 1',
-            [userData.user.id],
-        );
-        expect(result).toEqual(userData.user);
-
-    });
-
-    test('should return null if user not found by email, username or id', async () =>{
-
-        mockedDbQuery.mockResolvedValue([]);
-
-        await expect(UserModel.findByEmail('missing@user.com')).resolves.toBeNull();
-        await expect(UserModel.findByUsername('missing-user')).resolves.toBeNull();
-        await expect(UserModel.findById(9999)).resolves.toBeNull();
-
-    });
-
-    test('should create a new user in the database', () =>{
-        mockedDbQuery.mockImplementation(async () => ({ insertId: 99 }));
-
-        const payload = {
-            username: 'newuser',
-            email: 'new@user.com',
-            password_hash: 'hashed-password',
-            role: UserRole.TUTOR,
-        };
-
-        return UserModel.create(payload).then((result: any) => {
-            expect(mockedDbQuery).toHaveBeenCalledTimes(1);
-            expect(mockedDbQuery).toHaveBeenCalledWith(
-                'INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
-                [payload.username, payload.email, payload.password_hash, payload.role],
-            );
-            expect(result).toEqual({ insertId: 99 });
-        });
     });
 
 });

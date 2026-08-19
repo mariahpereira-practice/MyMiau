@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { LoginUserInputDTO, RegisterUserInputDTO, UserRole } from '../dtos/user.dto';
 import { Action } from './action';
 import { UserModel } from './user.model';
+import { userRepository, UserRepository } from '../repositories/user.repository';
 
 type HttpError = Error & { status: number };
 
@@ -22,7 +23,7 @@ export type AuthActionResult = {
 abstract class AuthAction<TResult = void> extends Action<TResult> {
   protected readonly jwtSecret: string;
 
-  constructor(jwtSecret: string) {
+  constructor(jwtSecret: string, protected readonly userRepository: UserRepository = userRepository) {
     super();
     this.jwtSecret = jwtSecret;
   }
@@ -37,8 +38,8 @@ abstract class AuthAction<TResult = void> extends Action<TResult> {
 export class RegisterUserAction extends AuthAction<AuthActionResult> {
   private readonly input: RegisterUserInputDTO;
 
-  constructor(input: RegisterUserInputDTO, jwtSecret: string) {
-    super(jwtSecret);
+  constructor(input: RegisterUserInputDTO, jwtSecret: string, repository: UserRepository = userRepository) {
+    super(jwtSecret, repository);
     this.input = input;
   }
 
@@ -49,19 +50,19 @@ export class RegisterUserAction extends AuthAction<AuthActionResult> {
       throw this.createHttpError(400, 'Username, email and password are required.');
     }
 
-    const existingByEmail = await UserModel.findByEmail(email);
+    const existingByEmail = await this.userRepository.findByEmail(email);
     if (existingByEmail) {
       throw this.createHttpError(409, 'Email already in use.');
     }
 
-    const existingByUsername = await UserModel.findByUsername(username);
+    const existingByUsername = await this.userRepository.findByUsername(username);
     if (existingByUsername) {
       throw this.createHttpError(409, 'Username already in use.');
     }
 
     const userRole = role ?? UserRole.TUTOR;
     const passwordHash = await bcrypt.hash(password, 10);
-    const newUser = await UserModel.create({
+    const newUser = await this.userRepository.create({
       username,
       email,
       password_hash: passwordHash,
@@ -88,8 +89,8 @@ export class RegisterUserAction extends AuthAction<AuthActionResult> {
 export class LoginUserAction extends AuthAction<AuthActionResult> {
   private readonly input: LoginUserInputDTO;
 
-  constructor(input: LoginUserInputDTO, jwtSecret: string) {
-    super(jwtSecret);
+  constructor(input: LoginUserInputDTO, jwtSecret: string, repository: UserRepository = userRepository) {
+    super(jwtSecret, repository);
     this.input = input;
   }
 
@@ -117,7 +118,7 @@ export class LoginUserAction extends AuthAction<AuthActionResult> {
     }
 
     const userRow =
-      (await UserModel.findByEmail(identifier)) || (await UserModel.findByUsername(identifier));
+      (await this.userRepository.findByEmail(identifier)) || (await this.userRepository.findByUsername(identifier));
 
     if (!userRow) {
       throw this.createHttpError(401, 'Invalid credentials.');

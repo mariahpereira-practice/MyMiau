@@ -23,6 +23,13 @@ describe('MariaDbUserRepository', () => {
     });
   });
 
+  test('findByEmail retorna null quando não encontra usuário', async () => {
+    const database = new FakeDatabaseClient([[]]);
+    const repository = new MariaDbUserRepository(database);
+
+    await expect(repository.findByEmail('missing@email.com')).resolves.toBeNull();
+  });
+
   test('findByUsername busca usuário pelo nome', async () => {
     const database = new FakeDatabaseClient([[user]]);
     const repository = new MariaDbUserRepository(database);
@@ -32,6 +39,13 @@ describe('MariaDbUserRepository', () => {
     expect(database.calls[0].sql).toContain('WHERE username = ?');
   });
 
+  test('findByUsername retorna null quando não encontra usuário', async () => {
+    const database = new FakeDatabaseClient([[]]);
+    const repository = new MariaDbUserRepository(database);
+
+    await expect(repository.findByUsername('missing-user')).resolves.toBeNull();
+  });
+
   test('findById busca usuário pelo id', async () => {
     const database = new FakeDatabaseClient([[user]]);
     const repository = new MariaDbUserRepository(database);
@@ -39,6 +53,13 @@ describe('MariaDbUserRepository', () => {
     await expect(repository.findById(user.id)).resolves.toEqual(user);
     expect(database.calls[0].params).toEqual([user.id]);
     expect(database.calls[0].sql).toContain('WHERE id = ?');
+  });
+
+  test('findById retorna null quando não encontra usuário', async () => {
+    const database = new FakeDatabaseClient([[]]);
+    const repository = new MariaDbUserRepository(database);
+
+    await expect(repository.findById(9999)).resolves.toBeNull();
   });
 
   test('create insere usuário e retorna insertId', async () => {
@@ -56,5 +77,19 @@ describe('MariaDbUserRepository', () => {
       sql: 'INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
       params: [input.username, input.email, input.password_hash, input.role],
     });
+  });
+
+  test('create encaminha corretamente usuário catsitter', async () => {
+    const database = new FakeDatabaseClient([{ insertId: '11' }]);
+    const repository = new MariaDbUserRepository(database);
+    const input = { ...user, role: UserRole.CATSITTER };
+
+    await expect(repository.create(input)).resolves.toEqual({ insertId: '11' });
+    expect(database.calls[0].params).toEqual([
+      input.username,
+      input.email,
+      input.password_hash,
+      UserRole.CATSITTER,
+    ]);
   });
 });

@@ -24,6 +24,14 @@ describe('MariaDbTarefaRepository', () => {
     });
   });
 
+  test('findMany retorna lista vazia quando não há tarefas', async () => {
+    const database = new FakeDatabaseClient([[]]);
+    const repository = new MariaDbTarefaRepository(database);
+
+    await expect(repository.findMany(999)).resolves.toEqual([]);
+    expect(database.calls[0].params).toEqual([999]);
+  });
+
   test('findById busca tarefa pelo id', async () => {
     const database = new FakeDatabaseClient([[tarefa]]);
     const repository = new MariaDbTarefaRepository(database);
@@ -31,6 +39,13 @@ describe('MariaDbTarefaRepository', () => {
     await expect(repository.findById(tarefa.idTarefa)).resolves.toEqual(tarefa);
     expect(database.calls[0].params).toEqual([tarefa.idTarefa]);
     expect(database.calls[0].sql).toContain('WHERE t.idTarefa = ?');
+  });
+
+  test('findById retorna undefined quando não encontra tarefa', async () => {
+    const database = new FakeDatabaseClient([[]]);
+    const repository = new MariaDbTarefaRepository(database);
+
+    await expect(repository.findById(999)).resolves.toBeUndefined();
   });
 
   test('create insere uma tarefa', async () => {

@@ -1,5 +1,4 @@
 import { UserProfileResponseDTO, UserRole } from '../dtos/user.dto';
-import { userRepository } from '../repositories/user.repository';
 
 export interface UserRow extends UserProfileResponseDTO {
   password_hash: string;
@@ -63,41 +62,4 @@ export class UserModel {
     return profile;
   }
 
-  private static __normalizeUser(row: UserRow | null): UserRow | null {
-    if (!row) {
-      return null;
-    }
-
-    return {
-      ...row,
-      id: Number(row.id),
-      role: (row.role as UserRole) || UserRole.TUTOR,
-    };
-  }
-
-  static async findByEmail(email: string): Promise<UserRow | null> {
-    return UserModel.__normalizeUser(await userRepository.findByEmail(email));
-  }
-
-  static async findByUsername(username: string): Promise<UserRow | null> {
-    return UserModel.__normalizeUser(await userRepository.findByUsername(username));
-  }
-
-  static async findById(id: number): Promise<UserRow | null> {
-    return UserModel.__normalizeUser(await userRepository.findById(id));
-  }
-
-  static async create({
-    username,
-    email,
-    password_hash,
-    role,
-  }: {
-    username: string;
-    email: string;
-    password_hash: string;
-    role: UserRole;
-  }): Promise<{ insertId: number | string }> {
-    return userRepository.create({ username, email, password_hash, role });
-  }
 }

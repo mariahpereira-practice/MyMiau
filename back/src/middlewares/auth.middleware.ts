@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { UserModel } from '../models/user.model';
 import { AuthTokenPayloadDTO, UserRole } from '../dtos/user.dto';
+import { userRepository } from '../repositories/user.repository';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change_me';
 
@@ -29,7 +30,7 @@ export const requiredAuth = async (
       return res.status(401).json({ error: 'Token inválido ou expirado.' });
     }
 
-    const user = await UserModel.findById(userId);
+    const user = await userRepository.findById(userId);
     if (!user) {
       return res.status(401).json({ error: 'Token inválido ou expirado.' });
     }
