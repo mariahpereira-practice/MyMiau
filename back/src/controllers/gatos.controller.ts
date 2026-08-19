@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { gatosService } from '../services/gatos.service';
+import { GatosService, gatosService } from '../services/gatos.service';
 import {
   GatoCreateInputDTO,
   GatoCreateRequestDTO,
@@ -7,35 +7,40 @@ import {
   GatoUpdateInputDTO,
 } from '../dtos/gato.dto';
 
-export const saveGatoController = async (
-  req: Request<{}, {}, GatoCreateRequestDTO>,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
-  try {
-    const data = req.body;
-    const idTutor = req.user?.id;
-    if (!idTutor) {
-      return res.status(401).json({ message: 'Usuário não autenticado.' });
-    }
-    const payload: GatoCreateInputDTO = {
-      ...data,
-      tutor_id: idTutor,
-    };
-    const gato = await gatosService.saveGato(payload);
-    return res.status(201).json(gato);
-  } catch (error) {
-    next(error);
-  }
-};
+export class GatoController {
+  private readonly gatoService: GatosService;
 
-export const updateGatoController = async (
-  req: Request<{ id: string }, {}, GatoUpdateInputDTO>,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
-  try {
-    const { id } = req.params;
+  constructor() {
+    this.gatoService = gatosService;
+  }
+
+  saveGato = async (
+    req: Request<{}, {}, GatoCreateRequestDTO>, 
+    res: Response, next: NextFunction): 
+    Promise<Response | void> => { 
+    try {
+      const data = req.body;
+      const idTutor = req.user?.id;
+      if (!idTutor) {
+        return res.status(401).json({ message: 'Usuário não autenticado.' });
+      }
+      const payload: GatoCreateInputDTO = {
+        ...data,
+        tutor_id: idTutor,
+      };
+      const gato = await this.gatoService.saveGato(payload);
+      return res.status(201).json(gato);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateGato = async (
+    req: Request<{ id: string }, {}, GatoUpdateInputDTO>, 
+    res: Response, next: NextFunction): 
+    Promise<Response | void> => {
+    try {
+      const { id } = req.params;
     const idTutor = req.user?.id;
     if (!idTutor) {
       return res.status(401).json({ message: 'Usuário não autenticado.' });
@@ -46,11 +51,11 @@ export const updateGatoController = async (
   } catch (error) {
     next(error);
   }
-};
+  };
 
-export const getGatosDisponiveis = async (
+  getGatosDisponiveis = async (
     req: Request, 
-  res: Response<GatoResponseDTO[]>, 
+    res: Response<GatoResponseDTO[]>, 
     next: NextFunction): 
     Promise<Response | void> => {
   try {
@@ -68,11 +73,11 @@ export const getGatosDisponiveis = async (
   } catch (error) {
     next(error);
   }
-};
+  };
 
-export const getMeusGatos = async (
+  getMeusGatos = async (
     req: Request, 
-  res: Response<GatoResponseDTO[]>,
+    res: Response<GatoResponseDTO[]>,
     next: NextFunction): 
     Promise<Response | void> => {
   try {
@@ -89,4 +94,5 @@ export const getMeusGatos = async (
   } catch (error) {
     next(error);
   }
-};
+
+}};

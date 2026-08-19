@@ -1,9 +1,11 @@
 import express from 'express';
-import { login, register } from '../controllers/auth.controller';
+import { authController } from '../controllers/auth.controller';
+import { validateBody } from '../validators/validate-body.middleware';
+import { validateLoginUser, validateRegisterUser } from '../validators/dto.validators';
 
 const router = express.Router();
 
-router.post('/login', login);
-router.post('/register', register);
+router.post('/login', validateBody(validateLoginUser), authController.login);
+router.post('/register', validateBody(validateRegisterUser), authController.register);
 
 export default router;

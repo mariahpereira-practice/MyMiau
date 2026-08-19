@@ -262,17 +262,17 @@ describe('Tarefa API', () => {
       expect(tarefaCreateSpy).not.toHaveBeenCalled();
     });
 
-    test('retornar erro ao criar uma nova tarefa sem descricao e pontos obrigatorios', async () => {
+    test('retornar 400 ao criar uma nova tarefa sem descricao e pontos obrigatorios', async () => {
       const response = await request(app)
         .post(`/api/tarefas/tarefa/${gatoTutorRow.id}`)
         .send({});
 
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({
-        statusCode: 500,
-        message: 'Descrição e pontos são obrigatórios para salvar uma tarefa.',
-        error: true,
-      });
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({ error: true, message: 'Dados inválidos.' });
+      expect(response.body.errors).toEqual(expect.arrayContaining([
+        'descricao é obrigatória.',
+        'pontos deve ser um número positivo.',
+      ]));
     });
   });
 

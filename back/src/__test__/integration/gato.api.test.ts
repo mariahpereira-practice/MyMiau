@@ -264,7 +264,7 @@ describe('Gato API', () => {
       });
     });
 
-    test('deve retornar 500 quando faltam campos obrigatórios para criar o gato', async () => {
+    test('deve retornar 400 quando faltam campos obrigatórios para criar o gato', async () => {
       const body = {
         idadeGato: 3,
         pesoGato: 4.5,
@@ -275,12 +275,9 @@ describe('Gato API', () => {
 
       const response = await request(app).post('/api/gatos').send(body);
 
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({
-        statusCode: 500,
-        message: 'Todos os campos são obrigatórios para salvar um gato.',
-        error: true,
-      });
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({ error: true, message: 'Dados inválidos.' });
+      expect(response.body.errors).toContain('nomeGato é obrigatório.');
       expect(findManySpy).not.toHaveBeenCalled();
       expect(createGatoSpy).not.toHaveBeenCalled();
     });
@@ -293,7 +290,6 @@ describe('Gato API', () => {
         peloGato: 2,
         racaGato: 'Siamese',
         idIcone: 1,
-        tutor_id: 999,
       };
 
       findManySpy.mockResolvedValueOnce([gatoRow]);
@@ -313,7 +309,7 @@ describe('Gato API', () => {
       expect(createGatoSpy).not.toHaveBeenCalled();
     });
 
-    test('deve ignorar tutor_id enviado no body e usar o usuário autenticado', async () => {
+    test('deve rejeitar tutor_id enviado no body', async () => {
       const body = {
         nomeGato: 'Whiskers',
         idadeGato: 3,
@@ -324,29 +320,11 @@ describe('Gato API', () => {
         tutor_id: 999,
       };
 
-      findManySpy.mockResolvedValueOnce([]);
-      createGatoSpy.mockResolvedValue({
-        id: 10,
-        nomeGato: 'Whiskers',
-        idadeGato: 3,
-        pesoGato: 4.5,
-        peloGato: 2,
-        racaGato: 'Siamese',
-        idIcone: 1,
-        tutor_id: tutorUserRow.id,
-        tutorNome: tutorUserRow.username,
-        disponivel_para_cuidado: 1,
-      });
-
       const response = await request(app).post('/api/gatos').send(body);
 
-      expect(response.status).toBe(201);
-      expect(createGatoSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ tutor_id: tutorUserRow.id }),
-      );
-      expect(createGatoSpy).not.toHaveBeenCalledWith(
-        expect.objectContaining({ tutor_id: 999 }),
-      );
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toContain('tutor_id não é permitido.');
+      expect(createGatoSpy).not.toHaveBeenCalled();
     });
 
     test('deve retornar 403 quando o usuário não é tutor', async () => {
@@ -443,7 +421,7 @@ describe('Gato API', () => {
       expect(updateGatoSpy).not.toHaveBeenCalled();
     });
 
-    test('deve retornar 500 quando todos os dados vierem como nulo', async () => {
+    test('deve retornar 400 quando todos os dados vierem como nulo', async () => {
       const invalidGato: GatoResponseDTO = {
         ...gatoRow,
         nomeGato: null as any,
@@ -463,12 +441,8 @@ describe('Gato API', () => {
           disponivel_para_cuidado: null,
         });
 
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({
-        statusCode: 500,
-        message: 'Dados do gato inválidos para atualização.',
-        error: true,
-      });
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({ error: true, message: 'Dados inválidos.' });
       expect(updateGatoSpy).not.toHaveBeenCalled();
     });
 
