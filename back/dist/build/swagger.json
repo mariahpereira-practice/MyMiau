@@ -1,0 +1,774 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"TarefaStatus": {
+				"type": "string",
+				"enum": [
+					"PENDENTE",
+					"CONCLUIDA"
+				]
+			},
+			"TarefaResponseDTO": {
+				"properties": {
+					"idTarefa": {
+						"type": "number",
+						"format": "double"
+					},
+					"gato_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"descricao": {
+						"type": "string"
+					},
+					"pontos": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/TarefaStatus"
+					},
+					"concluida_por": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"concluida_em": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"idTarefa",
+					"gato_id",
+					"descricao",
+					"pontos",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"TarefasResponseDTO": {
+				"properties": {
+					"tarefas": {
+						"items": {
+							"$ref": "#/components/schemas/TarefaResponseDTO"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"tarefas"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"MessageResponseDTO": {
+				"properties": {
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"CreateTarefaInputDTO": {
+				"properties": {
+					"descricao": {
+						"type": "string"
+					},
+					"pontos": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"descricao",
+					"pontos"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"UpdateTarefaInputDTO": {
+				"properties": {
+					"descricao": {
+						"type": "string"
+					},
+					"pontos": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/TarefaStatus"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"GatoResponseDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"nomeGato": {
+						"type": "string"
+					},
+					"idadeGato": {
+						"type": "number",
+						"format": "double"
+					},
+					"pesoGato": {
+						"type": "number",
+						"format": "double"
+					},
+					"peloGato": {
+						"type": "number",
+						"format": "double"
+					},
+					"racaGato": {
+						"type": "string"
+					},
+					"idIcone": {
+						"type": "number",
+						"format": "double"
+					},
+					"tutor_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"tutorNome": {
+						"type": "string"
+					},
+					"disponivel_para_cuidado": {
+						"type": "number",
+						"enum": [
+							0,
+							1
+						]
+					}
+				},
+				"required": [
+					"id",
+					"nomeGato",
+					"idadeGato",
+					"pesoGato",
+					"peloGato",
+					"racaGato",
+					"idIcone",
+					"tutor_id",
+					"tutorNome",
+					"disponivel_para_cuidado"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"GatoCreateRequestDTO": {
+				"properties": {
+					"nomeGato": {
+						"type": "string"
+					},
+					"idadeGato": {
+						"type": "number",
+						"format": "double"
+					},
+					"pesoGato": {
+						"type": "number",
+						"format": "double"
+					},
+					"peloGato": {
+						"type": "number",
+						"format": "double"
+					},
+					"racaGato": {
+						"type": "string"
+					},
+					"idIcone": {
+						"type": "number",
+						"format": "double"
+					},
+					"disponivel_para_cuidado": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "number",
+								"enum": [
+									0,
+									1
+								]
+							}
+						]
+					}
+				},
+				"required": [
+					"nomeGato",
+					"idadeGato",
+					"pesoGato",
+					"peloGato",
+					"racaGato",
+					"idIcone"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"GatoUpdateInputDTO": {
+				"properties": {
+					"nomeGato": {
+						"type": "string"
+					},
+					"idadeGato": {
+						"type": "number",
+						"format": "double"
+					},
+					"pesoGato": {
+						"type": "number",
+						"format": "double"
+					},
+					"peloGato": {
+						"type": "number",
+						"format": "double"
+					},
+					"racaGato": {
+						"type": "string"
+					},
+					"idIcone": {
+						"type": "number",
+						"format": "double"
+					},
+					"disponivel_para_cuidado": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "number",
+								"enum": [
+									0,
+									1
+								]
+							}
+						]
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"UserRole": {
+				"enum": [
+					"TUTOR",
+					"CATSITTER",
+					"MODERATOR",
+					"ADMIN"
+				],
+				"type": "string"
+			},
+			"UserResponseDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"username": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					}
+				},
+				"required": [
+					"id",
+					"username",
+					"email",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"AuthResponseDTO": {
+				"properties": {
+					"jwt": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/UserResponseDTO"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					}
+				},
+				"required": [
+					"jwt",
+					"user",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"LoginUserInputDTO": {
+				"properties": {
+					"identifier": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"RegisterUserInputDTO": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "aula1_backend",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/tarefas/{idGato}": {
+			"get": {
+				"operationId": "GetListaTarefas",
+				"responses": {
+					"200": {
+						"description": "Tarefas encontradas",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TarefasResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idGato",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/tarefas/tarefa/{idGato}": {
+			"post": {
+				"operationId": "PostTarefa",
+				"responses": {
+					"201": {
+						"description": "Tarefa criada",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idGato",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTarefaInputDTO"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tarefas/tarefa/{idGato}/{idTarefa}": {
+			"put": {
+				"operationId": "UpdateTarefa",
+				"responses": {
+					"200": {
+						"description": "Tarefa atualizada",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idGato",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "path",
+						"name": "idTarefa",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTarefaInputDTO"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteTarefa",
+				"responses": {
+					"200": {
+						"description": "Tarefa excluída",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idGato",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "path",
+						"name": "idTarefa",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/gatos": {
+			"post": {
+				"operationId": "SaveGato",
+				"responses": {
+					"201": {
+						"description": "Gato criado com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GatoResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GatoCreateRequestDTO"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/gatos/{id}": {
+			"put": {
+				"operationId": "UpdateGato",
+				"responses": {
+					"200": {
+						"description": "Gato atualizado com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GatoResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GatoUpdateInputDTO"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/gatos/disponiveis": {
+			"get": {
+				"operationId": "GetGatosDisponiveis",
+				"responses": {
+					"200": {
+						"description": "Gatos disponíveis encontrados",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GatoResponseDTO"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "searchGato",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "searchTutor",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/gatos/meus": {
+			"get": {
+				"operationId": "GetMeusGatos",
+				"responses": {
+					"200": {
+						"description": "Gatos do tutor encontrados",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GatoResponseDTO"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "searchGato",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "searchTutor",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Login realizado com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginUserInputDTO"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"200": {
+						"description": "Usuário registrado com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisterUserInputDTO"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

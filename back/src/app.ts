@@ -1,10 +1,8 @@
 import cors from 'cors';
 import express from 'express';
-import gatoRoutes from './routes/gato.routes';
 import errorHandler from './middlewares/error.middleware';
-import authRoutes from './routes/auth.routes';
-import tarefaRoutes from './routes/tarefas.routes';
 import { requestLogger } from './middlewares/request-logger.middleware';
+import { RegisterRoutes } from './build/routes';
 
 const app = express();
 
@@ -12,9 +10,9 @@ app.use(cors({ origin: process.env.FRONTEND_ORIGIN }));
 app.use(express.json());
 app.use(requestLogger);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/gatos', gatoRoutes);
-app.use('/api/tarefas', tarefaRoutes);
+const tsoaRouter = express.Router();
+RegisterRoutes(tsoaRouter);
+app.use('/api', tsoaRouter);
 
 app.use(errorHandler);
 

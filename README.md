@@ -15,6 +15,7 @@ API REST desenvolvida com Node.js, Express e TypeScript para conectar tutores de
 - TypeScript em modo estrito
 - MariaDB para persistência
 - JWT e bcryptjs para autenticação
+- TSOA para documentação OpenAPI baseada nos controllers
 - Jest, ts-jest e Supertest para testes
 
 ## Execução
@@ -39,6 +40,28 @@ Para executar os testes:
 ```bash
 npm test
 ```
+
+## Documentação com TSOA
+
+Os controllers principais também são usados pelo TSOA para gerar a documentação OpenAPI:
+
+- `src/controllers/auth.controller.ts`
+- `src/controllers/gatos.controller.ts`
+- `src/controllers/tarefas.controller.ts`
+
+Cada controller possui uma classe decorada com `@Route`. Os métodos documentados usam decorators como `@Get`, `@Post`, `@Put`, `@Delete`, `@Body`, `@Path`, `@Query`, `@Request` e `@Security`.
+
+As rotas são geradas pelo TSOA e registradas no `app.ts` com `RegisterRoutes`. O router gerado é montado em `/api`, preservando as URLs públicas da API. Os métodos `handler...` permanecem como adapters Express durante a transição e não são usados pelo router gerado.
+
+Autenticação JWT é conectada ao TSOA por `src/middlewares/tsoa-auth.ts`, configurado em `back/tsoa.json` como `authenticationModule`. Os decorators `@Middlewares` preservam os validadores de DTO e as regras de perfil nas rotas geradas.
+
+O arquivo `back/tsoa.json` configura a busca dos controllers, o módulo de autenticação e os diretórios de saída. Gere a documentação e as rotas a partir da pasta `back` com:
+
+```bash
+npm run tsoa:generate
+```
+
+O arquivo Swagger fica em `back/dist/build/swagger.json` e as rotas geradas ficam em `back/src/build/routes.ts`. Ambos são artefatos derivados dos decorators e devem ser regenerados após alterações nos controllers.
 
 ## Autenticação
 
@@ -102,7 +125,7 @@ As validações de DTO cuidam do formato da entrada. Regras de negócio, ownersh
 ```text
 src/
 ├── config/          # Configuração e cliente de banco
-├── controllers/     # Adaptação entre HTTP e serviços
+├── controllers/     # Controllers Express e documentação OpenAPI com TSOA
 ├── dtos/            # Contratos de entrada e saída
 ├── middlewares/     # Autenticação, autorização, erros e logs
 ├── models/          # Modelos e regras de domínio/actions

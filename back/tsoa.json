@@ -1,0 +1,14 @@
+{
+    "entryFile": "src/index.ts",
+    "controllerPathGlobs": [
+        "src/controllers/**/*.ts"
+    ],
+    "spec": {
+        "outputDirectory": "dist/build",
+        "specVersion": 3
+    },
+    "routes": {
+        "routesDir": "src/build",
+        "authenticationModule": "src/middlewares/tsoa-auth.ts"
+    }
+}

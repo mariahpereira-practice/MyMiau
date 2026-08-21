@@ -136,6 +136,12 @@ export class AtualizarGatoTutorAction extends TutorAction<GatoResponseDTO> {
             throw new Error('Dados do gato inválidos para atualização.');
         }
 
+        const disponibilidade = this.data.disponivel_para_cuidado;
+        const disponivelParaCuidado: 0 | 1 = disponibilidade === true
+            ? 1
+            : disponibilidade === false
+                ? 0
+                : disponibilidade ?? gato.disponivelParaCuidado ?? 1;
         const payload = {
             nomeGato: this.data.nomeGato ?? gato.nomeGato,
             idadeGato: this.data.idadeGato ?? gato.idadeGato,
@@ -143,7 +149,7 @@ export class AtualizarGatoTutorAction extends TutorAction<GatoResponseDTO> {
             peloGato: this.data.peloGato ?? gato.peloGato,
             racaGato: this.data.racaGato ?? gato.racaGato,
             idIcone: this.data.idIcone ?? gato.idIcone,
-            disponivel_para_cuidado: this.data.disponivel_para_cuidado ?? gato.disponivelParaCuidado ?? 1,
+            disponivel_para_cuidado: disponivelParaCuidado,
         };
 
         await this.gatoRepository.update(this.idGato, payload);

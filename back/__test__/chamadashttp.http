@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ### Gatos - Ver todos os MEUS gatos - TUTOR
 GET http://localhost:1337/api/gatos/meus
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NjYyMDEzMSwiZXhwIjoxNzg3MjI0OTMxfQ.vCJzl1nyevc0nSZxfbeeg3r_0IcLLDjacswiRHTLtJ4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqdWxpYW5hQGVtYWlsLmNvbSIsInJvbGUiOiJUVVRPUiIsImlhdCI6MTc4NzMxNDk0NiwiZXhwIjoxNzg3OTE5NzQ2fQ.2x5AS2tVh6s5q5c6-O3_0ZgnTJHsLpRiOdOZSoomcXQ
 
 ### Gatos - Ver todos os gatos disponiveis - CATSITTER
 GET http://localhost:1337/api/gatos/disponiveis

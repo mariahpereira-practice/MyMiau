@@ -9,16 +9,11 @@ import { userRepository } from '../../repositories/user.repository';
 import { gatoRepository } from '../../repositories/gato.repository';
 import { tarefaRepository } from '../../repositories/tarefa.repository';
 
-const requiredAuthMock = jest.fn();
+import { expressAuthentication } from '../../middlewares/tsoa-auth';
 
-jest.mock('../../middlewares/auth.middleware', () => {
-  const { UserRole: ActualUserRole } = jest.requireActual('../../dtos/user.dto') as typeof import('../../dtos/user.dto');
-
-  return {
-    requiredAuth: (...args: unknown[]) => requiredAuthMock(...args),
-    UserRole: ActualUserRole,
-  };
-});
+jest.mock('../../middlewares/tsoa-auth', () => ({
+  expressAuthentication: jest.fn(),
+}));
 
 describe('Tarefa API', () => {
   const tutorUserRow: UserRow = {
@@ -92,31 +87,25 @@ describe('Tarefa API', () => {
   const updatePontuacaoSpy = jest.spyOn(tarefaRepository, 'addPoints');
 
   const mockTutorAuth = () => {
-    requiredAuthMock.mockImplementation((req: any, _res: any, next: any) => {
-      req.user = {
-        id: tutorUserRow.id,
-        username: tutorUserRow.username,
-        email: tutorUserRow.email,
-        role: tutorUserRow.role,
-        pontuacao: 0,
-        rankGlobal: 'No rank',
-      };
-      next();
+    jest.mocked(expressAuthentication).mockResolvedValue({
+      id: tutorUserRow.id,
+      username: tutorUserRow.username,
+      email: tutorUserRow.email,
+      role: tutorUserRow.role,
+      pontuacao: 0,
+      rankGlobal: 'No rank',
     });
     userFindByIdSpy.mockResolvedValue(tutorUserRow);
   };
 
   const mockCatSitterAuth = () => {
-    requiredAuthMock.mockImplementation((req: any, _res: any, next: any) => {
-      req.user = {
-        id: catSitterUserRow.id,
-        username: catSitterUserRow.username,
-        email: catSitterUserRow.email,
-        role: catSitterUserRow.role,
-        pontuacao: 0,
-        rankGlobal: 'No rank',
-      };
-      next();
+    jest.mocked(expressAuthentication).mockResolvedValue({
+      id: catSitterUserRow.id,
+      username: catSitterUserRow.username,
+      email: catSitterUserRow.email,
+      role: catSitterUserRow.role,
+      pontuacao: 0,
+      rankGlobal: 'No rank',
     });
     userFindByIdSpy.mockResolvedValue(catSitterUserRow);
   };

@@ -9,9 +9,11 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_dto_1 = require("../dtos/user.dto");
 const action_1 = require("./action");
 const user_model_1 = require("./user.model");
+const user_repository_1 = require("../repositories/user.repository");
 class AuthAction extends action_1.Action {
-    constructor(jwtSecret) {
+    constructor(jwtSecret, userRepository = userRepository) {
         super();
+        this.userRepository = userRepository;
         this.jwtSecret = jwtSecret;
     }
     createHttpError(status, message) {
@@ -21,8 +23,8 @@ class AuthAction extends action_1.Action {
     }
 }
 class RegisterUserAction extends AuthAction {
-    constructor(input, jwtSecret) {
-        super(jwtSecret);
+    constructor(input, jwtSecret, repository = user_repository_1.userRepository) {
+        super(jwtSecret, repository);
         this.input = input;
     }
     async run() {
@@ -30,17 +32,17 @@ class RegisterUserAction extends AuthAction {
         if (!username || !email || !password) {
             throw this.createHttpError(400, 'Username, email and password are required.');
         }
-        const existingByEmail = await user_model_1.UserModel.findByEmail(email);
+        const existingByEmail = await this.userRepository.findByEmail(email);
         if (existingByEmail) {
             throw this.createHttpError(409, 'Email already in use.');
         }
-        const existingByUsername = await user_model_1.UserModel.findByUsername(username);
+        const existingByUsername = await this.userRepository.findByUsername(username);
         if (existingByUsername) {
             throw this.createHttpError(409, 'Username already in use.');
         }
         const userRole = role ?? user_dto_1.UserRole.TUTOR;
         const passwordHash = await bcryptjs_1.default.hash(password, 10);
-        const newUser = await user_model_1.UserModel.create({
+        const newUser = await this.userRepository.create({
             username,
             email,
             password_hash: passwordHash,
@@ -58,8 +60,8 @@ class RegisterUserAction extends AuthAction {
 }
 exports.RegisterUserAction = RegisterUserAction;
 class LoginUserAction extends AuthAction {
-    constructor(input, jwtSecret) {
-        super(jwtSecret);
+    constructor(input, jwtSecret, repository = user_repository_1.userRepository) {
+        super(jwtSecret, repository);
         this.input = input;
     }
     mapPublicUser(user) {
@@ -80,7 +82,7 @@ class LoginUserAction extends AuthAction {
         if (!identifier || !password) {
             throw this.createHttpError(400, 'Identifier and password are required.');
         }
-        const userRow = (await user_model_1.UserModel.findByEmail(identifier)) || (await user_model_1.UserModel.findByUsername(identifier));
+        const userRow = (await this.userRepository.findByEmail(identifier)) || (await this.userRepository.findByUsername(identifier));
         if (!userRow) {
             throw this.createHttpError(401, 'Invalid credentials.');
         }

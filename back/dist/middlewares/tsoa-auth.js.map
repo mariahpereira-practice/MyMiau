@@ -1,0 +1,1 @@
+{"version":3,"file":"tsoa-auth.js","sourceRoot":"","sources":["../../src/middlewares/tsoa-auth.ts"],"names":[],"mappings":";;AAGA,sDASC;AAXD,mDAAmD;AAE5C,KAAK,UAAU,qBAAqB,CACzC,OAAgB,EAChB,YAAoB;IAEpB,IAAI,YAAY,KAAK,KAAK,EAAE,CAAC;QAC3B,MAAM,IAAI,KAAK,CAAC,6CAA6C,YAAY,EAAE,CAAC,CAAC;IAC/E,CAAC;IAED,OAAO,IAAA,gCAAgB,EAAC,OAAO,CAAC,CAAC;AACnC,CAAC"}

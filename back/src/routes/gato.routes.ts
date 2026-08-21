@@ -9,9 +9,9 @@ import { gatosService } from '../services/gatos.service';
 const router = express.Router();
 const gatoController = new GatoController(gatosService);
 
-router.get('/meus', requiredAuth, authorizeRoles(UserRole.TUTOR, UserRole.ADMIN), gatoController.getMeusGatos);
-router.get('/disponiveis', requiredAuth, authorizeRoles(UserRole.CATSITTER, UserRole.MODERATOR, UserRole.ADMIN), gatoController.getGatosDisponiveis);
-router.post('/', requiredAuth, authorizeRoles(UserRole.TUTOR, UserRole.ADMIN, UserRole.MODERATOR), validateBody(validateCreateGato), gatoController.saveGato);
-router.put('/:id', requiredAuth, authorizeRoles(UserRole.TUTOR, UserRole.ADMIN, UserRole.MODERATOR), validateBody(validateUpdateGato), gatoController.updateGato);
+router.get('/meus', requiredAuth, authorizeRoles(UserRole.TUTOR, UserRole.ADMIN), gatoController.handlerGetMeusGatos.bind(gatoController));
+router.get('/disponiveis', requiredAuth, authorizeRoles(UserRole.CATSITTER, UserRole.MODERATOR, UserRole.ADMIN), gatoController.handlerGetGatosDisponiveis.bind(gatoController));
+router.post('/', requiredAuth, authorizeRoles(UserRole.TUTOR, UserRole.ADMIN, UserRole.MODERATOR), validateBody(validateCreateGato), gatoController.handlerSaveGato.bind(gatoController));
+router.put('/:id', requiredAuth, authorizeRoles(UserRole.TUTOR, UserRole.ADMIN, UserRole.MODERATOR), validateBody(validateUpdateGato), gatoController.handlerUpdateGato.bind(gatoController));
 
 export default router;

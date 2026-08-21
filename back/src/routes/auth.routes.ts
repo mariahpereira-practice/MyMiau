@@ -5,7 +5,7 @@ import { validateLoginUser, validateRegisterUser } from '../validators/dto.valid
 
 const router = express.Router();
 
-router.post('/login', validateBody(validateLoginUser), authController.login);
-router.post('/register', validateBody(validateRegisterUser), authController.register);
+router.post('/login', validateBody(validateLoginUser), authController.handlerLogin.bind(authController));
+router.post('/register', validateBody(validateRegisterUser), authController.handlerRegister.bind(authController));
 
 export default router;

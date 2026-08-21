@@ -1,81 +1,157 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTarefa = exports.updateTarefa = exports.postTarefa = exports.getListaTarefas = void 0;
+exports.tarefaController = exports.TarefaController = void 0;
+const tsoa_1 = require("tsoa");
 const tarefas_service_1 = require("../services/tarefas.service");
-const getListaTarefas = async (req, res, next) => {
-    try {
-        const { idGato } = req.params;
-        if (!idGato) {
-            return res.status(400).json({ message: 'Parâmetro idGato inválido.' });
+const user_dto_1 = require("../dtos/user.dto");
+const role_middleware_1 = require("../middlewares/role.middleware");
+const validate_body_middleware_1 = require("../validators/validate-body.middleware");
+const dto_validators_1 = require("../validators/dto.validators");
+let TarefaController = class TarefaController extends tsoa_1.Controller {
+    constructor(service = tarefas_service_1.tarefasService) {
+        super();
+        this.service = service;
+    }
+    async handlerGetListaTarefas(req, res, next) {
+        try {
+            return res.json(await this.getListaTarefas(Number(req.params.idGato), req));
         }
+        catch (error) {
+            next(error);
+        }
+    }
+    async handlerPostTarefa(req, res, next) {
+        try {
+            return res.status(201).json(await this.postTarefa(Number(req.params.idGato), req.body, req));
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    async handlerUpdateTarefa(req, res, next) {
+        try {
+            const result = await this.updateTarefa(Number(req.params.idGato), Number(req.params.idTarefa), req.body, req);
+            return res.status(req.user?.role === 'CATSITTER' ? 200 : 201).json(result);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    async handlerDeleteTarefa(req, res, next) {
+        try {
+            return res.status(200).json(await this.deleteTarefa(Number(req.params.idGato), Number(req.params.idTarefa), req));
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    async getListaTarefas(idGato, req) {
         if (req.user?.role === 'CATSITTER') {
-            const idCatSitter = req.user?.id;
-            if (!idCatSitter) {
-                return res.status(401).json({ message: 'Usuário não autenticado.' });
-            }
-            const tarefas = await tarefas_service_1.tarefasService.listTarefasCatSitter({ idGato: Number(idGato), idCatSitter: Number(idCatSitter) });
-            return res.json({ tarefas });
+            return { tarefas: await this.service.listTarefasCatSitter({ idGato, idCatSitter: req.user.id }) };
         }
-        else {
-            const idTutor = req.user?.id;
-            const tarefas = await tarefas_service_1.tarefasService.listTarefasTutor({ idGato: Number(idGato), idTutor: Number(idTutor) });
-            return res.json({ tarefas });
-        }
-    }
-    catch (error) {
-        next(error);
-    }
-};
-exports.getListaTarefas = getListaTarefas;
-const postTarefa = async (req, res, next) => {
-    try {
-        const { idGato } = req.params;
         const idTutor = req.user?.id;
         if (!idTutor) {
-            return res.status(401).json({ message: 'Usuário não autenticado.' });
+            this.setStatus(401);
+            throw new Error('Usuário não autenticado.');
         }
-        const data = req.body;
-        await tarefas_service_1.tarefasService.criarTarefa(Number(idGato), Number(idTutor), data);
-        res.status(201).json({ message: 'Tarefa registrada com sucesso!' });
+        return { tarefas: await this.service.listTarefasTutor({ idGato, idTutor }) };
     }
-    catch (error) {
-        next(error);
+    async postTarefa(idGato, data, req) {
+        const idTutor = req.user?.id;
+        if (!idTutor) {
+            this.setStatus(401);
+            throw new Error('Usuário não autenticado.');
+        }
+        await this.service.criarTarefa(idGato, idTutor, data);
+        return { message: 'Tarefa registrada com sucesso!' };
     }
-};
-exports.postTarefa = postTarefa;
-const updateTarefa = async (req, res, next) => {
-    try {
-        const { idGato, idTarefa } = req.params;
+    async updateTarefa(idGato, idTarefa, data, req) {
         if (req.user?.role === 'CATSITTER') {
-            await tarefas_service_1.tarefasService.atualizarStatusTarefa(Number(idTarefa), Number(req.user?.id));
-            return res.status(200).json({ message: 'Status da tarefa atualizado com sucesso!' });
+            await this.service.atualizarStatusTarefa(idTarefa, req.user.id);
+            return { message: 'Status da tarefa atualizado com sucesso!' };
         }
         const idTutor = req.user?.id;
         if (!idTutor) {
-            return res.status(401).json({ message: 'Usuário não autenticado.' });
+            this.setStatus(401);
+            throw new Error('Usuário não autenticado.');
         }
-        const data = req.body;
-        await tarefas_service_1.tarefasService.atualizarTarefa(Number(idGato), Number(idTutor), data, Number(idTarefa));
-        res.status(201).json({ message: 'Tarefa atualizada com sucesso!' });
+        await this.service.atualizarTarefa(idGato, idTutor, data, idTarefa);
+        this.setStatus(201);
+        return { message: 'Tarefa atualizada com sucesso!' };
     }
-    catch (error) {
-        next(error);
-    }
-};
-exports.updateTarefa = updateTarefa;
-const deleteTarefa = async (req, res, next) => {
-    try {
-        const { idGato, idTarefa } = req.params;
+    async deleteTarefa(idGato, idTarefa, req) {
         const idTutor = req.user?.id;
         if (!idTutor) {
-            return res.status(401).json({ message: 'Usuário não autenticado.' });
+            this.setStatus(401);
+            throw new Error('Usuário não autenticado.');
         }
-        await tarefas_service_1.tarefasService.deletarTarefaServico(Number(idGato), Number(idTarefa), Number(idTutor));
-        res.status(200).json({ message: 'Tarefa deletada com sucesso!' });
-    }
-    catch (error) {
-        next(error);
+        await this.service.deletarTarefaServico(idGato, idTarefa, idTutor);
+        return { message: 'Tarefa deletada com sucesso!' };
     }
 };
-exports.deleteTarefa = deleteTarefa;
+exports.TarefaController = TarefaController;
+__decorate([
+    (0, tsoa_1.Get)('{idGato}'),
+    (0, tsoa_1.Security)('jwt'),
+    (0, tsoa_1.SuccessResponse)('200', 'Tarefas encontradas'),
+    __param(0, (0, tsoa_1.Path)()),
+    __param(1, (0, tsoa_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], TarefaController.prototype, "getListaTarefas", null);
+__decorate([
+    (0, tsoa_1.Post)('tarefa/{idGato}'),
+    (0, tsoa_1.Security)('jwt'),
+    (0, tsoa_1.Middlewares)((0, role_middleware_1.authorizeRoles)(user_dto_1.UserRole.TUTOR, user_dto_1.UserRole.ADMIN, user_dto_1.UserRole.MODERATOR), (0, validate_body_middleware_1.validateBody)(dto_validators_1.validateCreateTarefa)),
+    (0, tsoa_1.SuccessResponse)('201', 'Tarefa criada'),
+    __param(0, (0, tsoa_1.Path)()),
+    __param(1, (0, tsoa_1.Body)()),
+    __param(2, (0, tsoa_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object, Object]),
+    __metadata("design:returntype", Promise)
+], TarefaController.prototype, "postTarefa", null);
+__decorate([
+    (0, tsoa_1.Put)('tarefa/{idGato}/{idTarefa}'),
+    (0, tsoa_1.Security)('jwt'),
+    (0, tsoa_1.Middlewares)((0, validate_body_middleware_1.validateBody)(dto_validators_1.validateUpdateTarefa)),
+    (0, tsoa_1.SuccessResponse)('200', 'Tarefa atualizada'),
+    __param(0, (0, tsoa_1.Path)()),
+    __param(1, (0, tsoa_1.Path)()),
+    __param(2, (0, tsoa_1.Body)()),
+    __param(3, (0, tsoa_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Object, Object]),
+    __metadata("design:returntype", Promise)
+], TarefaController.prototype, "updateTarefa", null);
+__decorate([
+    (0, tsoa_1.Delete)('tarefa/{idGato}/{idTarefa}'),
+    (0, tsoa_1.Security)('jwt'),
+    (0, tsoa_1.Middlewares)((0, role_middleware_1.authorizeRoles)(user_dto_1.UserRole.TUTOR, user_dto_1.UserRole.ADMIN, user_dto_1.UserRole.MODERATOR)),
+    (0, tsoa_1.SuccessResponse)('200', 'Tarefa excluída'),
+    __param(0, (0, tsoa_1.Path)()),
+    __param(1, (0, tsoa_1.Path)()),
+    __param(2, (0, tsoa_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Object]),
+    __metadata("design:returntype", Promise)
+], TarefaController.prototype, "deleteTarefa", null);
+exports.TarefaController = TarefaController = __decorate([
+    (0, tsoa_1.Route)('tarefas'),
+    __metadata("design:paramtypes", [tarefas_service_1.TarefaService])
+], TarefaController);
+exports.tarefaController = new TarefaController();
 //# sourceMappingURL=tarefas.controller.js.map

@@ -18,7 +18,7 @@ export interface GatoCreateRequestDTO {
   peloGato: number;
   racaGato: string;
   idIcone: number;
-  disponivel_para_cuidado?: 0 | 1;
+  disponivel_para_cuidado?: 0 | 1 | boolean;
 }
 
 export interface GatoCreateInputDTO extends GatoCreateRequestDTO {
