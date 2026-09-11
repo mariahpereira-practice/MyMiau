@@ -59,7 +59,7 @@ describe('Auth Service', () => {
       token: 'register-token',
       role: UserRole.TUTOR,
       user: {
-        id: 10,
+        id: '10',
         username: 'novoUsuario',
         email: 'novo@user.com',
         role: UserRole.TUTOR,
@@ -86,7 +86,7 @@ describe('Auth Service', () => {
       token: 'login-token',
       role: UserRole.CATSITTER,
       user: {
-        id: 11,
+        id: '11',
         username: 'catsitter',
         email: 'novo@user.com',
         role: UserRole.CATSITTER,

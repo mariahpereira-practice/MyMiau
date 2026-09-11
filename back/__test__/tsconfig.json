@@ -2,7 +2,8 @@
   "extends": "../tsconfig.test.json",
   "compilerOptions": {
     "noUncheckedIndexedAccess": false,
-    "exactOptionalPropertyTypes": false
+    "exactOptionalPropertyTypes": false,
+    "isolatedModules": false
   },
-  "include": ["../src/**/*.ts", "./**/*.ts"]
+  "include": ["./**/*.ts", "../src/types/**/*.ts"]
 }
