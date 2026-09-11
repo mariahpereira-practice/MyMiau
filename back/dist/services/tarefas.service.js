@@ -4,11 +4,11 @@ exports.tarefasService = exports.TarefaService = void 0;
 const catSitterAction_1 = require("../models/catSitterAction");
 const tutorAction_1 = require("../models/tutorAction");
 const user_model_1 = require("../models/user.model");
-const user_repository_1 = require("../repositories/user.repository");
-const gato_repository_1 = require("../repositories/gato.repository");
-const tarefa_repository_1 = require("../repositories/tarefa.repository");
+const repositories_1 = require("../repositories");
+const repositories_2 = require("../repositories");
+const repositories_3 = require("../repositories");
 class TarefaService {
-    constructor(repository = user_repository_1.userRepository, gatos = gato_repository_1.gatoRepository, tarefas = tarefa_repository_1.tarefaRepository) {
+    constructor(repository = repositories_1.userRepository, gatos = repositories_2.gatoRepository, tarefas = repositories_3.tarefaRepository) {
         this.repository = repository;
         this.gatos = gatos;
         this.tarefas = tarefas;

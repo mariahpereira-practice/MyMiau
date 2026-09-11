@@ -17,12 +17,10 @@
 			"TarefaResponseDTO": {
 				"properties": {
 					"idTarefa": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"gato_id": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"descricao": {
 						"type": "string"
@@ -35,8 +33,7 @@
 						"$ref": "#/components/schemas/TarefaStatus"
 					},
 					"concluida_por": {
-						"type": "number",
-						"format": "double",
+						"type": "string",
 						"nullable": true
 					},
 					"concluida_em": {
@@ -118,8 +115,7 @@
 			"GatoResponseDTO": {
 				"properties": {
 					"id": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"nomeGato": {
 						"type": "string"
@@ -144,8 +140,7 @@
 						"format": "double"
 					},
 					"tutor_id": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"tutorNome": {
 						"type": "string"
@@ -277,8 +272,7 @@
 			"UserResponseDTO": {
 				"properties": {
 					"id": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"username": {
 						"type": "string"
@@ -387,8 +381,7 @@
 						"name": "idGato",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				]
@@ -420,8 +413,7 @@
 						"name": "idGato",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				],
@@ -463,8 +455,7 @@
 						"name": "idGato",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					},
 					{
@@ -472,8 +463,7 @@
 						"name": "idTarefa",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				],
@@ -513,8 +503,7 @@
 						"name": "idGato",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					},
 					{
@@ -522,8 +511,7 @@
 						"name": "idTarefa",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				]
@@ -588,8 +576,7 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				],

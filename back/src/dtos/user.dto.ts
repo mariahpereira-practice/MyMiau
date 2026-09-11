@@ -1,5 +1,5 @@
 export interface UserResponseDTO {
-  id: number;
+  id: string;
   username: string;
   email: string;
   role: UserRole;

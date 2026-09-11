@@ -20,12 +20,12 @@ const models = {
     "TarefaResponseDTO": {
         "dataType": "refObject",
         "properties": {
-            "idTarefa": { "dataType": "double", "required": true },
-            "gato_id": { "dataType": "double", "required": true },
+            "idTarefa": { "dataType": "string", "required": true },
+            "gato_id": { "dataType": "string", "required": true },
             "descricao": { "dataType": "string", "required": true },
             "pontos": { "dataType": "double", "required": true },
             "status": { "ref": "TarefaStatus", "required": true },
-            "concluida_por": { "dataType": "union", "subSchemas": [{ "dataType": "double" }, { "dataType": "enum", "enums": [null] }] },
+            "concluida_por": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "concluida_em": { "dataType": "union", "subSchemas": [{ "dataType": "datetime" }, { "dataType": "enum", "enums": [null] }] },
         },
         "additionalProperties": true,
@@ -69,14 +69,14 @@ const models = {
     "GatoResponseDTO": {
         "dataType": "refObject",
         "properties": {
-            "id": { "dataType": "double", "required": true },
+            "id": { "dataType": "string", "required": true },
             "nomeGato": { "dataType": "string", "required": true },
             "idadeGato": { "dataType": "double", "required": true },
             "pesoGato": { "dataType": "double", "required": true },
             "peloGato": { "dataType": "double", "required": true },
             "racaGato": { "dataType": "string", "required": true },
             "idIcone": { "dataType": "double", "required": true },
-            "tutor_id": { "dataType": "double", "required": true },
+            "tutor_id": { "dataType": "string", "required": true },
             "tutorNome": { "dataType": "string", "required": true },
             "disponivel_para_cuidado": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": [0] }, { "dataType": "enum", "enums": [1] }], "required": true },
         },
@@ -119,7 +119,7 @@ const models = {
     "UserResponseDTO": {
         "dataType": "refObject",
         "properties": {
-            "id": { "dataType": "double", "required": true },
+            "id": { "dataType": "string", "required": true },
             "username": { "dataType": "string", "required": true },
             "email": { "dataType": "string", "required": true },
             "role": { "ref": "UserRole", "required": true },
@@ -166,7 +166,7 @@ function RegisterRoutes(app) {
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
     const argsTarefaController_getListaTarefas = {
-        idGato: { "in": "path", "name": "idGato", "required": true, "dataType": "double" },
+        idGato: { "in": "path", "name": "idGato", "required": true, "dataType": "string" },
         req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
     };
     app.get('/tarefas/:idGato', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(tarefas_controller_1.TarefaController)), ...((0, runtime_1.fetchMiddlewares)(tarefas_controller_1.TarefaController.prototype.getListaTarefas)), async function TarefaController_getListaTarefas(request, response, next) {
@@ -190,7 +190,7 @@ function RegisterRoutes(app) {
     });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     const argsTarefaController_postTarefa = {
-        idGato: { "in": "path", "name": "idGato", "required": true, "dataType": "double" },
+        idGato: { "in": "path", "name": "idGato", "required": true, "dataType": "string" },
         data: { "in": "body", "name": "data", "required": true, "ref": "CreateTarefaInputDTO" },
         req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
     };
@@ -215,8 +215,8 @@ function RegisterRoutes(app) {
     });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     const argsTarefaController_updateTarefa = {
-        idGato: { "in": "path", "name": "idGato", "required": true, "dataType": "double" },
-        idTarefa: { "in": "path", "name": "idTarefa", "required": true, "dataType": "double" },
+        idGato: { "in": "path", "name": "idGato", "required": true, "dataType": "string" },
+        idTarefa: { "in": "path", "name": "idTarefa", "required": true, "dataType": "string" },
         data: { "in": "body", "name": "data", "required": true, "ref": "UpdateTarefaInputDTO" },
         req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
     };
@@ -241,8 +241,8 @@ function RegisterRoutes(app) {
     });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     const argsTarefaController_deleteTarefa = {
-        idGato: { "in": "path", "name": "idGato", "required": true, "dataType": "double" },
-        idTarefa: { "in": "path", "name": "idTarefa", "required": true, "dataType": "double" },
+        idGato: { "in": "path", "name": "idGato", "required": true, "dataType": "string" },
+        idTarefa: { "in": "path", "name": "idTarefa", "required": true, "dataType": "string" },
         req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
     };
     app.delete('/tarefas/tarefa/:idGato/:idTarefa', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(tarefas_controller_1.TarefaController)), ...((0, runtime_1.fetchMiddlewares)(tarefas_controller_1.TarefaController.prototype.deleteTarefa)), async function TarefaController_deleteTarefa(request, response, next) {
@@ -290,7 +290,7 @@ function RegisterRoutes(app) {
     });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     const argsGatoController_updateGato = {
-        id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
+        id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
         data: { "in": "body", "name": "data", "required": true, "ref": "GatoUpdateInputDTO" },
         req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
     };

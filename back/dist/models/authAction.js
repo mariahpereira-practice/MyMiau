@@ -9,7 +9,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_dto_1 = require("../dtos/user.dto");
 const action_1 = require("./action");
 const user_model_1 = require("./user.model");
-const user_repository_1 = require("../repositories/user.repository");
+const repositories_1 = require("../repositories");
 class AuthAction extends action_1.Action {
     constructor(jwtSecret, userRepository = userRepository) {
         super();
@@ -23,7 +23,7 @@ class AuthAction extends action_1.Action {
     }
 }
 class RegisterUserAction extends AuthAction {
-    constructor(input, jwtSecret, repository = user_repository_1.userRepository) {
+    constructor(input, jwtSecret, repository = repositories_1.userRepository) {
         super(jwtSecret, repository);
         this.input = input;
     }
@@ -49,7 +49,7 @@ class RegisterUserAction extends AuthAction {
             role: userRole,
         });
         const user = {
-            id: Number(newUser.insertId),
+            id: String(newUser.insertId),
             username,
             email,
             role: userRole,
@@ -60,7 +60,7 @@ class RegisterUserAction extends AuthAction {
 }
 exports.RegisterUserAction = RegisterUserAction;
 class LoginUserAction extends AuthAction {
-    constructor(input, jwtSecret, repository = user_repository_1.userRepository) {
+    constructor(input, jwtSecret, repository = repositories_1.userRepository) {
         super(jwtSecret, repository);
         this.input = input;
     }

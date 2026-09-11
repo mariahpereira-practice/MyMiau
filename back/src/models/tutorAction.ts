@@ -4,8 +4,8 @@ import { Action } from './action';
 import { GatoModel } from './gato.model';
 import { UserModel } from './user.model';
 import { TarefaModel } from './tarefa.model';
-import { gatoRepository, GatoRepository } from '../repositories/gato.repository';
-import { tarefaRepository, TarefaRepository } from '../repositories/tarefa.repository';
+import { gatoRepository, GatoRepository } from '../repositories';
+import { tarefaRepository, TarefaRepository } from '../repositories';
 
 export abstract class TutorAction<TResult = void> extends Action<TResult> {
     protected readonly gatoRepository: GatoRepository;
@@ -100,10 +100,10 @@ export class CriarGatoTutorAction extends TutorAction<GatoResponseDTO> {
 }
 
 export class AtualizarGatoTutorAction extends TutorAction<GatoResponseDTO> {
-    private readonly idGato: number;
+    private readonly idGato: string;
     private readonly data: GatoUpdateInputDTO;
 
-    constructor(user: UserModel, idGato: number, data: GatoUpdateInputDTO, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
+    constructor(user: UserModel, idGato: string, data: GatoUpdateInputDTO, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
         super(user, gatoRepositoryDependency, tarefaRepositoryDependency);
         this.idGato = idGato;
         this.data = data;
@@ -170,9 +170,9 @@ export class AtualizarGatoTutorAction extends TutorAction<GatoResponseDTO> {
 }
 
 export class ListarTarefasTutorAction extends TutorAction<TarefaResponseDTO[]> {
-    private readonly idGato: number;
+    private readonly idGato: string;
 
-    constructor(user: UserModel, idGato: number, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
+    constructor(user: UserModel, idGato: string, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
         super(user, gatoRepositoryDependency, tarefaRepositoryDependency);
         this.idGato = idGato;
     }
@@ -197,10 +197,10 @@ export class ListarTarefasTutorAction extends TutorAction<TarefaResponseDTO[]> {
 }
 
 export class CriarTarefaTutorAction extends TutorAction {
-    private readonly idGato: number;
+    private readonly idGato: string;
     private readonly data: CreateTarefaInputDTO;
 
-    constructor(user: UserModel, idGato: number, data: CreateTarefaInputDTO, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
+    constructor(user: UserModel, idGato: string, data: CreateTarefaInputDTO, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
         super(user, gatoRepositoryDependency, tarefaRepositoryDependency);
         this.idGato = idGato;
         this.data = data;
@@ -234,11 +234,11 @@ export class CriarTarefaTutorAction extends TutorAction {
 }
 
 export class AtualizarTarefaTutorAction extends TutorAction {
-    private readonly idGato: number;
-    private readonly idTarefa: number;
+    private readonly idGato: string;
+    private readonly idTarefa: string;
     private readonly data: UpdateTarefaInputDTO;
 
-    constructor(user: UserModel, idGato: number, idTarefa: number, data: UpdateTarefaInputDTO, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
+    constructor(user: UserModel, idGato: string, idTarefa: string, data: UpdateTarefaInputDTO, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
         super(user, gatoRepositoryDependency, tarefaRepositoryDependency);
         this.idGato = idGato;
         this.idTarefa = idTarefa;
@@ -284,10 +284,10 @@ export class AtualizarTarefaTutorAction extends TutorAction {
 }
 
 export class DeletarTarefaTutorAction extends TutorAction {
-    private readonly idGato: number;
-    private readonly idTarefa: number;
+    private readonly idGato: string;
+    private readonly idTarefa: string;
 
-    constructor(user: UserModel, idGato: number, idTarefa: number, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
+    constructor(user: UserModel, idGato: string, idTarefa: string, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
         super(user, gatoRepositoryDependency, tarefaRepositoryDependency);
         this.idGato = idGato;
         this.idTarefa = idTarefa;

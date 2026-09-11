@@ -49,7 +49,7 @@ let GatoController = class GatoController extends tsoa_1.Controller {
     }
     async handlerUpdateGato(req, res, next) {
         try {
-            const gatoUpdated = await this.updateGato(Number(req.params.id), req.body, req);
+            const gatoUpdated = await this.updateGato(req.params.id, req.body, req);
             return res.json(gatoUpdated);
         }
         catch (error) {
@@ -132,7 +132,7 @@ __decorate([
     __param(1, (0, tsoa_1.Body)()),
     __param(2, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object, Object]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], GatoController.prototype, "updateGato", null);
 __decorate([

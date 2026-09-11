@@ -7,11 +7,11 @@ export class TarefaModel {
     this.__tarefaRow = data.tarefa;
   }
 
-  get idTarefa(): number | null {
+  get idTarefa(): string | null {
     return this.__tarefaRow?.idTarefa || null;
   }
 
-  get gato_id(): number | null {
+  get gato_id(): string | null {
     return this.__tarefaRow?.gato_id || null;
   }
 
@@ -27,7 +27,7 @@ export class TarefaModel {
     return this.__tarefaRow?.status || null;
   }
 
-  get concluida_por(): number | null {
+  get concluida_por(): string | null {
     return this.__tarefaRow?.concluida_por || null;
   }
 
@@ -41,8 +41,8 @@ export class TarefaModel {
     } 
 
     const response: TarefaResponseDTO = {
-      idTarefa: this.idTarefa as number,
-      gato_id: this.gato_id as number,
+      idTarefa: this.idTarefa as string,
+      gato_id: this.gato_id as string,
       descricao: this.descricao as string,
       pontos: this.pontos as number,
       status: this.status as TarefaStatus,

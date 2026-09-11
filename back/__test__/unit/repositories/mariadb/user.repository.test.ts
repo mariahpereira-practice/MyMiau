@@ -1,10 +1,11 @@
 import { describe, expect, test } from '@jest/globals';
-import { UserRole } from '../../../src/dtos/user.dto';
-import { MariaDbUserRepository } from '../../../src/repositories/user.repository';
-import { FakeDatabaseClient } from '../../fakes/fake-database-client';
+import { UserRole } from '../../../../src/dtos/user.dto';
+import { MariaDbUserRepository } from '../../../../src/repositories/mariadb/user.repository';
+import { FakeDatabaseClient } from '../../../fakes/fake-database-client';
 
 describe('MariaDbUserRepository', () => {
-  const user = {
+  // O SQL devolve id numerico; o repositorio converte para string.
+  const userSqlRow = {
     id: 1,
     username: 'juliana',
     email: 'juliana@email.com',
@@ -12,8 +13,10 @@ describe('MariaDbUserRepository', () => {
     password_hash: 'hash',
   };
 
+  const user = { ...userSqlRow, id: '1' };
+
   test('findByEmail busca usuário pelo e-mail', async () => {
-    const database = new FakeDatabaseClient([[user]]);
+    const database = new FakeDatabaseClient([[userSqlRow]]);
     const repository = new MariaDbUserRepository(database);
 
     await expect(repository.findByEmail(user.email)).resolves.toEqual(user);
@@ -31,7 +34,7 @@ describe('MariaDbUserRepository', () => {
   });
 
   test('findByUsername busca usuário pelo nome', async () => {
-    const database = new FakeDatabaseClient([[user]]);
+    const database = new FakeDatabaseClient([[userSqlRow]]);
     const repository = new MariaDbUserRepository(database);
 
     await expect(repository.findByUsername(user.username)).resolves.toEqual(user);
@@ -47,11 +50,11 @@ describe('MariaDbUserRepository', () => {
   });
 
   test('findById busca usuário pelo id', async () => {
-    const database = new FakeDatabaseClient([[user]]);
+    const database = new FakeDatabaseClient([[userSqlRow]]);
     const repository = new MariaDbUserRepository(database);
 
     await expect(repository.findById(user.id)).resolves.toEqual(user);
-    expect(database.calls[0].params).toEqual([user.id]);
+    expect(database.calls[0].params).toEqual([userSqlRow.id]);
     expect(database.calls[0].sql).toContain('WHERE id = ?');
   });
 
@@ -59,7 +62,7 @@ describe('MariaDbUserRepository', () => {
     const database = new FakeDatabaseClient([[]]);
     const repository = new MariaDbUserRepository(database);
 
-    await expect(repository.findById(9999)).resolves.toBeNull();
+    await expect(repository.findById('9999')).resolves.toBeNull();
   });
 
   test('create insere usuário e retorna insertId', async () => {
@@ -72,7 +75,7 @@ describe('MariaDbUserRepository', () => {
       role: user.role,
     };
 
-    await expect(repository.create(input)).resolves.toEqual({ insertId: 10 });
+    await expect(repository.create(input)).resolves.toEqual({ insertId: '10' });
     expect(database.calls[0]).toEqual({
       sql: 'INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
       params: [input.username, input.email, input.password_hash, input.role],

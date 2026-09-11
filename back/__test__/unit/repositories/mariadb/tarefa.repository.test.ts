@@ -1,9 +1,10 @@
 import { describe, expect, test } from '@jest/globals';
-import { MariaDbTarefaRepository } from '../../../src/repositories/tarefa.repository';
-import { FakeDatabaseClient } from '../../fakes/fake-database-client';
+import { MariaDbTarefaRepository } from '../../../../src/repositories/mariadb/tarefa.repository';
+import { FakeDatabaseClient } from '../../../fakes/fake-database-client';
 
 describe('MariaDbTarefaRepository', () => {
-  const tarefa = {
+  // O SQL devolve ids numericos; o repositorio converte para string.
+  const tarefaSqlRow = {
     idTarefa: 9,
     gato_id: 7,
     descricao: 'Escovar o gato',
@@ -13,14 +14,16 @@ describe('MariaDbTarefaRepository', () => {
     concluida_em: null,
   };
 
+  const tarefa = { ...tarefaSqlRow, idTarefa: '9', gato_id: '7' };
+
   test('findMany lista tarefas do gato', async () => {
-    const database = new FakeDatabaseClient([[tarefa]]);
+    const database = new FakeDatabaseClient([[tarefaSqlRow]]);
     const repository = new MariaDbTarefaRepository(database);
 
     await expect(repository.findMany(tarefa.gato_id)).resolves.toEqual([tarefa]);
     expect(database.calls[0]).toEqual({
       sql: 'SELECT * FROM tarefas t WHERE t.gato_id = ? ORDER BY t.idTarefa DESC',
-      params: [tarefa.gato_id],
+      params: [tarefaSqlRow.gato_id],
     });
   });
 
@@ -28,16 +31,16 @@ describe('MariaDbTarefaRepository', () => {
     const database = new FakeDatabaseClient([[]]);
     const repository = new MariaDbTarefaRepository(database);
 
-    await expect(repository.findMany(999)).resolves.toEqual([]);
+    await expect(repository.findMany('999')).resolves.toEqual([]);
     expect(database.calls[0].params).toEqual([999]);
   });
 
   test('findById busca tarefa pelo id', async () => {
-    const database = new FakeDatabaseClient([[tarefa]]);
+    const database = new FakeDatabaseClient([[tarefaSqlRow]]);
     const repository = new MariaDbTarefaRepository(database);
 
     await expect(repository.findById(tarefa.idTarefa)).resolves.toEqual(tarefa);
-    expect(database.calls[0].params).toEqual([tarefa.idTarefa]);
+    expect(database.calls[0].params).toEqual([tarefaSqlRow.idTarefa]);
     expect(database.calls[0].sql).toContain('WHERE t.idTarefa = ?');
   });
 
@@ -45,7 +48,7 @@ describe('MariaDbTarefaRepository', () => {
     const database = new FakeDatabaseClient([[]]);
     const repository = new MariaDbTarefaRepository(database);
 
-    await expect(repository.findById(999)).resolves.toBeUndefined();
+    await expect(repository.findById('999')).resolves.toBeUndefined();
   });
 
   test('create insere uma tarefa', async () => {
@@ -60,7 +63,7 @@ describe('MariaDbTarefaRepository', () => {
       gato_id: tarefa.gato_id,
     };
 
-    await expect(repository.create(input)).resolves.toEqual({ insertId: 11 });
+    await expect(repository.create(input)).resolves.toEqual({ insertId: '11' });
     expect(database.calls[0].sql).toContain('INSERT INTO tarefas');
     expect(database.calls[0].params).toEqual([
       input.descricao,
@@ -68,7 +71,7 @@ describe('MariaDbTarefaRepository', () => {
       input.status,
       input.concluida_por,
       input.concluida_em,
-      input.gato_id,
+      tarefaSqlRow.gato_id,
     ]);
   });
 
@@ -80,7 +83,7 @@ describe('MariaDbTarefaRepository', () => {
 
     expect(database.calls[0]).toEqual({
       sql: 'DELETE FROM tarefas WHERE idTarefa = ?',
-      params: [tarefa.idTarefa],
+      params: [tarefaSqlRow.idTarefa],
     });
   });
 
@@ -100,7 +103,7 @@ describe('MariaDbTarefaRepository', () => {
       update.descricao,
       update.pontos,
       update.status,
-      tarefa.idTarefa,
+      tarefaSqlRow.idTarefa,
     ]);
   });
 
@@ -108,17 +111,17 @@ describe('MariaDbTarefaRepository', () => {
     const database = new FakeDatabaseClient([undefined]);
     const repository = new MariaDbTarefaRepository(database);
 
-    await repository.updateStatus(tarefa.idTarefa, 3);
+    await repository.updateStatus(tarefa.idTarefa, '3');
 
     expect(database.calls[0].sql).toContain("UPDATE tarefas SET status = 'CONCLUIDA'");
-    expect(database.calls[0].params).toEqual([expect.any(Date), 3, tarefa.idTarefa]);
+    expect(database.calls[0].params).toEqual([expect.any(Date), 3, tarefaSqlRow.idTarefa]);
   });
 
   test('addPoints atualiza pontuação do catsitter', async () => {
     const database = new FakeDatabaseClient([undefined]);
     const repository = new MariaDbTarefaRepository(database);
 
-    await repository.addPoints(3, tarefa.pontos);
+    await repository.addPoints('3', tarefa.pontos);
 
     expect(database.calls[0]).toEqual({
       sql: 'UPDATE users SET pontuacao = pontuacao + ? WHERE id = ?',

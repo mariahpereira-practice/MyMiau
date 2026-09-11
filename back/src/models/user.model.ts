@@ -11,7 +11,7 @@ export class UserModel {
     this.__userRow = data.user;
   }
 
-  get id(): number | null {
+  get id(): string | null {
     return this.__userRow?.id || null;
   }
 
@@ -45,7 +45,7 @@ export class UserModel {
     }
 
     const profile: UserProfileResponseDTO = {
-      id: this.id as number,
+      id: this.id as string,
       username: this.username as string,
       email: this.email as string,
       role: this.role ?? UserRole.TUTOR,

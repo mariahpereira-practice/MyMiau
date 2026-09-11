@@ -26,7 +26,7 @@ let TarefaController = class TarefaController extends tsoa_1.Controller {
     }
     async handlerGetListaTarefas(req, res, next) {
         try {
-            return res.json(await this.getListaTarefas(Number(req.params.idGato), req));
+            return res.json(await this.getListaTarefas(req.params.idGato, req));
         }
         catch (error) {
             next(error);
@@ -34,7 +34,7 @@ let TarefaController = class TarefaController extends tsoa_1.Controller {
     }
     async handlerPostTarefa(req, res, next) {
         try {
-            return res.status(201).json(await this.postTarefa(Number(req.params.idGato), req.body, req));
+            return res.status(201).json(await this.postTarefa(req.params.idGato, req.body, req));
         }
         catch (error) {
             next(error);
@@ -42,7 +42,7 @@ let TarefaController = class TarefaController extends tsoa_1.Controller {
     }
     async handlerUpdateTarefa(req, res, next) {
         try {
-            const result = await this.updateTarefa(Number(req.params.idGato), Number(req.params.idTarefa), req.body, req);
+            const result = await this.updateTarefa(req.params.idGato, req.params.idTarefa, req.body, req);
             return res.status(req.user?.role === 'CATSITTER' ? 200 : 201).json(result);
         }
         catch (error) {
@@ -51,7 +51,7 @@ let TarefaController = class TarefaController extends tsoa_1.Controller {
     }
     async handlerDeleteTarefa(req, res, next) {
         try {
-            return res.status(200).json(await this.deleteTarefa(Number(req.params.idGato), Number(req.params.idTarefa), req));
+            return res.status(200).json(await this.deleteTarefa(req.params.idGato, req.params.idTarefa, req));
         }
         catch (error) {
             next(error);
@@ -109,7 +109,7 @@ __decorate([
     __param(0, (0, tsoa_1.Path)()),
     __param(1, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], TarefaController.prototype, "getListaTarefas", null);
 __decorate([
@@ -121,7 +121,7 @@ __decorate([
     __param(1, (0, tsoa_1.Body)()),
     __param(2, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object, Object]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], TarefaController.prototype, "postTarefa", null);
 __decorate([
@@ -134,7 +134,7 @@ __decorate([
     __param(2, (0, tsoa_1.Body)()),
     __param(3, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, Object, Object]),
+    __metadata("design:paramtypes", [String, String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], TarefaController.prototype, "updateTarefa", null);
 __decorate([
@@ -146,7 +146,7 @@ __decorate([
     __param(1, (0, tsoa_1.Path)()),
     __param(2, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, Object]),
+    __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", Promise)
 ], TarefaController.prototype, "deleteTarefa", null);
 exports.TarefaController = TarefaController = __decorate([

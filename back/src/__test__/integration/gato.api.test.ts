@@ -5,8 +5,8 @@ import { GatoModel } from '../../models/gato.model';
 import { type UserRow } from '../../models/user.model';
 import { UserRole } from '../../dtos/user.dto';
 import { GatoResponseDTO } from '../../dtos/gato.dto';
-import { userRepository } from '../../repositories/user.repository';
-import { gatoRepository } from '../../repositories/gato.repository';
+import { userRepository } from '../../repositories';
+import { gatoRepository } from '../../repositories';
 
 import { expressAuthentication } from '../../middlewares/tsoa-auth';
 
@@ -16,7 +16,7 @@ jest.mock('../../middlewares/tsoa-auth', () => ({
 
 describe('Gato API', () => {
   const tutorUserRow: UserRow = {
-    id: 2,
+    id: '2',
     username: 'juliana',
     email: 'juliana@email.com',
     role: UserRole.TUTOR,
@@ -24,7 +24,7 @@ describe('Gato API', () => {
   };
 
   const catSitterUserRow: UserRow = {
-    id: 3,
+    id: '3',
     username: 'carlos',
     email: 'carlos@email.com',
     role: UserRole.CATSITTER,
@@ -32,14 +32,14 @@ describe('Gato API', () => {
   };
 
   const gatoRow: GatoResponseDTO = {
-    id: 8,
+    id: '8',
     nomeGato: 'Marley',
     idadeGato: 2,
     pesoGato: 4.5,
     peloGato: 2,
     racaGato: 'Sem Raça Definida',
     idIcone: 5,
-    tutor_id: 2,
+    tutor_id: '2',
     tutorNome: 'juliana',
     disponivel_para_cuidado: 1,
   };
@@ -213,7 +213,7 @@ describe('Gato API', () => {
 
       findManySpy.mockResolvedValueOnce([]);
       createGatoSpy.mockResolvedValue({
-        id: 9,
+        id: '9',
         nomeGato: 'Whiskers',
         idadeGato: 3,
         pesoGato: 4.5,
@@ -242,7 +242,7 @@ describe('Gato API', () => {
         tutor_id: tutorUserRow.id,
       });
       expect(response.body).toEqual({
-        id: 9,
+        id: '9',
         nomeGato: 'Whiskers',
         idadeGato: 3,
         pesoGato: 4.5,
@@ -348,8 +348,8 @@ describe('Gato API', () => {
         });
 
       expect(response.status).toBe(200);
-      expect(findGatoByIdSpy).toHaveBeenNthCalledWith(1, 8);
-      expect(updateGatoSpy).toHaveBeenCalledWith(8, {
+      expect(findGatoByIdSpy).toHaveBeenNthCalledWith(1, '8');
+      expect(updateGatoSpy).toHaveBeenCalledWith('8', {
         nomeGato: 'Marley Atualizado',
         idadeGato: 3,
         pesoGato: 5,
@@ -387,7 +387,7 @@ describe('Gato API', () => {
     test('deve retornar 500 quando o usuario não tem permissão para atualizar o gato com o id digitado', async () => {
       const otherUserGato: GatoResponseDTO = {
         ...gatoRow,
-        tutor_id: 999,
+        tutor_id: '999',
       };
 
       findGatoByIdSpy.mockResolvedValueOnce(otherUserGato);

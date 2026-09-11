@@ -8,7 +8,7 @@ export abstract class Action<TResult = void> {
     this.user = user;
   }
 
-  protected requireUserId(): number {
+  protected requireUserId(): string {
     const userId = this.user?.id;
     if (!userId) {
       throw new Error('Usuário inválido para esta ação.');

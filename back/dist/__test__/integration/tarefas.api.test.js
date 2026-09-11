@@ -7,30 +7,30 @@ const globals_1 = require("@jest/globals");
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../../app"));
 const user_dto_1 = require("../../dtos/user.dto");
-const user_repository_1 = require("../../repositories/user.repository");
-const gato_repository_1 = require("../../repositories/gato.repository");
-const tarefa_repository_1 = require("../../repositories/tarefa.repository");
+const repositories_1 = require("../../repositories");
+const repositories_2 = require("../../repositories");
+const repositories_3 = require("../../repositories");
 const tsoa_auth_1 = require("../../middlewares/tsoa-auth");
 globals_1.jest.mock('../../middlewares/tsoa-auth', () => ({
     expressAuthentication: globals_1.jest.fn(),
 }));
 (0, globals_1.describe)('Tarefa API', () => {
     const tutorUserRow = {
-        id: 2,
+        id: '2',
         username: 'juliana',
         email: 'juliana@email.com',
         role: user_dto_1.UserRole.TUTOR,
         password_hash: 'hashed-password',
     };
     const catSitterUserRow = {
-        id: 3,
+        id: '3',
         username: 'carlos',
         email: 'carlos@email.com',
         role: user_dto_1.UserRole.CATSITTER,
         password_hash: 'hashed-password',
     };
     const gatoTutorRow = {
-        id: 8,
+        id: '8',
         nomeGato: 'Marley',
         idadeGato: 2,
         pesoGato: 4.5,
@@ -43,7 +43,7 @@ globals_1.jest.mock('../../middlewares/tsoa-auth', () => ({
     };
     const gatoDeOutroTutorRow = {
         ...gatoTutorRow,
-        tutor_id: 999,
+        tutor_id: '999',
         tutorNome: 'outroTutor',
     };
     const gatoIndisponivelRow = {
@@ -51,7 +51,7 @@ globals_1.jest.mock('../../middlewares/tsoa-auth', () => ({
         disponivel_para_cuidado: 0,
     };
     const tarefaRow = {
-        idTarefa: 7,
+        idTarefa: '7',
         gato_id: gatoTutorRow.id,
         descricao: 'Escovar o gato',
         pontos: 10,
@@ -65,17 +65,17 @@ globals_1.jest.mock('../../middlewares/tsoa-auth', () => ({
     };
     const tarefaDeOutroGatoRow = {
         ...tarefaRow,
-        gato_id: 999,
+        gato_id: '999',
     };
-    const userFindByIdSpy = globals_1.jest.spyOn(user_repository_1.userRepository, 'findById');
-    const gatoFindByIdSpy = globals_1.jest.spyOn(gato_repository_1.gatoRepository, 'findById');
-    const tarefaFindManySpy = globals_1.jest.spyOn(tarefa_repository_1.tarefaRepository, 'findMany');
-    const tarefaFindByIdSpy = globals_1.jest.spyOn(tarefa_repository_1.tarefaRepository, 'findById');
-    const tarefaCreateSpy = globals_1.jest.spyOn(tarefa_repository_1.tarefaRepository, 'create');
-    const tarefaDeleteSpy = globals_1.jest.spyOn(tarefa_repository_1.tarefaRepository, 'delete');
-    const tarefaUpdateSpy = globals_1.jest.spyOn(tarefa_repository_1.tarefaRepository, 'update');
-    const updateStatusSpy = globals_1.jest.spyOn(tarefa_repository_1.tarefaRepository, 'updateStatus');
-    const updatePontuacaoSpy = globals_1.jest.spyOn(tarefa_repository_1.tarefaRepository, 'addPoints');
+    const userFindByIdSpy = globals_1.jest.spyOn(repositories_1.userRepository, 'findById');
+    const gatoFindByIdSpy = globals_1.jest.spyOn(repositories_2.gatoRepository, 'findById');
+    const tarefaFindManySpy = globals_1.jest.spyOn(repositories_3.tarefaRepository, 'findMany');
+    const tarefaFindByIdSpy = globals_1.jest.spyOn(repositories_3.tarefaRepository, 'findById');
+    const tarefaCreateSpy = globals_1.jest.spyOn(repositories_3.tarefaRepository, 'create');
+    const tarefaDeleteSpy = globals_1.jest.spyOn(repositories_3.tarefaRepository, 'delete');
+    const tarefaUpdateSpy = globals_1.jest.spyOn(repositories_3.tarefaRepository, 'update');
+    const updateStatusSpy = globals_1.jest.spyOn(repositories_3.tarefaRepository, 'updateStatus');
+    const updatePontuacaoSpy = globals_1.jest.spyOn(repositories_3.tarefaRepository, 'addPoints');
     const mockTutorAuth = () => {
         globals_1.jest.mocked(tsoa_auth_1.expressAuthentication).mockResolvedValue({
             id: tutorUserRow.id,
@@ -160,7 +160,7 @@ globals_1.jest.mock('../../middlewares/tsoa-auth', () => ({
     (0, globals_1.describe)('POST /api/tarefas/tarefa/:idGato', () => {
         (0, globals_1.test)('criar uma nova tarefa como tutor', async () => {
             gatoFindByIdSpy.mockResolvedValueOnce(gatoTutorRow);
-            tarefaCreateSpy.mockResolvedValueOnce({ insertId: 11 });
+            tarefaCreateSpy.mockResolvedValueOnce({ insertId: '11' });
             const response = await (0, supertest_1.default)(app_1.default)
                 .post(`/api/tarefas/tarefa/${gatoTutorRow.id}`)
                 .send({ descricao: 'Escovar o gato', pontos: 5 });

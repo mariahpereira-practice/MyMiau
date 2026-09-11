@@ -7,7 +7,7 @@ export class GatoModel {
     this.__gatoRow = data.gato;
   }
 
-  get id(): number | null {
+  get id(): string | null {
     return this.__gatoRow?.id || null;
   }
 
@@ -35,7 +35,7 @@ export class GatoModel {
     return this.__gatoRow?.idIcone || null;
   }
 
-  get tutorId(): number | null {
+  get tutorId(): string | null {
     return this.__gatoRow?.tutor_id || null;
   }
 

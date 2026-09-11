@@ -9,7 +9,7 @@ describe('User Model', () => {
     beforeEach(() => {
         userData = {
             user: {
-                id: 1,
+                id: '1',
                 username: 'testuser',
                 email: 'test@user.com',
                 role: UserRole.TUTOR,
@@ -25,7 +25,7 @@ describe('User Model', () => {
 
 
     test('should create a user with valid properties', () => {
-        expect(user.id).toBe(1);
+        expect(user.id).toBe('1');
         expect(user.username).toBe('testuser');
         expect(user.email).toBe('test@user.com');
         expect(user.role).toBe(UserRole.TUTOR);
@@ -46,7 +46,7 @@ describe('User Model', () => {
     });
 
     test('should turn the user to a profile response', () => {
-        expect(profileResponse?.id).toBe(1);
+        expect(profileResponse?.id).toBe('1');
         expect(profileResponse?.username).toBe('testuser');
         expect(profileResponse?.email).toBe('test@user.com');
         expect(profileResponse?.role).toBe(UserRole.TUTOR);
@@ -64,7 +64,7 @@ describe('User Model', () => {
     test('should handle missing optional properties in profile response', () => {
         const userDataWithoutOptional = {
             user: {
-                id: 2,
+                id: '2',
                 username: 'testuser2',
                 email: 'test2@user.com',
                 role: UserRole.CATSITTER,
@@ -73,7 +73,7 @@ describe('User Model', () => {
         };
         const user = new UserModel(userDataWithoutOptional);
         const profileResponse = user.toProfileResponse();
-        expect(profileResponse?.id).toBe(2);
+        expect(profileResponse?.id).toBe('2');
         expect(profileResponse?.username).toBe('testuser2');
         expect(profileResponse?.email).toBe('test2@user.com');
         expect(profileResponse?.role).toBe(UserRole.CATSITTER);

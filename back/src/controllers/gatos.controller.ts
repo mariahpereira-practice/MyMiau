@@ -63,7 +63,7 @@ export class GatoController extends Controller {
     Promise<Response | void> {
     try {
       const gatoUpdated = await this.updateGato(
-        Number(req.params.id),
+        req.params.id,
         req.body,
         req,
       );
@@ -78,7 +78,7 @@ export class GatoController extends Controller {
   @Middlewares(authorizeRoles(UserRole.TUTOR, UserRole.ADMIN, UserRole.MODERATOR), validateBody(validateUpdateGato))
   @SuccessResponse('200', 'Gato atualizado com sucesso')
   async updateGato(
-      @Path() id: number,
+      @Path() id: string,
       @Body() data: GatoUpdateInputDTO,
       @Request() req: ExpressRequest,
     ): Promise<GatoResponseDTO> {

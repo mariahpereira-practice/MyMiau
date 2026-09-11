@@ -4,10 +4,10 @@ exports.gatosService = exports.GatosService = void 0;
 const catSitterAction_1 = require("../models/catSitterAction");
 const tutorAction_1 = require("../models/tutorAction");
 const user_model_1 = require("../models/user.model");
-const user_repository_1 = require("../repositories/user.repository");
-const gato_repository_1 = require("../repositories/gato.repository");
+const repositories_1 = require("../repositories");
+const repositories_2 = require("../repositories");
 class GatosService {
-    constructor(repository = user_repository_1.userRepository, gatos = gato_repository_1.gatoRepository) {
+    constructor(repository = repositories_1.userRepository, gatos = repositories_2.gatoRepository) {
         this.repository = repository;
         this.gatos = gatos;
     }

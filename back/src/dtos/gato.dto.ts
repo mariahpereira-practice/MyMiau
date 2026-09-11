@@ -1,12 +1,12 @@
 export interface GatoResponseDTO {
-  id: number;
+  id: string;
   nomeGato: string;
   idadeGato: number;
   pesoGato: number;
   peloGato: number;
   racaGato: string;
   idIcone: number;
-  tutor_id: number;
+  tutor_id: string;
   tutorNome: string;
   disponivel_para_cuidado: 0 | 1;
 }
@@ -22,7 +22,7 @@ export interface GatoCreateRequestDTO {
 }
 
 export interface GatoCreateInputDTO extends GatoCreateRequestDTO {
-  tutor_id: number;
+  tutor_id: string;
 }
 
 export interface GatoUpdateInputDTO extends Partial<GatoCreateRequestDTO> {

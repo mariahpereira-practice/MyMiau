@@ -23,7 +23,7 @@ export class TarefaController extends Controller {
 
   async handlerGetListaTarefas(req: ExpressRequest<{ idGato: string }>, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      return res.json(await this.getListaTarefas(Number(req.params.idGato), req));
+      return res.json(await this.getListaTarefas(req.params.idGato, req));
     } catch (error) {
       next(error);
     }
@@ -31,7 +31,7 @@ export class TarefaController extends Controller {
 
   async handlerPostTarefa(req: ExpressRequest<{ idGato: string }, {}, CreateTarefaInputDTO>, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      return res.status(201).json(await this.postTarefa(Number(req.params.idGato), req.body, req));
+      return res.status(201).json(await this.postTarefa(req.params.idGato, req.body, req));
     } catch (error) {
       next(error);
     }
@@ -39,7 +39,7 @@ export class TarefaController extends Controller {
 
   async handlerUpdateTarefa(req: ExpressRequest<{ idGato: string; idTarefa: string }, {}, UpdateTarefaInputDTO>, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const result = await this.updateTarefa(Number(req.params.idGato), Number(req.params.idTarefa), req.body, req);
+      const result = await this.updateTarefa(req.params.idGato, req.params.idTarefa, req.body, req);
       return res.status(req.user?.role === 'CATSITTER' ? 200 : 201).json(result);
     } catch (error) {
       next(error);
@@ -48,7 +48,7 @@ export class TarefaController extends Controller {
 
   async handlerDeleteTarefa(req: ExpressRequest<{ idGato: string; idTarefa: string }>, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      return res.status(200).json(await this.deleteTarefa(Number(req.params.idGato), Number(req.params.idTarefa), req));
+      return res.status(200).json(await this.deleteTarefa(req.params.idGato, req.params.idTarefa, req));
     } catch (error) {
       next(error);
     }
@@ -57,7 +57,7 @@ export class TarefaController extends Controller {
   @Get('{idGato}')
   @Security('jwt')
   @SuccessResponse('200', 'Tarefas encontradas')
-  async getListaTarefas(@Path() idGato: number, @Request() req: any): Promise<TarefasResponseDTO> {
+  async getListaTarefas(@Path() idGato: string, @Request() req: any): Promise<TarefasResponseDTO> {
     if (req.user?.role === 'CATSITTER') {
       return { tarefas: await this.service.listTarefasCatSitter({ idGato, idCatSitter: req.user.id }) };
     }
@@ -73,7 +73,7 @@ export class TarefaController extends Controller {
   @Security('jwt')
   @Middlewares(authorizeRoles(UserRole.TUTOR, UserRole.ADMIN, UserRole.MODERATOR), validateBody(validateCreateTarefa))
   @SuccessResponse('201', 'Tarefa criada')
-  async postTarefa(@Path() idGato: number, @Body() data: CreateTarefaInputDTO, @Request() req: any): Promise<MessageResponseDTO> {
+  async postTarefa(@Path() idGato: string, @Body() data: CreateTarefaInputDTO, @Request() req: any): Promise<MessageResponseDTO> {
     const idTutor = req.user?.id;
     if (!idTutor) {
       this.setStatus(401);
@@ -87,7 +87,7 @@ export class TarefaController extends Controller {
   @Security('jwt')
   @Middlewares(validateBody(validateUpdateTarefa))
   @SuccessResponse('200', 'Tarefa atualizada')
-  async updateTarefa(@Path() idGato: number, @Path() idTarefa: number, @Body() data: UpdateTarefaInputDTO, @Request() req: any): Promise<MessageResponseDTO> {
+  async updateTarefa(@Path() idGato: string, @Path() idTarefa: string, @Body() data: UpdateTarefaInputDTO, @Request() req: any): Promise<MessageResponseDTO> {
     if (req.user?.role === 'CATSITTER') {
       await this.service.atualizarStatusTarefa(idTarefa, req.user.id);
       return { message: 'Status da tarefa atualizado com sucesso!' };
@@ -106,7 +106,7 @@ export class TarefaController extends Controller {
   @Security('jwt')
   @Middlewares(authorizeRoles(UserRole.TUTOR, UserRole.ADMIN, UserRole.MODERATOR))
   @SuccessResponse('200', 'Tarefa excluída')
-  async deleteTarefa(@Path() idGato: number, @Path() idTarefa: number, @Request() req: any): Promise<MessageResponseDTO> {
+  async deleteTarefa(@Path() idGato: string, @Path() idTarefa: string, @Request() req: any): Promise<MessageResponseDTO> {
     const idTutor = req.user?.id;
     if (!idTutor) {
       this.setStatus(401);

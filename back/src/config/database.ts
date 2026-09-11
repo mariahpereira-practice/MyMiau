@@ -1,38 +1,38 @@
 import 'dotenv/config';
-import mariadb, { Pool, PoolConnection } from 'mariadb';
+import mariadb from './databaseMariaDB';
+import { connectMongoDB } from './databaseMongoDB';
 
-function requireEnv(name: string): string {
-  const value = process.env[name];
+export type DatabaseDriver = 'mariadb' | 'mongodb';
+
+// ========== UNICO LUGAR QUE DECIDE O BANCO ==========
+// Troque aqui (ou defina DB_DRIVER no .env).
+const DEFAULT_DRIVER: DatabaseDriver = 'mongodb';
+// ====================================================
+
+function resolveDriver(): DatabaseDriver {
+  const value = process.env.DB_DRIVER?.trim().toLowerCase();
+
   if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
+    return DEFAULT_DRIVER;
   }
+
+  if (value !== 'mariadb' && value !== 'mongodb') {
+    throw new Error(`DB_DRIVER invalido: "${value}". Use "mariadb" ou "mongodb".`);
+  }
+
   return value;
 }
 
-const pool: Pool = mariadb.createPool({
-  host: requireEnv('DB_HOST'),
-  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-  user: requireEnv('DB_USER'),
-  password: requireEnv('DB_PASSWORD'),
-  database: requireEnv('DB_NAME'),
-  connectionLimit: process.env.DB_CONN_LIMIT
-    ? Number(process.env.DB_CONN_LIMIT)
-    : 10,
-});
+export const DATABASE_DRIVER: DatabaseDriver = resolveDriver();
 
-async function query<T = unknown>(sql: string, params?: unknown[]): Promise<T> {
-  let conn: PoolConnection | undefined;
-
-  try {
-    conn = await pool.getConnection();
-    const res = await conn.query(sql, params);
-    return res as T;
-  } finally {
-    conn?.release();
+export async function connectDatabase(): Promise<void> {
+  if (DATABASE_DRIVER === 'mongodb') {
+    await connectMongoDB();
+    console.log('Banco ativo: MongoDB');
+    return;
   }
-}
 
-export default {
-  pool,
-  query,
-};
+  const conn = await mariadb.pool.getConnection();
+  conn.release();
+  console.log('Banco ativo: MariaDB');
+}

@@ -4,8 +4,8 @@ import { TarefaResponseDTO } from '../dtos/tarefa.dto';
 import { UserModel } from './user.model';
 import { TarefaModel } from './tarefa.model';
 import { Action } from './action';
-import { gatoRepository, GatoRepository } from '../repositories/gato.repository';
-import { tarefaRepository, TarefaRepository } from '../repositories/tarefa.repository';
+import { gatoRepository, GatoRepository } from '../repositories';
+import { tarefaRepository, TarefaRepository } from '../repositories';
 
 abstract class CatSitterAction<TResult = void> extends Action<TResult> {
     protected readonly gatoRepository: GatoRepository;
@@ -45,9 +45,9 @@ export class ListarGatosDisponiveisCatSitterAction extends CatSitterAction<GatoR
 }
 
 export class ListarTarefasCatSitterAction extends CatSitterAction<TarefaResponseDTO[]> {
-    private readonly idGato: number;
+    private readonly idGato: string;
 
-    constructor(user: UserModel, idGato: number, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
+    constructor(user: UserModel, idGato: string, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
         super(user, gatoRepositoryDependency, tarefaRepositoryDependency);
         this.idGato = idGato;
     }
@@ -71,9 +71,9 @@ export class ListarTarefasCatSitterAction extends CatSitterAction<TarefaResponse
 }
 
 export class ConcluirTarefa extends CatSitterAction {
-    private readonly idTarefa: number;
+    private readonly idTarefa: string;
 
-    constructor(user: UserModel, idTarefa: number, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
+    constructor(user: UserModel, idTarefa: string, gatoRepositoryDependency?: GatoRepository, tarefaRepositoryDependency?: TarefaRepository) {
         super(user, gatoRepositoryDependency, tarefaRepositoryDependency);
         this.idTarefa = idTarefa;
     }

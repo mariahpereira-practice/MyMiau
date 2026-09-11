@@ -4,8 +4,8 @@ import { TarefaModel } from '../../../src/models/tarefa.model';
 
 describe('Tarefa Model', () => {
     const tarefaRow = {
-       idTarefa: 1,
-       gato_id: 1,
+       idTarefa: '1',
+       gato_id: '1',
        descricao: 'Sample Task',
        pontos: 10,
        status: 'PENDENTE',
@@ -24,8 +24,8 @@ describe('Tarefa Model', () => {
 
     test('should create a tarefa with valid properties', () => {
         expect(tarefa).toBeInstanceOf(TarefaModel);
-        expect(tarefa.idTarefa).toBe(1);
-        expect(tarefa.gato_id).toBe(1);
+        expect(tarefa.idTarefa).toBe('1');
+        expect(tarefa.gato_id).toBe('1');
         expect(tarefa.descricao).toBe('Sample Task');
         expect(tarefa.pontos).toBe(10);
         expect(tarefa.status).toBe('PENDENTE');

@@ -1,19 +1,8 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
-import db from '../../../src/config/database';
 import { GatoCreateInputDTO, GatoResponseDTO } from '../../../src/dtos/gato.dto';
 import { GatoModel } from '../../../src/models/gato.model';
 
-jest.mock('../../../src/config/database', () => ({
-    __esModule: true,
-    default: {
-        query: jest.fn(),
-        pool: {},
-    },
-}));
-
 describe('Gato Model', () => {
-    const mockedDbQuery = db.query as any;
-
     const gatoRowFromDatabase = {
         id: '1',
         nomeGato: 'Whiskers',
@@ -22,33 +11,33 @@ describe('Gato Model', () => {
         peloGato: '1',
         racaGato: 'Siamese',
         idIcone: 2,
-        tutor_id: 10,
+        tutor_id: '10',
         tutorNome: 'John Doe',
         disponivel_para_cuidado: undefined,
     } as any;
 
     const normalizedGatoRow: GatoResponseDTO = {
-        id: 1,
+        id: '1',
         nomeGato: 'Whiskers',
         idadeGato: 3,
         pesoGato: 4.5,
         peloGato: 1,
         racaGato: 'Siamese',
         idIcone: 2,
-        tutor_id: 10,
+        tutor_id: '10',
         tutorNome: 'John Doe',
         disponivel_para_cuidado: 1,
     };
 
     const queryGatoRow: GatoResponseDTO = {
-        id: 1,
+        id: '1',
         nomeGato: 'Whiskers',
         idadeGato: 3,
         pesoGato: '4.5' as any,
         peloGato: 1,
         racaGato: 'Siamese',
         idIcone: 2,
-        tutor_id: 10,
+        tutor_id: '10',
         tutorNome: 'John Doe',
         disponivel_para_cuidado: 1,
     };
@@ -63,14 +52,14 @@ describe('Gato Model', () => {
     });
 
     test('should create a gato with valid properties', () => {
-        expect(gato.id).toBe(1);
+        expect(gato.id).toBe('1');
         expect(gato.nomeGato).toBe('Whiskers');
         expect(gato.idadeGato).toBe(3);
         expect(gato.pesoGato).toBe(4.5);
         expect(gato.peloGato).toBe(1);
         expect(gato.racaGato).toBe('Siamese');
         expect(gato.idIcone).toBe(2);
-        expect(gato.tutorId).toBe(10);
+        expect(gato.tutorId).toBe('10');
         expect(gato.tutorNome).toBe('John Doe');
         expect(gato.disponivelParaCuidado).toBe(1);
     });

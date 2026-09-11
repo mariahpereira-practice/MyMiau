@@ -1,6 +1,6 @@
 import { LoginUserInputDTO, RegisterUserInputDTO } from '../dtos/user.dto';
 import { LoginUserAction, RegisterUserAction } from '../models/authAction';
-import { userRepository, UserRepository } from '../repositories/user.repository';
+import { userRepository, UserRepository } from '../repositories';
 
 export class AuthService {
   private readonly __jwtSecret = process.env.JWT_SECRET || 'change_me';

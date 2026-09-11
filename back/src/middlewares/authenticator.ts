@@ -2,7 +2,7 @@ import { Request } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { AuthTokenPayloadDTO, UserProfileResponseDTO } from '../dtos/user.dto';
 import { UserModel } from '../models/user.model';
-import { userRepository } from '../repositories/user.repository';
+import { userRepository } from '../repositories';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change_me';
 
@@ -19,8 +19,8 @@ export async function authenticateUser(req: Request): Promise<UserProfileRespons
 
   try {
     const payload = jwt.verify(token, JWT_SECRET) as JwtPayload & AuthTokenPayloadDTO;
-    const userId = Number(payload.id);
-    if (!payload.id || Number.isNaN(userId)) {
+    const userId = String(payload.id ?? '');
+    if (!userId) {
       throw new Error('Token inválido ou expirado.');
     }
 

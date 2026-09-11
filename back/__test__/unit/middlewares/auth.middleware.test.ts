@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { requiredAuth } from '../../../src/middlewares/auth.middleware';
-import { userRepository } from '../../../src/repositories/user.repository';
+import { userRepository } from '../../../src/repositories';
 import { UserRole } from '../../../src/dtos/user.dto';
 
 jest.mock('jsonwebtoken', () => ({
@@ -24,7 +24,7 @@ describe('requiredAuth', () => {
   const verifyMock = jwt.verify as jest.Mock;
   const findByIdMock = jest.spyOn(userRepository, 'findById');
   const user = {
-    id: 7,
+    id: '7',
     username: 'juliana',
     email: 'juliana@email.com',
     role: UserRole.TUTOR,

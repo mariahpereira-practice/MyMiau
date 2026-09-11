@@ -7,8 +7,8 @@ import {
 import { ListarGatosDisponiveisCatSitterAction } from '../models/catSitterAction';
 import { AtualizarGatoTutorAction, CriarGatoTutorAction, ListarMeusGatosTutorAction } from '../models/tutorAction';
 import { UserModel } from '../models/user.model';
-import { userRepository, UserRepository } from '../repositories/user.repository';
-import { gatoRepository, GatoRepository } from '../repositories/gato.repository';
+import { userRepository, UserRepository } from '../repositories';
+import { gatoRepository, GatoRepository } from '../repositories';
 
 export class GatosService {
 
@@ -17,7 +17,7 @@ export class GatosService {
     private readonly gatos: GatoRepository = gatoRepository,
   ) {}
 
-  private async __findUserOrThrow(idUser: number): Promise<UserModel> {
+  private async __findUserOrThrow(idUser: string): Promise<UserModel> {
     const user = await this.repository.findById(idUser);
 
     if (!user) {
@@ -27,7 +27,7 @@ export class GatosService {
     return new UserModel({ user });
   }
 
-  async listGatos(filters: GatoListFiltersInputDTO & { disponiveis?: boolean }, idUser: number) {
+  async listGatos(filters: GatoListFiltersInputDTO & { disponiveis?: boolean }, idUser: string) {
     const user = await this.__findUserOrThrow(idUser);
 
     if (filters.disponiveis === true) {
@@ -45,7 +45,7 @@ export class GatosService {
     return action.run();
   }
 
-  async updateGato(id: number, idTutor: number, data: GatoUpdateInputDTO): Promise<GatoResponseDTO> {
+  async updateGato(id: string, idTutor: string, data: GatoUpdateInputDTO): Promise<GatoResponseDTO> {
     const tutor = await this.__findUserOrThrow(idTutor);
     const action = new AtualizarGatoTutorAction(tutor, id, data, this.gatos);
     return action.run();

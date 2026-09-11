@@ -4,10 +4,10 @@ exports.ConcluirTarefa = exports.ListarTarefasCatSitterAction = exports.ListarGa
 const gato_model_1 = require("./gato.model");
 const tarefa_model_1 = require("./tarefa.model");
 const action_1 = require("./action");
-const gato_repository_1 = require("../repositories/gato.repository");
-const tarefa_repository_1 = require("../repositories/tarefa.repository");
+const repositories_1 = require("../repositories");
+const repositories_2 = require("../repositories");
 class CatSitterAction extends action_1.Action {
-    constructor(user, gatoRepositoryDependency = gato_repository_1.gatoRepository, tarefaRepositoryDependency = tarefa_repository_1.tarefaRepository) {
+    constructor(user, gatoRepositoryDependency = repositories_1.gatoRepository, tarefaRepositoryDependency = repositories_2.tarefaRepository) {
         super(user);
         this.gatoRepository = gatoRepositoryDependency;
         this.tarefaRepository = tarefaRepositoryDependency;

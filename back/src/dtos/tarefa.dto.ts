@@ -1,12 +1,12 @@
 export type TarefaStatus = 'PENDENTE' | 'CONCLUIDA';
 
 export interface TarefaResponseDTO {
-  idTarefa: number;
-  gato_id: number;
+  idTarefa: string;
+  gato_id: string;
   descricao: string;
   pontos: number;
   status: TarefaStatus;
-  concluida_por?: number | null;
+  concluida_por?: string | null;
   concluida_em?: Date | null;
 }
 

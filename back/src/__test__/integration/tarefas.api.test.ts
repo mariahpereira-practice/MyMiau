@@ -5,9 +5,9 @@ import { GatoResponseDTO } from '../../dtos/gato.dto';
 import { TarefaResponseDTO } from '../../dtos/tarefa.dto';
 import { UserRole } from '../../dtos/user.dto';
 import { type UserRow } from '../../models/user.model';
-import { userRepository } from '../../repositories/user.repository';
-import { gatoRepository } from '../../repositories/gato.repository';
-import { tarefaRepository } from '../../repositories/tarefa.repository';
+import { userRepository } from '../../repositories';
+import { gatoRepository } from '../../repositories';
+import { tarefaRepository } from '../../repositories';
 
 import { expressAuthentication } from '../../middlewares/tsoa-auth';
 
@@ -17,7 +17,7 @@ jest.mock('../../middlewares/tsoa-auth', () => ({
 
 describe('Tarefa API', () => {
   const tutorUserRow: UserRow = {
-    id: 2,
+    id: '2',
     username: 'juliana',
     email: 'juliana@email.com',
     role: UserRole.TUTOR,
@@ -25,7 +25,7 @@ describe('Tarefa API', () => {
   };
 
   const catSitterUserRow: UserRow = {
-    id: 3,
+    id: '3',
     username: 'carlos',
     email: 'carlos@email.com',
     role: UserRole.CATSITTER,
@@ -33,7 +33,7 @@ describe('Tarefa API', () => {
   };
 
   const gatoTutorRow: GatoResponseDTO = {
-    id: 8,
+    id: '8',
     nomeGato: 'Marley',
     idadeGato: 2,
     pesoGato: 4.5,
@@ -47,7 +47,7 @@ describe('Tarefa API', () => {
 
   const gatoDeOutroTutorRow: GatoResponseDTO = {
     ...gatoTutorRow,
-    tutor_id: 999,
+    tutor_id: '999',
     tutorNome: 'outroTutor',
   };
 
@@ -57,7 +57,7 @@ describe('Tarefa API', () => {
   };
 
   const tarefaRow: TarefaResponseDTO = {
-    idTarefa: 7,
+    idTarefa: '7',
     gato_id: gatoTutorRow.id,
     descricao: 'Escovar o gato',
     pontos: 10,
@@ -73,7 +73,7 @@ describe('Tarefa API', () => {
 
   const tarefaDeOutroGatoRow: TarefaResponseDTO = {
     ...tarefaRow,
-    gato_id: 999,
+    gato_id: '999',
   };
 
   const userFindByIdSpy = jest.spyOn(userRepository, 'findById');
@@ -188,7 +188,7 @@ describe('Tarefa API', () => {
   describe('POST /api/tarefas/tarefa/:idGato', () => {
     test('criar uma nova tarefa como tutor', async () => {
       gatoFindByIdSpy.mockResolvedValueOnce(gatoTutorRow);
-      tarefaCreateSpy.mockResolvedValueOnce({ insertId: 11 });
+      tarefaCreateSpy.mockResolvedValueOnce({ insertId: '11' });
 
       const response = await request(app)
         .post(`/api/tarefas/tarefa/${gatoTutorRow.id}`)

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authService = exports.AuthService = void 0;
 const authAction_1 = require("../models/authAction");
-const user_repository_1 = require("../repositories/user.repository");
+const repositories_1 = require("../repositories");
 class AuthService {
-    constructor(repository = user_repository_1.userRepository) {
+    constructor(repository = repositories_1.userRepository) {
         this.repository = repository;
         this.__jwtSecret = process.env.JWT_SECRET || 'change_me';
     }

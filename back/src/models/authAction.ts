@@ -3,13 +3,13 @@ import jwt from 'jsonwebtoken';
 import { LoginUserInputDTO, RegisterUserInputDTO, UserRole } from '../dtos/user.dto';
 import { Action } from './action';
 import { UserModel } from './user.model';
-import { userRepository, UserRepository } from '../repositories/user.repository';
+import { userRepository, UserRepository } from '../repositories';
 
 type HttpError = Error & { status: number };
 
 export type AuthActionResult = {
   user: {
-    id: number;
+    id: string;
     username: string;
     email: string;
     role: UserRole;
@@ -70,7 +70,7 @@ export class RegisterUserAction extends AuthAction<AuthActionResult> {
     });
 
     const user = {
-      id: Number(newUser.insertId),
+      id: String(newUser.insertId),
       username,
       email,
       role: userRole,
@@ -96,7 +96,7 @@ export class LoginUserAction extends AuthAction<AuthActionResult> {
 
   private mapPublicUser(user: UserModel): AuthActionResult['user'] {
     const mappedUser: AuthActionResult['user'] = {
-      id: user.id as number,
+      id: user.id as string,
       username: user.username as string,
       email: user.email as string,
       role: user.role ?? UserRole.TUTOR,

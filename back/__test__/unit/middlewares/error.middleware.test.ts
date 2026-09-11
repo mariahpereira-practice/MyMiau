@@ -47,6 +47,7 @@ describe('errorHandler', () => {
     const response = makeResponse();
     jest.spyOn(console, 'error').mockImplementation(() => undefined);
     const error = {
+      name: 'Error',
       status: 409,
       message: 'Database conflict',
       code: 'ER_DUP_ENTRY',
